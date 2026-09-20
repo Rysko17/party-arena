@@ -1,0 +1,6 @@
+PARTY ARENA V5.21.1
+Correctif Render:
+- `const socket=s` est maintenant initialisé immédiatement au début de la connexion Socket.IO.
+- Les handlers rerollWho et rerollImpostor sont exécutés après cette initialisation.
+- Toutes les banques V5.21, l'anti-répétition et les nouveaux thèmes sont conservés.
+- `node --check server.js` validé.
