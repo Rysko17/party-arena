@@ -1,0 +1,1 @@
+Place ici les images autorisées/licenciées correspondant aux noms référencés dans questions.json.

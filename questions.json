@@ -957,6 +957,32 @@
       ],
       "c": 1,
       "difficulty": "moyen"
+    },
+    {
+      "q": "Qui est représenté sur cette image ?",
+      "a": [
+        "Kylian Mbappé",
+        "Erling Haaland",
+        "Vinícius Júnior",
+        "Jude Bellingham"
+      ],
+      "c": 0,
+      "image": "/assets/quiz/football/mbappe.jpg",
+      "difficulty": "moyen",
+      "requiresAsset": true
+    },
+    {
+      "q": "Qui est représenté sur cette image ?",
+      "a": [
+        "Lionel Messi",
+        "Cristiano Ronaldo",
+        "Neymar",
+        "Antoine Griezmann"
+      ],
+      "c": 0,
+      "image": "/assets/quiz/football/messi.jpg",
+      "difficulty": "moyen",
+      "requiresAsset": true
     }
   ],
   "Cinéma & Séries": [
@@ -1146,6 +1172,32 @@
       ],
       "c": 0,
       "difficulty": "simple"
+    },
+    {
+      "q": "Quel est ce film ?",
+      "a": [
+        "Titanic",
+        "Avatar",
+        "Inception",
+        "Interstellar"
+      ],
+      "c": 0,
+      "image": "/assets/quiz/cinema/titanic.jpg",
+      "difficulty": "moyen",
+      "requiresAsset": true
+    },
+    {
+      "q": "Quel est ce film ?",
+      "a": [
+        "Harry Potter",
+        "Le Seigneur des anneaux",
+        "Star Wars",
+        "Narnia"
+      ],
+      "c": 0,
+      "image": "/assets/quiz/cinema/harry-potter.jpg",
+      "difficulty": "moyen",
+      "requiresAsset": true
     }
   ],
   "Anime & Manga": [
@@ -1394,6 +1446,32 @@
       "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Cosplay%20of%20Monkey%20D.%20Luffy.jpg",
       "difficulty": "moyen",
       "visualTheme": "Anime & Manga"
+    },
+    {
+      "q": "Qui est représenté sur cette image ?",
+      "a": [
+        "Ichigo Kurosaki",
+        "Naruto Uzumaki",
+        "Monkey D. Luffy",
+        "Goku"
+      ],
+      "c": 0,
+      "image": "/assets/quiz/anime/ichigo.jpg",
+      "difficulty": "moyen",
+      "requiresAsset": true
+    },
+    {
+      "q": "Qui est représenté sur cette image ?",
+      "a": [
+        "Naruto Uzumaki",
+        "Ichigo Kurosaki",
+        "Satoru Gojo",
+        "Tanjiro Kamado"
+      ],
+      "c": 0,
+      "image": "/assets/quiz/anime/naruto.jpg",
+      "difficulty": "moyen",
+      "requiresAsset": true
     }
   ],
   "Musique": [
@@ -1752,6 +1830,32 @@
       "image": "https://commons.wikimedia.org/wiki/Special:FilePath/50%20mario.jpg",
       "difficulty": "moyen",
       "visualTheme": "Jeux vidéo"
+    },
+    {
+      "q": "Qui est représenté sur cette image ?",
+      "a": [
+        "Mario",
+        "Sonic",
+        "Crash Bandicoot",
+        "Link"
+      ],
+      "c": 0,
+      "image": "/assets/quiz/games/mario.jpg",
+      "difficulty": "moyen",
+      "requiresAsset": true
+    },
+    {
+      "q": "Qui est représenté sur cette image ?",
+      "a": [
+        "Kratos",
+        "Geralt",
+        "Master Chief",
+        "Nathan Drake"
+      ],
+      "c": 0,
+      "image": "/assets/quiz/games/kratos.jpg",
+      "difficulty": "moyen",
+      "requiresAsset": true
     }
   ],
   "Dessins animés": [
