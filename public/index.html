@@ -6,7 +6,7 @@
 .homePanel .row{margin-top:10px}
 .backBtn{background:#172544}
 @media(max-width:650px){.homeChoice{grid-template-columns:1fr}}
-</style></head><body><div class="w"><div class="logo">⚡ PARTY ARENA V5.20</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
+</style></head><body><div class="w"><div class="logo">⚡ PARTY ARENA V5.21</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
 <div id="home" class="card">
 <h2>Que veux-tu faire ?</h2>
 <p>Crée une nouvelle partie ou rejoins tes amis avec leur code.</p>
@@ -26,6 +26,12 @@
 <div id="lobby" class="hide"><div class="card"><div class="row"><div><small>CODE DE LA SALLE</small><div id="code" class="code"></div></div><div id="players"></div></div></div><div id="setup" class="card hide"><h2>1. Choisir les jeux</h2><div id="games" class="grid"></div><h2>2. Choisir les thèmes</h2><div id="themes" class="grid"></div><div class="row" style="margin-top:18px"><button onclick="start()">▶ JOUER</button></div></div><div id="wait" class="card">En attente de l’hôte…</div></div>
 <div id="play" class="card hide"><div class="row"><b id="rl"></b><b id="gl"></b></div><small id="tl"></small><div id="secret" class="card hide"></div><div id="q" class="q"></div><img id="img" class="img hide"><div id="answers" class="answers"></div><div id="hc" class="hide"><h3>Points manuels</h3><div id="award"></div><br><button onclick="next()">Manche suivante ➜</button></div></div>
 <div id="final" class="card hide"><h1>🏆 Classement final</h1><div id="rank"></div></div></div><script>
+
+function whoImageFallback(img){
+ img.style.display='none';
+ const f=img.nextElementSibling;if(f)f.style.display='flex';
+}
+
 const s=io(),GL=['Quiz Battle','Tu me connais ?','Majorité','La Bombe',"L’Imposteur",'Duel','Mot interdit','Défi surprise','Trouve l’intrus','Qui est-ce ?'],TL=['Culture générale','Football','Sport','Cinéma & Séries','Anime & Manga','Musique','Jeux vidéo','Dessins animés','Internet & Réseaux','Mathématiques','Images'];let room,me,state,cg=new Set(['Quiz Battle']),ct=new Set(['Culture générale']);
 let gameRounds={'Quiz Battle':5};
 function render(){
@@ -108,6 +114,7 @@ function next(){s.emit('next',room)}function answer(i){s.emit('answer',{code:roo
 s.on('connect',()=>me=s.id);s.on('room',r=>{state=r;players.innerHTML=r.players.map(p=>`<span class="pill">${p.name} · ${p.score}</span> `).join('');let h=r.host===me;setup.classList.toggle('hide',!h);wait.classList.toggle('hide',h);if(h){cg=new Set(r.settings.games);ct=new Set(r.settings.themes);gameRounds={...(r.settings.gameRounds||{})};render()}});
 s.on('round',x=>{
 const jb=[...document.querySelectorAll('button')].find(b=>b.textContent==='Lancement…');if(jb){jb.disabled=false;jb.textContent='▶ JOUER'};lobby.classList.add('hide');play.classList.remove('hide');secret.classList.add('hide');rl.textContent=`${x.current.game} — Manche ${x.gameRound}/${x.gameTotal}`;gl.textContent=x.current.game;tl.textContent=x.current.theme||'';q.innerHTML=(x.current.q||'')+(x.current.difficulty?` <span class="pill">🎯 ${x.current.difficulty.toUpperCase()} • ${x.current.points} pts</span>`:'');
+if(x.current.game==='Qui est-ce ?' && me===room.host){award.innerHTML=`<button onclick="s.emit('rerollWho',{code:room.code})">🔄 CHANGER L’IMAGE / QUESTION</button>`;}
 if(x.current.typedBomb){
  answers.innerHTML=`<div class="card"><h2>💣 LA BOMBE — ${x.current.theme||''}</h2><p>${x.current.q}</p><input id="bombInput" type="text" autocomplete="off" maxlength="80" placeholder="ÉCRIS TA RÉPONSE ICI..." style="display:block;width:100%;box-sizing:border-box;padding:18px;margin:16px 0;font-size:20px;border:2px solid #fff;border-radius:14px;background:#fff;color:#111"><button id="bombSend" onclick="sendBomb()">📨 ENVOYER</button><div id="bombStatus"></div></div>`;
  award.innerHTML=me===room.host?'<div class="card"><h3>👑 Validation des réponses</h3><div id="bombReview">En attente...</div></div>':'';

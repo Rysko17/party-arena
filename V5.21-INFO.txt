@@ -1,0 +1,10 @@
+PARTY ARENA V5.21
+- 100 nouvelles variantes « Tu me connais ? » PAR THÈME, avec 4 vrais choix liés au thème.
+- +60 consignes Bombe PAR THÈME.
+- +40 paires Imposteur PAR THÈME.
+- +40 Duel PAR THÈME.
+- Défi surprise et Mot interdit également augmentés pour chaque thème.
+- Historique anti-répétition conservé lors d'un restart dans la même room.
+- Qui est-ce : fallback visible si une image externe échoue + bouton hôte CHANGER L'IMAGE / QUESTION.
+IMPORTANT : les vraies images distantes peuvent toujours dépendre de la disponibilité/licence de leur source. Cette version ne prétend pas avoir localement des centaines de photos protégées.
+- Syntaxe serveur vérifiée avec Node.
