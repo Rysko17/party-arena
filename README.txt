@@ -1,11 +1,7 @@
-PARTY ARENA V5.7 — PARTIES STRUCTURÉES
-
-Demandes intégrées :
-- 5 / 10 / 15 / 20 manches PAR JEU.
-- Les jeux ne doivent plus être mélangés : jeu 1 jusqu'à sa dernière manche, puis jeu 2, etc.
-- Fin de partie : Recommencer avec les mêmes réglages OU revenir changer jeux/thèmes.
-- Base de questions images locale ajoutée (pas de dépendance à des liens d'images externes).
-- Pour les jeux à réponse orale : système prévu pour que l'hôte valide ou refuse le point.
-- Les correctifs précédents restent présents.
-
-Déploiement : remplace les fichiers du dépôt GitHub par cette version, Commit changes, puis attends le redéploiement Render.
+PARTY ARENA V5.8
+- Chaque jeu sélectionné a SON choix : 5, 10, 15 ou 20 manches.
+- Les jeux se jouent l'un après l'autre, jamais mélangés.
+- Correction du bug « Lancement… » : le serveur démarre maintenant avec confirmation.
+- Affichage : nom du jeu + manche actuelle de ce jeu.
+- Fin : Recommencer ou Changer jeux/thèmes.
+- Jeux à réponse orale : l'hôte voit Valider +500 / Refuser.
