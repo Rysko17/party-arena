@@ -6,7 +6,7 @@
 .homePanel .row{margin-top:10px}
 .backBtn{background:#172544}
 @media(max-width:650px){.homeChoice{grid-template-columns:1fr}}
-</style></head><body><div class="w"><div class="logo">⚡ PARTY ARENA V5</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
+</style></head><body><div class="w"><div class="logo">⚡ PARTY ARENA V5.9</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
 <div id="home" class="card">
 <h2>Que veux-tu faire ?</h2>
 <p>Crée une nouvelle partie ou rejoins tes amis avec leur code.</p>
@@ -81,20 +81,33 @@ function openL(){
   document.getElementById('home').classList.add('hide');
   document.getElementById('lobby').classList.remove('hide');
   document.getElementById('code').textContent=room;
-}function save(){
-  if(!ct.size){alert('Choisis au moins un thème.');return false}
-  if(!cg.size){alert('Choisis au moins un jeu.');return false}
-  s.emit('settings',{code:room,settings:{games:[...cg],themes:[...ct],rounds:+rounds.value}});
-  return true;
+}function start(){
+  if(!ct.size)return alert('Choisis au moins un thème.');
+  if(!cg.size)return alert('Choisis au moins un jeu.');
+  const settings={
+    games:[...cg],
+    themes:[...ct],
+    gameRounds:Object.fromEntries([...cg].map(g=>[g,+(gameRounds[g]||5)]))
+  };
+  const btn=[...document.querySelectorAll('button')].find(x=>x.textContent.includes('JOUER'));
+  if(btn){btn.disabled=true;btn.textContent='Lancement…'}
+  s.emit('settings',{code:room,settings},r=>{
+    if(!r||!r.ok){
+      if(btn){btn.disabled=false;btn.textContent='▶ JOUER'}
+      return alert('Erreur lors de l’enregistrement des réglages.');
+    }
+    s.emit('start',room,r2=>{
+      if(!r2||!r2.ok){
+        if(btn){btn.disabled=false;btn.textContent='▶ JOUER'}
+        alert('Impossible de lancer la partie.');
+      }
+    });
+  });
 }
-function start(){
-  if(!save())return;
-  const b=[...document.querySelectorAll('button')].find(x=>/JOUER|Lancer/i.test(x.textContent));
-  if(b){b.disabled=true;b.textContent='Lancement…'}
-  setTimeout(()=>s.emit('start',room),300);
-}function next(){s.emit('next',room)}function answer(i){s.emit('answer',{code:room,value:i});document.querySelectorAll('.ans').forEach(x=>x.style.pointerEvents='none')}function give(id){s.emit('award',{code:room,id,points:500})}function refuse(id){/* aucun point */}function secretChoice(i){s.emit('secretChoice',{code:room,value:i});answers.innerHTML='<div class="card">✅ Réponse secrète enregistrée. Les autres peuvent maintenant deviner.</div>'}
+function next(){s.emit('next',room)}function answer(i){s.emit('answer',{code:room,value:i});document.querySelectorAll('.ans').forEach(x=>x.style.pointerEvents='none')}function give(id){s.emit('award',{code:room,id,points:500})}function refuse(id){/* aucun point */}function secretChoice(i){s.emit('secretChoice',{code:room,value:i});answers.innerHTML='<div class="card">✅ Réponse secrète enregistrée. Les autres peuvent maintenant deviner.</div>'}
 s.on('connect',()=>me=s.id);s.on('room',r=>{state=r;players.innerHTML=r.players.map(p=>`<span class="pill">${p.name} · ${p.score}</span> `).join('');let h=r.host===me;setup.classList.toggle('hide',!h);wait.classList.toggle('hide',h);if(h){cg=new Set(r.settings.games);ct=new Set(r.settings.themes);gameRounds={...(r.settings.gameRounds||{})};render()}});
-s.on('round',x=>{lobby.classList.add('hide');play.classList.remove('hide');secret.classList.add('hide');rl.textContent=`${x.current.game} — Manche ${x.gameRound}/${x.gameTotal}`;gl.textContent=x.current.game;tl.textContent=x.current.theme||'';q.textContent=x.current.q||'';img.classList.toggle('hide',!x.current.image);if(x.current.image)img.src=x.current.image;if(x.current.game==='Tu me connais ?'&&x.current.phase==='choose'){if(me===x.current.target){q.textContent=x.current.q+' — choisis ta réponse secrètement';answers.innerHTML=x.current.a.map((a,i)=>`<div class="ans" onclick="secretChoice(${i})">${a}</div>`).join('')}else{q.textContent=x.current.targetName+' choisit sa réponse secrète…';answers.innerHTML='<div class="card">⏳ Attends que '+x.current.targetName+' ait choisi. Tu ne peux pas répondre avant.</div>'}}else{answers.innerHTML=x.current.a?x.current.a.map((a,i)=>`<div class="ans" onclick="answer(${i})">${a}</div>`).join(''):''}let h=state&&state.host===me;hc.classList.toggle('hide',!h);if(h)award.innerHTML=x.current.oral?state.players.map(p=>`<div style="margin:8px 0"><b>${p.name}</b> <button onclick="give('${p.id}')">✅ Valider +500</button> <button class="backBtn" onclick="refuse('${p.id}')">❌ Refuser</button></div>`).join(''):''});s.on('tmcGuess',x=>{q.textContent=x.q;if(me===x.target){answers.innerHTML='<div class="card">🤫 Ta réponse est enregistrée. Attends les réponses des autres.</div>'}else{answers.innerHTML=x.a.map((a,i)=>`<div class="ans" onclick="tmcGuess(${i})">${a}</div>`).join('')}});function tmcGuess(i){s.emit('tmcGuess',{code:room,value:i});answers.innerHTML='<div class="card">🔒 Réponse enregistrée.</div>'}s.on('guessResult',x=>{answers.innerHTML+=`<div class="card">${x.correct?'✅ Bonne réponse ! +500':'❌ Mauvaise réponse'}</div>`});
+s.on('round',x=>{
+const jb=[...document.querySelectorAll('button')].find(b=>b.textContent==='Lancement…');if(jb){jb.disabled=false;jb.textContent='▶ JOUER'};lobby.classList.add('hide');play.classList.remove('hide');secret.classList.add('hide');rl.textContent=`${x.current.game} — Manche ${x.gameRound}/${x.gameTotal}`;gl.textContent=x.current.game;tl.textContent=x.current.theme||'';q.textContent=x.current.q||'';img.classList.toggle('hide',!x.current.image);if(x.current.image)img.src=x.current.image;if(x.current.game==='Tu me connais ?'&&x.current.phase==='choose'){if(me===x.current.target){q.textContent=x.current.q+' — choisis ta réponse secrètement';answers.innerHTML=x.current.a.map((a,i)=>`<div class="ans" onclick="secretChoice(${i})">${a}</div>`).join('')}else{q.textContent=x.current.targetName+' choisit sa réponse secrète…';answers.innerHTML='<div class="card">⏳ Attends que '+x.current.targetName+' ait choisi. Tu ne peux pas répondre avant.</div>'}}else{answers.innerHTML=x.current.a?x.current.a.map((a,i)=>`<div class="ans" onclick="answer(${i})">${a}</div>`).join(''):''}let h=state&&state.host===me;hc.classList.toggle('hide',!h);if(h)award.innerHTML=x.current.oral?state.players.map(p=>`<div style="margin:8px 0"><b>${p.name}</b> <button onclick="give('${p.id}')">✅ Valider +500</button> <button class="backBtn" onclick="refuse('${p.id}')">❌ Refuser</button></div>`).join(''):''});s.on('tmcGuess',x=>{q.textContent=x.q;if(me===x.target){answers.innerHTML='<div class="card">🤫 Ta réponse est enregistrée. Attends les réponses des autres.</div>'}else{answers.innerHTML=x.a.map((a,i)=>`<div class="ans" onclick="tmcGuess(${i})">${a}</div>`).join('')}});function tmcGuess(i){s.emit('tmcGuess',{code:room,value:i});answers.innerHTML='<div class="card">🔒 Réponse enregistrée.</div>'}s.on('guessResult',x=>{answers.innerHTML+=`<div class="card">${x.correct?'✅ Bonne réponse ! +500':'❌ Mauvaise réponse'}</div>`});
 s.on('secret',x=>{secret.classList.remove('hide');secret.innerHTML=`🤫 TON MOT SECRET : <h1>${x.word}</h1>Ne le montre pas.`});s.on('finished',r=>{play.classList.add('hide');final.classList.remove('hide');rank.innerHTML=[...r.players].sort((a,b)=>b.score-a.score).map((p,i)=>`<div class="score"><b>${i+1}. ${p.name}</b><b>${p.score} pts</b></div>`).join('')+`${r.host===me?'<div class="row" style="margin-top:18px"><button onclick="restartSame()">🔁 Recommencer</button><button onclick="backToSetup()">⚙️ Changer jeux / thèmes</button></div>':''}`});function restartSame(){final.classList.add('hide');s.emit('restartSame',room)}
 function backToSetup(){final.classList.add('hide');s.emit('backToSetup',room)}
 s.on('backToSetup',()=>{play.classList.add('hide');final.classList.add('hide');lobby.classList.remove('hide');render()});
