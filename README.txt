@@ -1,12 +1,12 @@
-PARTY ARENA V5.4 — GAMEPLAY FIX
+PARTY ARENA V5.5 — CORRECTIF ACCUEIL
 
-CORRIGÉ :
-- Sélection des thèmes : multi-sélection fonctionnelle.
-- Au moins 1 thème et 1 jeu obligatoires.
-- Nom/pseudo obligatoire pour créer ou rejoindre.
-- Passage AUTOMATIQUE à la manche suivante quand tous les joueurs concernés ont répondu.
-- Petit délai d'environ 1,2 seconde avec message « Tout le monde a répondu ».
-- Pour « Tu me connais ? », le joueur cible choisit d'abord secrètement ; la manche avance quand tous les AUTRES ont deviné.
-- Tous les correctifs précédents sont conservés.
+Correction importante :
+- Les boutons « Créer une partie » et « Rejoindre une partie » fonctionnent.
+- Le pseudo est obligatoire.
+- Le code n'apparaît que dans « Rejoindre ».
+- Conservation du choix jeux/thèmes et du passage automatique après les réponses.
+- Conservation des correctifs de « Tu me connais ? ».
 
-Remplace les fichiers GitHub par ceux de ce dossier puis Commit changes. Render Auto-Deploy fera la mise à jour.
+Mise à jour :
+Remplace sur GitHub les fichiers par ceux de cette version, puis Commit changes.
+Render redéploiera automatiquement.
