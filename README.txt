@@ -1,25 +1,10 @@
-PARTY ARENA V3 — ONLINE
+PARTY ARENA V4 ONLINE
 
-Cette version permet à des amis situés à des endroits différents de rejoindre la même salle.
+7 mini-jeux : Quiz Battle, Tu me connais ?, Majorité, La Bombe, Duel, Mot interdit, Défi surprise.
+40 questions de quiz dans 8 univers.
+14 manches, scores synchronisés.
 
-TEST LOCAL :
-1. Ouvre un terminal dans ce dossier.
-2. npm install
-3. npm start
-4. Ouvre http://localhost:3000
+Pour mettre à jour Render : remplace les fichiers GitHub de la V3 par ceux-ci. Render redéploiera automatiquement.
+Ne jamais envoyer node_modules.
 
-IMPORTANT POUR JOUER A DISTANCE :
-Le projet doit être déployé sur un hébergeur Node.js qui supporte les WebSockets.
-Une fois déployé, partage l'URL publique et le code de salle à tes amis.
-
-Fonctions V3 :
-- Créer/rejoindre une salle avec code 4 caractères
-- Lobby temps réel
-- Hôte de la partie
-- 2 joueurs minimum
-- Quiz synchronisé
-- Réponses individuelles
-- Scores temps réel
-- 8 manches et classement final
-
-Les autres mini-jeux (Tu me connais, Majorité, Bombe, Imposteur, Blind Test...) pourront être intégrés au moteur online ensuite.
+Blind Test audio et Imposteur à rôles privés seront ajoutés dans une prochaine étape.
