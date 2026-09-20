@@ -1,442 +1,266 @@
-[
-  {
-    "theme": "Culture générale",
-    "q": "Quelle planète est surnommée la planète rouge ?",
-    "a": [
-      "Mars",
-      "Vénus",
-      "Jupiter",
-      "Mercure"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Culture générale",
-    "q": "Quel est le plus grand océan ?",
-    "a": [
-      "Atlantique",
-      "Indien",
-      "Pacifique",
-      "Arctique"
-    ],
-    "ok": 2
-  },
-  {
-    "theme": "Culture générale",
-    "q": "Quelle est la capitale du Japon ?",
-    "a": [
-      "Kyoto",
-      "Tokyo",
-      "Osaka",
-      "Nagoya"
-    ],
-    "ok": 1
-  },
-  {
-    "theme": "Culture générale",
-    "q": "Combien de côtés a un hexagone ?",
-    "a": [
-      "5",
-      "6",
-      "7",
-      "8"
-    ],
-    "ok": 1
-  },
-  {
-    "theme": "Culture générale",
-    "q": "Quel organe pompe le sang ?",
-    "a": [
-      "Foie",
-      "Poumon",
-      "Cœur",
-      "Rein"
-    ],
-    "ok": 2
-  },
-  {
-    "theme": "Football",
-    "q": "Combien de joueurs une équipe aligne-t-elle normalement au coup d’envoi ?",
-    "a": [
-      "9",
-      "10",
-      "11",
-      "12"
-    ],
-    "ok": 2
-  },
-  {
-    "theme": "Football",
-    "q": "Quel carton signifie une expulsion directe ?",
-    "a": [
-      "Bleu",
-      "Vert",
-      "Rouge",
-      "Blanc"
-    ],
-    "ok": 2
-  },
-  {
-    "theme": "Football",
-    "q": "Comment appelle-t-on trois buts du même joueur ?",
-    "a": [
-      "Triplé",
-      "Doublé",
-      "Break",
-      "Set"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Football",
-    "q": "Quel poste peut utiliser ses mains dans sa surface ?",
-    "a": [
-      "Défenseur",
-      "Gardien",
-      "Milieu",
-      "Attaquant"
-    ],
-    "ok": 1
-  },
-  {
-    "theme": "Football",
-    "q": "Quel pays a remporté la Coupe du monde masculine 2018 ?",
-    "a": [
-      "France",
-      "Croatie",
-      "Brésil",
-      "Allemagne"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Anime & Manga",
-    "q": "Dans Naruto, quel animal est associé à Kurama ?",
-    "a": [
-      "Renard",
-      "Loup",
-      "Dragon",
-      "Tigre"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Anime & Manga",
-    "q": "Quel est le héros principal de Dragon Ball ?",
-    "a": [
-      "Vegeta",
-      "Goku",
-      "Piccolo",
-      "Trunks"
-    ],
-    "ok": 1
-  },
-  {
-    "theme": "Anime & Manga",
-    "q": "Dans One Piece, quel est le prénom du capitaine au chapeau de paille ?",
-    "a": [
-      "Zoro",
-      "Sanji",
-      "Luffy",
-      "Ace"
-    ],
-    "ok": 2
-  },
-  {
-    "theme": "Anime & Manga",
-    "q": "Dans Demon Slayer, quel est le héros principal ?",
-    "a": [
-      "Tanjiro",
-      "Zenitsu",
-      "Inosuke",
-      "Giyu"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Anime & Manga",
-    "q": "Dans Bleach, quel est le prénom de Kurosaki ?",
-    "a": [
-      "Ichigo",
-      "Renji",
-      "Uryu",
-      "Byakuya"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Jeux vidéo",
-    "q": "Dans Minecraft, quel outil sert principalement à miner la pierre ?",
-    "a": [
-      "Pioche",
-      "Arc",
-      "Bouclier",
-      "Canne à pêche"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Jeux vidéo",
-    "q": "Dans Mario, quel est le frère de Mario ?",
-    "a": [
-      "Wario",
-      "Luigi",
-      "Toad",
-      "Yoshi"
-    ],
-    "ok": 1
-  },
-  {
-    "theme": "Jeux vidéo",
-    "q": "Quel studio est à l’origine de Minecraft ?",
-    "a": [
-      "Mojang",
-      "Valve",
-      "Ubisoft",
-      "Capcom"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Jeux vidéo",
-    "q": "Dans League of Legends, combien de joueurs par équipe sur la Faille ?",
-    "a": [
-      "3",
-      "4",
-      "5",
-      "6"
-    ],
-    "ok": 2
-  },
-  {
-    "theme": "Jeux vidéo",
-    "q": "Quel jeu met en scène des voitures jouant au football ?",
-    "a": [
-      "Rocket League",
-      "Gran Turismo",
-      "Forza",
-      "NFS"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Cinéma & Séries",
-    "q": "Quel métier dirige principalement le tournage d’un film ?",
-    "a": [
-      "Réalisateur",
-      "Projectionniste",
-      "Cascadeur",
-      "Compositeur"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Cinéma & Séries",
-    "q": "Dans Harry Potter, quelle école fréquente Harry ?",
-    "a": [
-      "Poudlard",
-      "Beauxbâtons",
-      "Durmstrang",
-      "Ilvermorny"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Cinéma & Séries",
-    "q": "Quel super-héros est Bruce Wayne ?",
-    "a": [
-      "Superman",
-      "Batman",
-      "Iron Man",
-      "Thor"
-    ],
-    "ok": 1
-  },
-  {
-    "theme": "Cinéma & Séries",
-    "q": "Dans Le Roi Lion, comment s’appelle le fils de Mufasa ?",
-    "a": [
-      "Scar",
-      "Simba",
-      "Timon",
-      "Rafiki"
-    ],
-    "ok": 1
-  },
-  {
-    "theme": "Cinéma & Séries",
-    "q": "Dans Matrix, quelle pilule Neo choisit-il ?",
-    "a": [
-      "Bleue",
-      "Rouge",
-      "Verte",
-      "Jaune"
-    ],
-    "ok": 1
-  },
-  {
-    "theme": "Musique",
-    "q": "Comment appelle-t-on la partie répétée d’une chanson ?",
-    "a": [
-      "Refrain",
-      "Chapitre",
-      "Scène",
-      "Générique"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Musique",
-    "q": "Quel instrument possède des touches noires et blanches ?",
-    "a": [
-      "Piano",
-      "Violon",
-      "Trompette",
-      "Batterie"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Musique",
-    "q": "Comment appelle-t-on la vitesse d’un morceau ?",
-    "a": [
-      "Tempo",
-      "Timbre",
-      "Accord",
-      "Octave"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Musique",
-    "q": "Le rap est historiquement associé à quelle culture ?",
-    "a": [
-      "Hip-hop",
-      "Opéra",
-      "Baroque",
-      "Country"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Musique",
-    "q": "Comment appelle-t-on une version retravaillée d’un morceau ?",
-    "a": [
-      "Remix",
-      "Roman",
-      "Épisode",
-      "Trailer"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Dessins animés",
-    "q": "Quel personnage Disney est une célèbre souris ?",
-    "a": [
-      "Mickey",
-      "Donald",
-      "Dingo",
-      "Stitch"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Dessins animés",
-    "q": "Dans Bob l’éponge, où vit Bob ?",
-    "a": [
-      "Dans un ananas",
-      "Dans un château",
-      "Dans une fusée",
-      "Dans un arbre"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Dessins animés",
-    "q": "Dans Scooby-Doo, quel animal est Scooby ?",
-    "a": [
-      "Chat",
-      "Chien",
-      "Ours",
-      "Cheval"
-    ],
-    "ok": 1
-  },
-  {
-    "theme": "Dessins animés",
-    "q": "Dans Les Simpson, comment s’appelle le père ?",
-    "a": [
-      "Bart",
-      "Homer",
-      "Ned",
-      "Moe"
-    ],
-    "ok": 1
-  },
-  {
-    "theme": "Dessins animés",
-    "q": "Quel Pokémon jaune est devenu une icône mondiale ?",
-    "a": [
-      "Pikachu",
-      "Carapuce",
-      "Rondoudou",
-      "Onix"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Pop Culture",
-    "q": "Quelle plateforme est connue pour ses vidéos courtes verticales ?",
-    "a": [
-      "TikTok",
-      "Excel",
-      "Wikipedia",
-      "Maps"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Pop Culture",
-    "q": "Comment appelle-t-on un contenu qui se diffuse massivement ?",
-    "a": [
-      "Viral",
-      "Hors-ligne",
-      "Privé",
-      "Compressé"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Pop Culture",
-    "q": "Quel symbole précède un hashtag ?",
-    "a": [
-      "#",
-      "@",
-      "€",
-      "&"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Pop Culture",
-    "q": "Quel terme désigne une diffusion en direct ?",
-    "a": [
-      "Live",
-      "Archive",
-      "Patch",
-      "PDF"
-    ],
-    "ok": 0
-  },
-  {
-    "theme": "Pop Culture",
-    "q": "Comment appelle-t-on un créateur qui diffuse ses jeux en direct ?",
-    "a": [
-      "Streamer",
-      "Arbitre",
-      "Projectionniste",
-      "Imprimeur"
-    ],
-    "ok": 0
-  }
-]
+{
+  "Culture générale": [
+    {
+      "q": "Quelle planète est surnommée la planète rouge ?",
+      "a": [
+        "Mars",
+        "Vénus",
+        "Jupiter",
+        "Mercure"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel est le plus grand océan ?",
+      "a": [
+        "Atlantique",
+        "Indien",
+        "Pacifique",
+        "Arctique"
+      ],
+      "c": 2
+    },
+    {
+      "q": "Combien de côtés possède un hexagone ?",
+      "a": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "c": 1
+    }
+  ],
+  "Football": [
+    {
+      "q": "Combien de joueurs une équipe aligne-t-elle normalement ?",
+      "a": [
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "c": 2
+    },
+    {
+      "q": "Quelle compétition oppose les sélections européennes ?",
+      "a": [
+        "Euro",
+        "Copa América",
+        "CAN",
+        "Libertadores"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Trois buts du même joueur forment un…",
+      "a": [
+        "Triplé",
+        "Doublé",
+        "Ace",
+        "Set"
+      ],
+      "c": 0
+    }
+  ],
+  "Cinéma & Séries": [
+    {
+      "q": "Qui dirige artistiquement le tournage d’un film ?",
+      "a": [
+        "Réalisateur",
+        "Monteur",
+        "Cascadeur",
+        "Exploitant"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Comment appelle-t-on un épisode test d’une série ?",
+      "a": [
+        "Pilote",
+        "Finale",
+        "Trailer",
+        "Remake"
+      ],
+      "c": 0
+    }
+  ],
+  "Anime & Manga": [
+    {
+      "q": "Dans Dragon Ball, quel est le prénom du héros ?",
+      "a": [
+        "Naruto",
+        "Goku",
+        "Luffy",
+        "Ichigo"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Dans Naruto, Kurama est représenté comme quoi ?",
+      "a": [
+        "Dragon",
+        "Renard",
+        "Loup",
+        "Serpent"
+      ],
+      "c": 1
+    }
+  ],
+  "Musique": [
+    {
+      "q": "Quelle partie d’une chanson revient généralement plusieurs fois ?",
+      "a": [
+        "Refrain",
+        "Outro",
+        "Pont",
+        "Solo"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Que signifie BPM ?",
+      "a": [
+        "Battements par minute",
+        "Basses par mesure",
+        "Boucles par mix",
+        "Balance piste/master"
+      ],
+      "c": 0
+    }
+  ],
+  "Jeux vidéo": [
+    {
+      "q": "Dans Minecraft, quel outil sert surtout à miner la pierre ?",
+      "a": [
+        "Pioche",
+        "Arc",
+        "Canne",
+        "Cisailles"
+      ],
+      "c": 0
+    },
+    {
+      "q": "GTA est surtout connu pour quel type de monde ?",
+      "a": [
+        "Monde ouvert",
+        "Puzzle",
+        "Cartes",
+        "Rails"
+      ],
+      "c": 0
+    }
+  ],
+  "Dessins animés": [
+    {
+      "q": "Quel animal est Mickey ?",
+      "a": [
+        "Souris",
+        "Canard",
+        "Chien",
+        "Lapin"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Tom poursuit généralement qui ?",
+      "a": [
+        "Jerry",
+        "Bugs",
+        "Daffy",
+        "Scooby"
+      ],
+      "c": 0
+    }
+  ],
+  "Internet & Réseaux": [
+    {
+      "q": "Quel symbole précède un hashtag ?",
+      "a": [
+        "#",
+        "@",
+        "&",
+        "%"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Que signifie souvent DM ?",
+      "a": [
+        "Message privé/direct",
+        "Mode sombre",
+        "Donnée mobile",
+        "Double mention"
+      ],
+      "c": 0
+    }
+  ],
+  "Images": [
+    {
+      "q": "Quel monument est représenté par cette illustration ?",
+      "a": [
+        "Tour Eiffel",
+        "Big Ben",
+        "Colisée",
+        "Arc de Triomphe"
+      ],
+      "c": 0,
+      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%235424a8%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23121a38%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%97%BC%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3EMONUMENT%3C/text%3E%0A%20%20%20%20%3C/svg%3E"
+    },
+    {
+      "q": "Quel animal est représenté ?",
+      "a": [
+        "Panda",
+        "Koala",
+        "Loup",
+        "Tigre"
+      ],
+      "c": 0,
+      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23136f63%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23102542%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%90%BC%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3EANIMAL%3C/text%3E%0A%20%20%20%20%3C/svg%3E"
+    },
+    {
+      "q": "Quel sport est représenté ?",
+      "a": [
+        "Football",
+        "Basket",
+        "Tennis",
+        "Rugby"
+      ],
+      "c": 0,
+      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%230b7a3e%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23132238%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%E2%9A%BD%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3ESPORT%3C/text%3E%0A%20%20%20%20%3C/svg%3E"
+    },
+    {
+      "q": "À quel univers cette image fait-elle penser ?",
+      "a": [
+        "Jeux vidéo",
+        "Cuisine",
+        "Architecture",
+        "Mode"
+      ],
+      "c": 0,
+      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%233c1b78%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2310162b%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%8E%AE%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3EGAMING%3C/text%3E%0A%20%20%20%20%3C/svg%3E"
+    },
+    {
+      "q": "Quel domaine est représenté ?",
+      "a": [
+        "Musique",
+        "Football",
+        "Cinéma",
+        "Science"
+      ],
+      "c": 0,
+      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%238a185f%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2314162e%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%8E%A7%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3EMUSIQUE%3C/text%3E%0A%20%20%20%20%3C/svg%3E"
+    },
+    {
+      "q": "Quel type de contenu est représenté ?",
+      "a": [
+        "Cinéma",
+        "Football",
+        "Manga",
+        "Cuisine"
+      ],
+      "c": 0,
+      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%237d3b12%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23161728%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%8E%AC%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3ECIN%C3%89MA%3C/text%3E%0A%20%20%20%20%3C/svg%3E"
+    }
+  ]
+}

@@ -1,10 +1,12 @@
-PARTY ARENA V4 ONLINE
+PARTY ARENA V5.1 — CORRECTIF
 
-7 mini-jeux : Quiz Battle, Tu me connais ?, Majorité, La Bombe, Duel, Mot interdit, Défi surprise.
-40 questions de quiz dans 8 univers.
-14 manches, scores synchronisés.
+CORRECTIONS :
+- Tu me connais ? fonctionne maintenant en 2 phases :
+  1. seul le joueur cible peut choisir sa réponse secrète ;
+  2. les autres sont bloqués jusqu'à son choix ;
+  3. ensuite seulement ils peuvent deviner.
+- Ajout de 6 questions avec images intégrées directement dans le jeu.
+- Les images ne dépendent plus d'un site externe.
+- Pour tester les images, sélectionne le thème « Images » + « Quiz Battle ».
 
-Pour mettre à jour Render : remplace les fichiers GitHub de la V3 par ceux-ci. Render redéploiera automatiquement.
-Ne jamais envoyer node_modules.
-
-Blind Test audio et Imposteur à rôles privés seront ajoutés dans une prochaine étape.
+Remplace les fichiers GitHub par ceux de cette version. Render Auto-Deploy redéploiera automatiquement.
