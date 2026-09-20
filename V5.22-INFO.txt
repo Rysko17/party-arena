@@ -1,0 +1,8 @@
+PARTY ARENA V5.22
+- Ajout d'un indicateur immédiat après une réponse QCM :
+  ✅ BONNE RÉPONSE / ❌ MAUVAISE RÉPONSE.
+- Qui est-ce filtre désormais les anciennes entrées locales placeholder .svg.
+- Si une image Qui est-ce distante échoue, l'hôte demande automatiquement une autre image/question (maximum 5 essais), avec bouton manuel toujours disponible.
+- IMPORTANT : cette correction améliore le comportement des images mais une URL externe peut toujours disparaître. Une banque 100% fiable exige des images locales autorisées réellement intégrées au projet.
+- Toutes les banques V5.21 sont conservées.
+- server.js validé avec Node --check.

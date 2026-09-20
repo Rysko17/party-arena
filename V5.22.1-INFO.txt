@@ -1,0 +1,5 @@
+PARTY ARENA V5.22.1
+Imposteur : l'hôte dispose d'un bouton « CHANGER LE MOT POUR TOUT LE MONDE ».
+Il redistribue une nouvelle paire de mots à tous sans quitter la manche.
+Toutes les améliorations V5.22 sont conservées.
+server.js validé avec Node --check.

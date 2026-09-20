@@ -1,4 +1,13 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Party Arena V5</title><script src="/socket.io/socket.io.js"></script><style>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Party Arena V5</title><script src="/socket.io/socket.io.js">
+s.on('answerFeedback',d=>{
+ const el=document.getElementById('answerFlash'); if(!el)return;
+ el.className=d.correct?'good':'bad';
+ el.querySelector('.feedbackBox').textContent=d.correct?'✅ BONNE RÉPONSE !':'❌ MAUVAISE RÉPONSE';
+ el.style.display='flex';
+ setTimeout(()=>{el.style.display='none'},1200);
+});
+
+</script><style>
 *{box-sizing:border-box}body{margin:0;font-family:Arial;background:radial-gradient(circle at 50% 0,#241069,#060814 55%);color:#fff;min-height:100vh}.w{max-width:1200px;margin:auto;padding:24px}.logo{font-size:40px;font-weight:900;font-style:italic;color:#d88cff}.card{background:#10162bd9;border:1px solid #2c3e70;border-radius:18px;padding:20px;margin:14px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:11px}.pick{background:#0b1428;border:1px solid #31527f;border-radius:14px;padding:17px;text-align:center;cursor:pointer}.roundPick{margin-top:10px;width:100%;padding:8px}.pick.on{border:2px solid #c344ff;box-shadow:0 0 15px #8b22ff;background:#24164d}button{border:0;border-radius:11px;padding:13px 17px;background:linear-gradient(90deg,#7924ff,#d52cff);color:#fff;font-weight:800;cursor:pointer}input,select{background:#091126;color:#fff;border:1px solid #3a5077;border-radius:10px;padding:12px}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.hide{display:none}.code{font-size:50px;font-weight:900;letter-spacing:5px}.pill{background:#17213d;padding:9px 12px;border-radius:20px}.q{font-size:27px;font-weight:800;margin:18px 0}.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ans{padding:17px;background:#172544;border:1px solid #385b91;border-radius:13px;cursor:pointer}.img{width:100%;max-height:380px;object-fit:cover;border-radius:16px}.score{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #26314f}@media(max-width:650px){.answers{grid-template-columns:1fr}.w{padding:10px}}
 .homeChoice{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
 .homeBig{padding:24px 18px;font-size:18px}
@@ -6,7 +15,14 @@
 .homePanel .row{margin-top:10px}
 .backBtn{background:#172544}
 @media(max-width:650px){.homeChoice{grid-template-columns:1fr}}
-</style></head><body><div class="w"><div class="logo">⚡ PARTY ARENA V5.21</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
+</style>
+<style>
+#answerFlash{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:9999;pointer-events:none}
+#answerFlash .feedbackBox{font-size:clamp(30px,6vw,72px);font-weight:1000;padding:28px 44px;border-radius:24px;background:#111;color:white;box-shadow:0 15px 60px #0008;text-align:center}
+#answerFlash.good .feedbackBox{outline:6px solid #35d07f}
+#answerFlash.bad .feedbackBox{outline:6px solid #ff4d5a}
+</style>
+</head><body><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.22.1</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
 <div id="home" class="card">
 <h2>Que veux-tu faire ?</h2>
 <p>Crée une nouvelle partie ou rejoins tes amis avec leur code.</p>
@@ -27,9 +43,18 @@
 <div id="play" class="card hide"><div class="row"><b id="rl"></b><b id="gl"></b></div><small id="tl"></small><div id="secret" class="card hide"></div><div id="q" class="q"></div><img id="img" class="img hide"><div id="answers" class="answers"></div><div id="hc" class="hide"><h3>Points manuels</h3><div id="award"></div><br><button onclick="next()">Manche suivante ➜</button></div></div>
 <div id="final" class="card hide"><h1>🏆 Classement final</h1><div id="rank"></div></div></div><script>
 
+function changeImpostorWord(){
+ if(!room||me!==room.host)return;
+ if(confirm("Changer le mot pour TOUS les joueurs ?")) s.emit('rerollImpostor',{code:room.code});
+}
+
 function whoImageFallback(img){
  img.style.display='none';
- const f=img.nextElementSibling;if(f)f.style.display='flex';
+ const f=img.nextElementSibling;if(f){f.style.display='flex';f.textContent='⏳ IMAGE INDISPONIBLE — changement automatique...'}
+ if(me===room?.host){
+   window.__whoRetry=(window.__whoRetry||0)+1;
+   if(window.__whoRetry<=5)setTimeout(()=>s.emit('rerollWho',{code:room.code}),350);
+ }
 }
 
 const s=io(),GL=['Quiz Battle','Tu me connais ?','Majorité','La Bombe',"L’Imposteur",'Duel','Mot interdit','Défi surprise','Trouve l’intrus','Qui est-ce ?'],TL=['Culture générale','Football','Sport','Cinéma & Séries','Anime & Manga','Musique','Jeux vidéo','Dessins animés','Internet & Réseaux','Mathématiques','Images'];let room,me,state,cg=new Set(['Quiz Battle']),ct=new Set(['Culture générale']);
@@ -157,4 +182,17 @@ s.on('bombAnswers',all=>{
  }
 });
 
-render();s.on('allAnswered',()=>{answers.innerHTML='<div class="card">✅ Tout le monde a répondu !<br>Question suivante…</div>'});</script></body></html>
+render();s.on('allAnswered',()=>{answers.innerHTML='<div class="card">✅ Tout le monde a répondu !<br>Question suivante…</div>'});
+s.on('round',x=>{
+ setTimeout(()=>{
+   if(x?.current?.game!=='L’Imposteur' || me!==room?.host)return;
+   const zone=document.getElementById('award');
+   if(!zone || document.getElementById('changeImpostorWordBtn'))return;
+   const wrap=document.createElement('div');
+   wrap.className='card';
+   wrap.innerHTML=`<button id="changeImpostorWordBtn" onclick="changeImpostorWord()" style="font-size:20px;padding:16px 22px;width:100%">🔄 CHANGER LE MOT POUR TOUT LE MONDE</button><p style="margin:10px 0 0">Si quelqu’un ne connaît pas le mot, un nouveau mot est redistribué à tous sans changer de manche.</p>`;
+   zone.prepend(wrap);
+ },80);
+});
+
+</script></body></html>

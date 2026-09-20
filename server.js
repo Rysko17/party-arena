@@ -157,8 +157,13 @@ function makeRound(r,g){
  else if(g==="L’Imposteur"){let z=themedPick(r,'impostor'),w=z.value,ps=Object.values(r.players),imp=ps[Math.floor(Math.random()*ps.length)];r.secret={imp:imp.id,n:w[0],o:w[1]};c={game:g,q:`Thème : ${z.theme} — Décris ton mot sans le dire, puis trouvez l’imposteur !`,theme:z.theme,oral:true}}
  else if(g==='Duel'){let pool=[];for(const t of r.settings.themes||[])for(const x of (DUEL_THEME_BANK[t]||[]))pool.push({t,x});if(!pool.length)for(const [t,a] of Object.entries(DUEL_THEME_BANK))for(const x of a)pool.push({t,x});let av=[...new Set(pool.map(o=>o.t))],tt=chooseTheme(r,'allGames',av),tp=pool.filter(o=>o.t===tt),z=unusedPick(r,'duelTheme:'+tt,tp);c={game:g,q:`Thème ${z.t} — ${z.x}`,oral:true}}
  else if(g==='Mot interdit'){let z=themedPick(r,'taboo'),m=z.value;c={game:g,q:`Thème ${z.theme} — Fais deviner « ${m.word} » sans dire « ${m.forbid} ».`,theme:z.theme,oral:true}}
- else if(g==='Qui est-ce ?'){let available=Object.keys(WHO_BANK).filter(t=>(WHO_BANK[t]||[]).length&&(r.settings.themes||[]).includes(t));if(!available.length)available=Object.keys(WHO_BANK);let t=chooseTheme(r,'allGames',available),w=unusedPick(r,'who:'+t,WHO_BANK[t]);c={game:g,q:`Thème ${t} — Qui est-ce ?`,a:w[1],c:w[1].indexOf(w[0]),image:w[2],theme:t,who:true,points:500}}
- else if(g==='Trouve l’intrus'){let pool=[];for(const t of r.settings.themes||[])for(const x of (THEMED_INTRUDERS_RICH[t]||[]))pool.push({t,x});if(!pool.length)for(const [t,a] of Object.entries(THEMED_INTRUDERS_RICH))for(const x of a)pool.push({t,x});let av=[...new Set(pool.map(o=>o.t))],tt=chooseTheme(r,'allGames',av),tp=pool.filter(o=>o.t===tt),z=unusedPick(r,'intruderRich:'+tt,tp),x=z.x;c={game:g,q:`Thème ${z.t} — Trouve l’intrus`,a:x.slice(0,4),c:x[4],why:x[5],intruder:true,theme:z.t,points:500}}
+ else if(g==='Qui est-ce ?'){
+ let available=Object.keys(WHO_BANK).filter(t=>(WHO_BANK[t]||[]).some(w=>/^https?:\/\//.test(w[2]||''))&&(r.settings.themes||[]).includes(t));
+ if(!available.length)available=Object.keys(WHO_BANK).filter(t=>(WHO_BANK[t]||[]).some(w=>/^https?:\/\//.test(w[2]||'')));
+ let t=chooseTheme(r,'allGames',available),valid=(WHO_BANK[t]||[]).filter(w=>/^https?:\/\//.test(w[2]||''));
+ let w=unusedPick(r,'who:'+t,valid);
+ c={game:g,q:`Thème ${t} — Qui est-ce ?`,a:w[1],c:w[1].indexOf(w[0]),image:w[2],theme:t,who:true,points:500}
+} else if(g==='Trouve l’intrus'){let pool=[];for(const t of r.settings.themes||[])for(const x of (THEMED_INTRUDERS_RICH[t]||[]))pool.push({t,x});if(!pool.length)for(const [t,a] of Object.entries(THEMED_INTRUDERS_RICH))for(const x of a)pool.push({t,x});let av=[...new Set(pool.map(o=>o.t))],tt=chooseTheme(r,'allGames',av),tp=pool.filter(o=>o.t===tt),z=unusedPick(r,'intruderRich:'+tt,tp),x=z.x;c={game:g,q:`Thème ${z.t} — Trouve l’intrus`,a:x.slice(0,4),c:x[4],why:x[5],intruder:true,theme:z.t,points:500}}
  else c={game:g,q:['Imite une célébrité sans parler.','Fais deviner un film en 3 mots.','Donne 5 animaux en 10 secondes.','Fais une imitation choisie par les autres joueurs.','Cite 4 pays en moins de 10 secondes.'][Math.floor(Math.random()*5)],oral:true};
  return c;
 }
