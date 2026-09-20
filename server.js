@@ -18,15 +18,25 @@ function makeRound(r,g){
  ['Quelle est la capitale du Japon ?','Tokyo'],['Combien font 7 × 8 ?','56'],['Quel animal est surnommé le roi de la jungle ?','Lion'],
  ['Quel club joue au Parc des Princes ?','PSG'],['Dans quel manga trouve-t-on Luffy ?','One Piece'],['Quelle planète est la plus proche du Soleil ?','Mercure'],
  ['Qui est le héros principal de Dragon Ball ?','Goku'],['Combien y a-t-il de continents ?','7'],['Quel pays a la forme d’une botte ?','Italie'],
- ['Quel sport pratique Kylian Mbappé ?','Football']][Math.floor(Math.random()*10)];c={game:g,q:d[0],answer:d[1],oral:true}}
+ ['Quel sport pratique Kylian Mbappé ?','Football'],['Quelle est la capitale de l’Italie ?','Rome'],['Qui est le héros de One Piece ?','Luffy'],['Combien font 9 × 9 ?','81'],['Quel Pokémon jaune accompagne Sacha ?','Pikachu'],['Quel est le plus grand océan ?','Pacifique'],['Quel héros est Bruce Wayne ?','Batman'],['Dans Naruto, quel est le village de Naruto ?','Konoha'],['Quel pays a gagné la Coupe du monde 2018 ?','France'],['Quel animal est le plus grand mammifère ?','Baleine bleue'],['Quelle planète est surnommée planète rouge ?','Mars']][Math.floor(Math.random()*20)];c={game:g,q:d[0],answer:d[1],oral:true}}
  else if(g==='Mot interdit'){let m=[['Plage','mer'],['Football','ballon'],['Pizza','fromage'],['TikTok','vidéo'],['Chat','miaou'],['Paris','Eiffel']][Math.floor(Math.random()*6)];c={game:g,q:`Fais deviner « ${m[0]} » sans dire « ${m[1]} ».`,oral:true}}
  else if(g==='Trouve l’intrus'){let sets=[
  {q:'Trouve l’intrus : un seul n’est PAS un animal.',items:[['🐶','Chien'],['🐱','Chat'],['🍎','Pomme'],['🐰','Lapin']],c:2,why:'La pomme n’est pas un animal.'},
  {q:'Trouve l’intrus : un seul n’est PAS un fruit.',items:[['🍎','Pomme'],['🍌','Banane'],['⚽','Ballon'],['🍓','Fraise']],c:2,why:'Le ballon n’est pas un fruit.'},
  {q:'Trouve l’intrus : lequel n’a PAS les cheveux jaunes ?',items:[['👱','Blond 1'],['👱‍♀️','Blond 2'],['👨‍🦰','Roux'],['👱‍♂️','Blond 3']],c:2,why:'Le troisième personnage est roux.'},
  {q:'Trouve l’intrus : un seul n’est PAS un moyen de transport.',items:[['🚗','Voiture'],['✈️','Avion'],['🚲','Vélo'],['🎸','Guitare']],c:3,why:'La guitare n’est pas un moyen de transport.'},
- {q:'Trouve l’intrus : un seul n’est PAS lié au Japon.',items:[['🗾','Japon'],['🍣','Sushi'],['🗼','Tokyo'],['🗽','Statue de la Liberté']],c:3,why:'La Statue de la Liberté est à New York.'}
- ][Math.floor(Math.random()*5)];c={game:g,q:sets.q,a:sets.items.map(x=>x[1]),images:sets.items.map(x=>x[0]),c:sets.c,why:sets.why,intruder:true}}
+ {q:'Trouve l’intrus : un seul n’est PAS lié au Japon.',items:[['🗾','Japon'],['🍣','Sushi'],['🗼','Tokyo'],['🗽','Statue de la Liberté']],c:3,why:'La Statue de la Liberté est à New York.'},
+ {q:'Trouve l’intrus : trois sont des sports avec ballon.',items:[['⚽','Football'],['🏀','Basket'],['🎾','Tennis'],['🏊','Natation']],c:3,why:'La natation ne se joue pas avec un ballon.'},
+ {q:'Trouve l’intrus : trois sont des moyens de transport terrestres.',items:[['🚗','Voiture'],['🚌','Bus'],['🚲','Vélo'],['🚁','Hélicoptère']],c:3,why:'L’hélicoptère vole.'},
+ {q:'Trouve l’intrus : trois sont jaunes.',items:[['🍌','Banane'],['🌞','Soleil'],['⭐','Étoile'],['🍓','Fraise']],c:3,why:'La fraise est rouge.'},
+ {q:'Trouve l’intrus : trois vivent principalement dans l’eau.',items:[['🐟','Poisson'],['🐬','Dauphin'],['🐙','Pieuvre'],['🐘','Éléphant']],c:3,why:'L’éléphant est terrestre.'},
+ {q:'Trouve l’intrus : trois sont associés à la musique.',items:[['🎸','Guitare'],['🎹','Piano'],['🎤','Micro'],['⚽','Ballon']],c:3,why:'Le ballon n’est pas un objet musical.'},
+ {q:'Trouve l’intrus : trois sont des fruits.',items:[['🍉','Pastèque'],['🍇','Raisin'],['🍍','Ananas'],['🥕','Carotte']],c:3,why:'La carotte est un légume.'},
+ {q:'Trouve l’intrus : trois sont des animaux.',items:[['🦁','Lion'],['🐯','Tigre'],['🐻','Ours'],['🚗','Voiture']],c:3,why:'La voiture n’est pas un animal.'},
+ {q:'Trouve l’intrus : trois peuvent voler.',items:[['✈️','Avion'],['🚁','Hélicoptère'],['🦅','Aigle'],['🚂','Train']],c:3,why:'Le train reste au sol.'},
+ {q:'Trouve l’intrus : trois sont des boissons.',items:[['☕','Café'],['🥛','Lait'],['🧃','Jus'],['🍕','Pizza']],c:3,why:'La pizza n’est pas une boisson.'},
+ {q:'Trouve l’intrus : trois sont liés au jeu vidéo.',items:[['🎮','Manette'],['🕹️','Joystick'],['👾','Alien pixel'],['🎻','Violon']],c:3,why:'Le violon est un instrument de musique.'}
+ ][Math.floor(Math.random()*15)];c={game:g,q:sets.q,a:sets.items.map(x=>x[1]),images:sets.items.map(x=>x[0]),c:sets.c,why:sets.why,intruder:true}}
  else c={game:g,q:['Imite une célébrité sans parler.','Fais deviner un film en 3 mots.','Donne 5 animaux en 10 secondes.','Fais une imitation choisie par les autres joueurs.','Cite 4 pays en moins de 10 secondes.'][Math.floor(Math.random()*5)],oral:true};
  return c;
 }
@@ -70,4 +80,4 @@ io.on('connection',s=>{
  s.on('backToSetup',c=>{let r=rooms[c];if(r&&r.host===s.id){r.round=0;r.gameIndex=0;r.gameRound=0;r.state='lobby';io.to(c).emit('backToSetup');emit(r)}});
  s.on('disconnect',()=>{for(const c in rooms){let r=rooms[c];if(r.players[s.id]){delete r.players[s.id];if(!Object.keys(r.players).length)delete rooms[c];else{if(r.host===s.id)r.host=Object.keys(r.players)[0];emit(r)}}}})
 });
-server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.8 lancé'));
+server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.11 lancé'));

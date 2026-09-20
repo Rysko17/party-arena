@@ -29,6 +29,206 @@
         "8"
       ],
       "c": 1
+    },
+    {
+      "q": "Quel est le plus grand océan du monde ?",
+      "a": [
+        "Pacifique",
+        "Atlantique",
+        "Indien",
+        "Arctique"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel gaz les humains respirent-ils principalement pour vivre ?",
+      "a": [
+        "Oxygène",
+        "Hélium",
+        "Hydrogène",
+        "Néon"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Combien de côtés possède un hexagone ?",
+      "a": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Quel est le plus grand mammifère ?",
+      "a": [
+        "Éléphant",
+        "Baleine bleue",
+        "Girafe",
+        "Rhinocéros"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Quelle est la capitale de l’Espagne ?",
+      "a": [
+        "Madrid",
+        "Barcelone",
+        "Séville",
+        "Valence"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel métal a pour symbole Fe ?",
+      "a": [
+        "Fer",
+        "Or",
+        "Argent",
+        "Cuivre"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Combien y a-t-il de minutes dans 2 heures ?",
+      "a": [
+        "100",
+        "110",
+        "120",
+        "140"
+      ],
+      "c": 2
+    },
+    {
+      "q": "Quel continent contient le Brésil ?",
+      "a": [
+        "Europe",
+        "Afrique",
+        "Amérique du Sud",
+        "Asie"
+      ],
+      "c": 2
+    },
+    {
+      "q": "Quel organe pompe le sang ?",
+      "a": [
+        "Poumon",
+        "Cœur",
+        "Foie",
+        "Rein"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Quelle langue est principalement parlée au Brésil ?",
+      "a": [
+        "Espagnol",
+        "Portugais",
+        "Français",
+        "Italien"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Quel est le satellite naturel de la Terre ?",
+      "a": [
+        "Mars",
+        "Lune",
+        "Soleil",
+        "Vénus"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Combien de jours compte une année bissextile ?",
+      "a": [
+        "365",
+        "366",
+        "364",
+        "367"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Quelle est la capitale de l’Italie ?",
+      "a": [
+        "Milan",
+        "Rome",
+        "Naples",
+        "Turin"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Quel animal est le plus rapide sur terre ?",
+      "a": [
+        "Guépard",
+        "Lion",
+        "Cheval",
+        "Loup"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quelle planète possède des anneaux très visibles ?",
+      "a": [
+        "Mars",
+        "Saturne",
+        "Mercure",
+        "Vénus"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Quel pays possède les pyramides de Gizeh ?",
+      "a": [
+        "Égypte",
+        "Maroc",
+        "Mexique",
+        "Inde"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel instrument mesure la température ?",
+      "a": [
+        "Baromètre",
+        "Thermomètre",
+        "Chronomètre",
+        "Altimètre"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Combien font 12 × 12 ?",
+      "a": [
+        "124",
+        "132",
+        "144",
+        "154"
+      ],
+      "c": 2
+    },
+    {
+      "q": "Quel est le plus long fleuve de France ?",
+      "a": [
+        "Loire",
+        "Seine",
+        "Rhône",
+        "Garonne"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quelle couleur obtient-on en mélangeant bleu et jaune ?",
+      "a": [
+        "Orange",
+        "Vert",
+        "Violet",
+        "Rouge"
+      ],
+      "c": 1
     }
   ],
   "Football": [
@@ -61,6 +261,156 @@
         "Set"
       ],
       "c": 0
+    },
+    {
+      "q": "Combien de minutes dure normalement un match sans prolongation ?",
+      "a": [
+        "80",
+        "90",
+        "100",
+        "120"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Quel joueur peut utiliser ses mains dans sa surface ?",
+      "a": [
+        "Défenseur",
+        "Gardien",
+        "Milieu",
+        "Attaquant"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Quel carton signifie une expulsion ?",
+      "a": [
+        "Vert",
+        "Bleu",
+        "Jaune",
+        "Rouge"
+      ],
+      "c": 3
+    },
+    {
+      "q": "Combien vaut un but ?",
+      "a": [
+        "1",
+        "2",
+        "3",
+        "5"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel pays a remporté la Coupe du monde 2018 ?",
+      "a": [
+        "France",
+        "Croatie",
+        "Brésil",
+        "Argentine"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel pays a remporté la Coupe du monde 2022 ?",
+      "a": [
+        "France",
+        "Argentine",
+        "Espagne",
+        "Allemagne"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Dans quel club joue-t-on au Parc des Princes ?",
+      "a": [
+        "OM",
+        "PSG",
+        "OL",
+        "Monaco"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Quel club joue au Santiago Bernabéu ?",
+      "a": [
+        "FC Barcelone",
+        "Real Madrid",
+        "Atlético Madrid",
+        "Séville"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Quel club joue à Anfield ?",
+      "a": [
+        "Chelsea",
+        "Liverpool",
+        "Arsenal",
+        "Everton"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Que signifie VAR ?",
+      "a": [
+        "Assistance vidéo à l’arbitrage",
+        "Vitesse arbitrale rapide",
+        "Validation automatique du résultat",
+        "Vision avancée du referee"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Combien de points rapporte une victoire en championnat ?",
+      "a": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "c": 2
+    },
+    {
+      "q": "Comment appelle-t-on trois buts d’un même joueur dans un match ?",
+      "a": [
+        "Triplé",
+        "Doublé",
+        "Carré",
+        "Grand chelem"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel poste joue principalement devant le but adverse ?",
+      "a": [
+        "Gardien",
+        "Attaquant",
+        "Arbitre",
+        "Défenseur central"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Quelle compétition oppose les meilleures sélections européennes ?",
+      "a": [
+        "Euro",
+        "Copa América",
+        "CAN",
+        "Ligue des champions"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel pays accueille traditionnellement Wembley ?",
+      "a": [
+        "France",
+        "Angleterre",
+        "Italie",
+        "Portugal"
+      ],
+      "c": 1
     }
   ],
   "Cinéma & Séries": [
@@ -81,6 +431,156 @@
         "Finale",
         "Trailer",
         "Remake"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Harry Potter, quelle école fréquente Harry ?",
+      "a": [
+        "Poudlard",
+        "Narnia",
+        "Nevermore",
+        "Xavier"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel super-héros est Bruce Wayne ?",
+      "a": [
+        "Superman",
+        "Batman",
+        "Iron Man",
+        "Thor"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Quel super-héros est Peter Parker ?",
+      "a": [
+        "Spider-Man",
+        "Hulk",
+        "Flash",
+        "Aquaman"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Titanic, comment s’appelle le personnage joué par Leonardo DiCaprio ?",
+      "a": [
+        "Jack",
+        "John",
+        "James",
+        "Jake"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Stranger Things, quelle ville fictive est au centre de l’histoire ?",
+      "a": [
+        "Hawkins",
+        "Riverdale",
+        "Gotham",
+        "Springfield"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel objet permet de filmer une scène ?",
+      "a": [
+        "Caméra",
+        "Micro-ondes",
+        "Projecteur uniquement",
+        "Console"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Star Wars, quelle arme utilisent les Jedi ?",
+      "a": [
+        "Sabre laser",
+        "Arc",
+        "Marteau",
+        "Trident"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel personnage dit souvent « Je s’appelle Groot » ?",
+      "a": [
+        "Rocket",
+        "Groot",
+        "Thanos",
+        "Loki"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Dans Avengers, quel héros manie Mjolnir ?",
+      "a": [
+        "Thor",
+        "Hulk",
+        "Hawkeye",
+        "Ant-Man"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel genre cherche principalement à faire peur ?",
+      "a": [
+        "Comédie",
+        "Horreur",
+        "Documentaire",
+        "Musical"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Comment appelle-t-on la suite d’un film ?",
+      "a": [
+        "Sequel",
+        "Pilote",
+        "Trailer",
+        "Casting"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel métier assemble les plans après le tournage ?",
+      "a": [
+        "Monteur",
+        "Figurant",
+        "Costumier",
+        "Exploitant"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans La Casa de Papel, les braqueurs utilisent des noms de quoi ?",
+      "a": [
+        "Villes",
+        "Animaux",
+        "Planètes",
+        "Couleurs"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel personnage est le capitaine du Black Pearl ?",
+      "a": [
+        "Jack Sparrow",
+        "Indiana Jones",
+        "Rocky",
+        "Neo"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel studio est associé à Toy Story ?",
+      "a": [
+        "Pixar",
+        "HBO",
+        "Netflix",
+        "Paramount+"
       ],
       "c": 0
     }
@@ -105,6 +605,186 @@
         "Serpent"
       ],
       "c": 1
+    },
+    {
+      "q": "Quel est le rêve de Luffy dans One Piece ?",
+      "a": [
+        "Devenir Hokage",
+        "Devenir Roi des Pirates",
+        "Devenir chasseur",
+        "Trouver les Dragon Balls"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Dans Naruto, quel village est celui de Naruto ?",
+      "a": [
+        "Konoha",
+        "Suna",
+        "Kiri",
+        "Ame"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Death Note, comment s’appelle le protagoniste qui trouve le carnet ?",
+      "a": [
+        "Light",
+        "L",
+        "Ryuk",
+        "Near"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Attack on Titan, que combattent principalement les héros ?",
+      "a": [
+        "Titans",
+        "Robots",
+        "Vampires",
+        "Pirates"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Demon Slayer, comment s’appelle le héros principal ?",
+      "a": [
+        "Tanjiro",
+        "Gojo",
+        "Eren",
+        "Edward"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Jujutsu Kaisen, qui est connu pour ses Six Yeux ?",
+      "a": [
+        "Gojo",
+        "Yuji",
+        "Megumi",
+        "Nanami"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Pokémon, quel Pokémon accompagne principalement Sacha ?",
+      "a": [
+        "Pikachu",
+        "Mewtwo",
+        "Dracaufeu",
+        "Évoli"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Bleach, quel est le prénom du héros ?",
+      "a": [
+        "Ichigo",
+        "Itachi",
+        "Inosuke",
+        "Izuku"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans My Hero Academia, quel est le surnom d’Izuku Midoriya ?",
+      "a": [
+        "Deku",
+        "Kira",
+        "Zero",
+        "Ace"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Dragon Ball, de quelle race est Goku ?",
+      "a": [
+        "Saiyan",
+        "Namek",
+        "Titan",
+        "Shinigami"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Hunter x Hunter, quel est le prénom du meilleur ami de Gon ?",
+      "a": [
+        "Killua",
+        "Kurapika",
+        "Leorio",
+        "Hisoka"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Fullmetal Alchemist, quel est le prénom du frère d’Alphonse ?",
+      "a": [
+        "Edward",
+        "Eren",
+        "Erwin",
+        "Envy"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans One Punch Man, comment s’appelle le héros chauve ?",
+      "a": [
+        "Saitama",
+        "Genos",
+        "Garou",
+        "King"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Tokyo Ghoul, quel est le prénom de Kaneki ?",
+      "a": [
+        "Ken",
+        "Ren",
+        "Zen",
+        "Sen"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Chainsaw Man, quel est le prénom du héros ?",
+      "a": [
+        "Denji",
+        "Aki",
+        "Power",
+        "Makima"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Solo Leveling, quel est le nom du héros principal ?",
+      "a": [
+        "Sung Jinwoo",
+        "Tanjiro Kamado",
+        "Yuji Itadori",
+        "Eren Yeager"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Blue Lock, quel sport est au centre de l’histoire ?",
+      "a": [
+        "Basket",
+        "Football",
+        "Tennis",
+        "Boxe"
+      ],
+      "c": 1
+    },
+    {
+      "q": "Dans Haikyuu!!, quel sport est pratiqué ?",
+      "a": [
+        "Volley-ball",
+        "Football",
+        "Baseball",
+        "Rugby"
+      ],
+      "c": 0
     }
   ],
   "Musique": [
@@ -125,6 +805,126 @@
         "Basses par mesure",
         "Boucles par mix",
         "Balance piste/master"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel instrument possède généralement 88 touches ?",
+      "a": [
+        "Piano",
+        "Guitare",
+        "Violon",
+        "Flûte"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel appareil est utilisé par un DJ pour mixer ?",
+      "a": [
+        "Platine/contrôleur",
+        "Télescope",
+        "Scanner",
+        "Imprimante"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Comment appelle-t-on la vitesse d’un morceau ?",
+      "a": [
+        "Tempo",
+        "Pixel",
+        "Cadre",
+        "Filtre"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel instrument possède six cordes dans sa version standard ?",
+      "a": [
+        "Guitare",
+        "Piano",
+        "Trompette",
+        "Batterie"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel terme désigne une chanson sans voix principale ?",
+      "a": [
+        "Instrumental",
+        "Acapella",
+        "Podcast",
+        "Remix vocal"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel format audio est très répandu ?",
+      "a": [
+        "MP3",
+        "PNG",
+        "PDF",
+        "DOCX"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Comment appelle-t-on une nouvelle version d’un morceau créée par un DJ/producteur ?",
+      "a": [
+        "Remix",
+        "Casting",
+        "Episode",
+        "Patch"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel élément donne souvent le rythme principal en rap ?",
+      "a": [
+        "Beat",
+        "Sous-titre",
+        "Storyboard",
+        "Logo"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel instrument fait partie des percussions ?",
+      "a": [
+        "Batterie",
+        "Violon",
+        "Clarinette",
+        "Harpe"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Comment appelle-t-on un album court de quelques titres ?",
+      "a": [
+        "EP",
+        "GPS",
+        "CPU",
+        "DLC"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel terme désigne les paroles d’une chanson ?",
+      "a": [
+        "Lyrics",
+        "Frames",
+        "Layers",
+        "Pixels"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel effet crée une sensation d’espace/écho ?",
+      "a": [
+        "Reverb",
+        "Crop",
+        "Zoom",
+        "Mask"
       ],
       "c": 0
     }
@@ -149,6 +949,156 @@
         "Rails"
       ],
       "c": 0
+    },
+    {
+      "q": "Quel personnage est la mascotte principale de Nintendo ?",
+      "a": [
+        "Mario",
+        "Sonic",
+        "Kratos",
+        "Master Chief"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Minecraft, quel ennemi vert explose ?",
+      "a": [
+        "Creeper",
+        "Zombie",
+        "Enderman",
+        "Squelette"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Fortnite, quel genre domine ?",
+      "a": [
+        "Battle Royale",
+        "Jeu de course uniquement",
+        "Échecs",
+        "Simulation de train"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans GTA V, quelle ville fictive est principale ?",
+      "a": [
+        "Los Santos",
+        "Liberty City",
+        "Vice City",
+        "Night City"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel jeu met en scène Kratos ?",
+      "a": [
+        "God of War",
+        "FIFA",
+        "Minecraft",
+        "Zelda"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel hérisson bleu est une mascotte de Sega ?",
+      "a": [
+        "Sonic",
+        "Tails",
+        "Mario",
+        "Kirby"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans League of Legends, combien de joueurs composent normalement une équipe ?",
+      "a": [
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "c": 2
+    },
+    {
+      "q": "Quel jeu contient le mode Ultimate Team ?",
+      "a": [
+        "EA Sports FC",
+        "Minecraft",
+        "Valorant",
+        "Zelda"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Pokémon, que fait-on principalement avec les Pokémon ?",
+      "a": [
+        "Les capturer et combattre",
+        "Construire des voitures",
+        "Jouer au football uniquement",
+        "Piloter des avions"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel jeu compétitif oppose attaquants et défenseurs avec des agents ?",
+      "a": [
+        "Valorant",
+        "Animal Crossing",
+        "The Sims",
+        "Mario Kart"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel studio est à l’origine de Minecraft ?",
+      "a": [
+        "Mojang",
+        "Rockstar",
+        "Valve",
+        "Ubisoft"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel objet emblématique de Zelda est souvent manié par Link ?",
+      "a": [
+        "Épée",
+        "Fusil laser",
+        "Batte",
+        "Raquette"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Mario Kart, quel objet bleu est célèbre pour viser le premier ?",
+      "a": [
+        "Carapace bleue",
+        "Banane rouge",
+        "Étoile noire",
+        "Champignon violet"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel jeu est centré sur des voitures jouant au football ?",
+      "a": [
+        "Rocket League",
+        "Gran Turismo",
+        "Need for Speed",
+        "Forza"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Among Us, quel rôle élimine secrètement les autres ?",
+      "a": [
+        "Imposteur",
+        "Médecin",
+        "Gardien",
+        "Coach"
+      ],
+      "c": 0
     }
   ],
   "Dessins animés": [
@@ -171,6 +1121,126 @@
         "Scooby"
       ],
       "c": 0
+    },
+    {
+      "q": "Quel animal est Scooby-Doo ?",
+      "a": [
+        "Chien",
+        "Chat",
+        "Cheval",
+        "Ours"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Bob l’éponge, où vit Bob ?",
+      "a": [
+        "Bikini Bottom",
+        "Springfield",
+        "Gotham",
+        "Paris"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel personnage poursuit souvent Bip Bip ?",
+      "a": [
+        "Coyote",
+        "Titi",
+        "Daffy",
+        "Bugs"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel duo est composé d’un chat et d’une souris ?",
+      "a": [
+        "Tom et Jerry",
+        "Tic et Tac",
+        "Phinéas et Ferb",
+        "Rick et Morty"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel personnage vit dans un ananas sous la mer ?",
+      "a": [
+        "Bob l’éponge",
+        "Mickey",
+        "Garfield",
+        "Simba"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel canard Disney porte une marinière bleue ?",
+      "a": [
+        "Donald",
+        "Dingo",
+        "Pluto",
+        "Mickey"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Les Simpson, comment s’appelle le père de famille ?",
+      "a": [
+        "Homer",
+        "Bart",
+        "Ned",
+        "Moe"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel personnage adore les lasagnes ?",
+      "a": [
+        "Garfield",
+        "Snoopy",
+        "Taz",
+        "Stitch"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans Pokémon, quel type de créature est Pikachu ?",
+      "a": [
+        "Pokémon",
+        "Digimon",
+        "Titan",
+        "Saiyan"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel personnage Disney est un lion ?",
+      "a": [
+        "Simba",
+        "Olaf",
+        "Stitch",
+        "Aladdin"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Dans South Park, combien d’enfants forment le groupe principal classique ?",
+      "a": [
+        "4",
+        "2",
+        "6",
+        "8"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel personnage est un ogre vert ?",
+      "a": [
+        "Shrek",
+        "Buzz",
+        "Woody",
+        "Po"
+      ],
+      "c": 0
     }
   ],
   "Internet & Réseaux": [
@@ -191,6 +1261,126 @@
         "Mode sombre",
         "Donnée mobile",
         "Double mention"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel symbole sert à mentionner un compte sur de nombreux réseaux ?",
+      "a": [
+        "@",
+        "#",
+        "€",
+        "&"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Que signifie DM sur les réseaux sociaux ?",
+      "a": [
+        "Message privé",
+        "Mode sombre",
+        "Donnée mobile",
+        "Double média"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel format est souvent utilisé pour une courte vidéo verticale ?",
+      "a": [
+        "9:16",
+        "16:9",
+        "4:3",
+        "21:9"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Comment appelle-t-on un contenu qui se propage très rapidement ?",
+      "a": [
+        "Viral",
+        "Hors-ligne",
+        "Compressé",
+        "Privé"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Que signifie « like » ?",
+      "a": [
+        "J’aime",
+        "Bloquer",
+        "Supprimer",
+        "Télécharger"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel terme désigne une diffusion vidéo en direct ?",
+      "a": [
+        "Live",
+        "Draft",
+        "Cache",
+        "Archive"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Qu’est-ce qu’un hashtag ?",
+      "a": [
+        "Mot-clé précédé de #",
+        "Mot de passe",
+        "Adresse IP",
+        "Filtre audio"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel terme désigne les personnes abonnées à un compte ?",
+      "a": [
+        "Followers/abonnés",
+        "Drivers",
+        "Pixels",
+        "Plugins"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Que signifie « POV » dans beaucoup de vidéos ?",
+      "a": [
+        "Point of view",
+        "Power of video",
+        "Private online voice",
+        "Post original viral"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Quel format est généralement utilisé pour une image compressée ?",
+      "a": [
+        "JPEG",
+        "MP3",
+        "WAV",
+        "EXE"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Qu’est-ce qu’un emoji ?",
+      "a": [
+        "Petit pictogramme numérique",
+        "Type de câble",
+        "Navigateur",
+        "Mot de passe"
+      ],
+      "c": 0
+    },
+    {
+      "q": "Que fait le bouton partager ?",
+      "a": [
+        "Envoie/retransmet le contenu",
+        "Éteint le téléphone",
+        "Change le mot de passe",
+        "Supprime le compte"
       ],
       "c": 0
     }
@@ -261,6 +1451,94 @@
       ],
       "c": 0,
       "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%237d3b12%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23161728%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%8E%AC%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3ECIN%C3%89MA%3C/text%3E%0A%20%20%20%20%3C/svg%3E"
+    },
+    {
+      "q": "Quel monument vois-tu sur cette photo ?",
+      "a": [
+        "Tour Eiffel",
+        "Big Ben",
+        "Colisée",
+        "Sagrada Família"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Tour%20Eiffel%20Wikimedia%20Commons.jpg"
+    },
+    {
+      "q": "Quel monument vois-tu sur cette photo ?",
+      "a": [
+        "Colisée",
+        "Tour Eiffel",
+        "Taj Mahal",
+        "Empire State Building"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Colosseo%202020.jpg"
+    },
+    {
+      "q": "Quel monument vois-tu sur cette photo ?",
+      "a": [
+        "Taj Mahal",
+        "Louvre",
+        "Big Ben",
+        "Arc de Triomphe"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Taj%20Mahal%2C%20Agra%2C%20India%20edit3.jpg"
+    },
+    {
+      "q": "Quel animal vois-tu sur cette photo ?",
+      "a": [
+        "Lion",
+        "Tigre",
+        "Léopard",
+        "Guépard"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Lion%20waiting%20in%20Namibia.jpg"
+    },
+    {
+      "q": "Quel animal vois-tu sur cette photo ?",
+      "a": [
+        "Panda géant",
+        "Ours brun",
+        "Koala",
+        "Panda roux"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Giant%20Panda%202004-03-2.jpg"
+    },
+    {
+      "q": "Quel joueur de football est sur cette photo ?",
+      "a": [
+        "Kylian Mbappé",
+        "Lionel Messi",
+        "Cristiano Ronaldo",
+        "Neymar"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Kylian%20Mbapp%C3%A9%202019.jpg"
+    },
+    {
+      "q": "Quel joueur de football est sur cette photo ?",
+      "a": [
+        "Lionel Messi",
+        "Cristiano Ronaldo",
+        "Zinédine Zidane",
+        "Erling Haaland"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Lionel%20Messi%2020180626.jpg"
+    },
+    {
+      "q": "Quel joueur de football est sur cette photo ?",
+      "a": [
+        "Cristiano Ronaldo",
+        "Karim Benzema",
+        "Luka Modrić",
+        "Sergio Ramos"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Cristiano%20Ronaldo%202018.jpg"
     }
   ]
 }

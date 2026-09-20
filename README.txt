@@ -1,7 +1,15 @@
-PARTY ARENA V5.10
-- La Bombe, Imposteur, Mot interdit et Défi surprise : l'hôte peut maintenant Valider +500 ou Refuser pour chaque joueur.
-- Une manche orale passe à la suivante quand l'hôte a décidé pour tous les joueurs.
-- Duel : vraies questions ajoutées + réponse visible pour l'hôte.
-- Nouveau jeu « Trouve l’intrus » : 4 éléments visuels, il faut cliquer sur l'intrus.
-- Exemples d'intrus : catégorie, couleur/apparence, Japon, objets, animaux, fruits.
-- Les manches par jeu 5/10/15/20 et l'ordre séquentiel sont conservés.
+PARTY ARENA V5.11 — GROS PACK QUESTIONS
+
+Banque Quiz Battle : 151 questions au total.
+Répartition : {'Culture générale': 23, 'Football': 18, 'Cinéma & Séries': 17, 'Anime & Manga': 20, 'Musique': 14, 'Jeux vidéo': 17, 'Dessins animés': 14, 'Internet & Réseaux': 14, 'Images': 14}
+
+Ajouts :
+- Beaucoup plus de questions dans tous les thèmes.
+- Plus de questions Anime/Manga, football, cinéma, jeux vidéo, musique, dessins animés, internet et culture générale.
+- Questions avec vraies photos ajoutées dans Images (monuments, animaux, joueurs de football) via Wikimedia Commons.
+- Trouve l’intrus enrichi avec 15 configurations visuelles.
+- Duel enrichi avec 20 questions orales.
+- Les réglages 5/10/15/20 manches par jeu restent conservés.
+- Les jeux restent joués l’un après l’autre.
+
+Note : les vraies photos Wikimedia nécessitent une connexion Internet côté joueur.
