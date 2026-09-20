@@ -31,7 +31,11 @@ const MAJORITY_BANK=(()=>{
  ['Quel style musical choisissez-vous ?',['Rap','Afro','Pop','R&B']],['Quel climat préférez-vous ?',['Très chaud','Doux','Froid','Neige']],
  ['Quelle plateforme choisissez-vous ?',['Netflix','Disney+','Prime Video','YouTube']],['Quel animal préférez-vous ?',['Chien','Chat','Lion','Dauphin']]
  ]; qs.push(...cats);
- const out=[];for(let n=0;n<10;n++)for(const x of qs)out.push({q:x.q+(n?` — choix ${n+1}`:''),a:[...x.a].sort((a,b)=>(a.charCodeAt(0)+n)%7-(b.charCodeAt(0)+n)%7)});
+ const out=[];for(let n=0;n<10;n++)for(const x of qs){
+ const question=Array.isArray(x)?x[0]:x.q;
+ const choices=Array.isArray(x)?x[1]:x.a;
+ out.push({q:question+(n?` — choix ${n+1}`:''),a:[...choices].sort((a,b)=>(a.charCodeAt(0)+n)%7-(b.charCodeAt(0)+n)%7)});
+}
  return out;
 })();
 const TMC_BANK=(()=>{
