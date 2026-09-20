@@ -179,7 +179,7 @@ function scheduleNextIfAll(r){
  else if(r.current?.a){done=ids.length>0&&ids.every(id=>r.answers?.[id]!=null)}
  if(done){r._advancing=true;io.to(r.code).emit('allAnswered');setTimeout(()=>next(r),1100)}
 }
-io.on('connection',s=>{
+io.on('connection',socket=>{
 
  socket.on('rerollImpostor',({code}={})=>{
    const r=rooms[code]; if(!r||r.host!==socket.id||!r.current||r.current.game!=="L’Imposteur")return;
