@@ -22,7 +22,7 @@ s.on('answerFeedback',d=>{
 #answerFlash.good .feedbackBox{outline:6px solid #35d07f}
 #answerFlash.bad .feedbackBox{outline:6px solid #ff4d5a}
 </style>
-</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.24</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
+</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.24.1</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
 <div id="home" class="card">
 <h2>Que veux-tu faire ?</h2>
 <p>Crée une nouvelle partie ou rejoins tes amis avec leur code.</p>
@@ -44,18 +44,13 @@ s.on('answerFeedback',d=>{
 <div id="final" class="card hide"><h1>🏆 Classement final</h1><div id="rank"></div></div></div><script>
 
 function changeImpostorWord(){
- if(!room||me!==room.host)return;
- if(confirm("Changer le mot pour TOUS les joueurs ?")) s.emit('rerollImpostor',{code:room.code});
+ if(!room||me!==state?.host)return;
+ if(confirm("Changer le mot pour TOUS les joueurs ?")) s.emit('rerollImpostor',{code:room});
 }
 
 function whoImageFallback(img){
  img.style.display='none';
  const f=img.nextElementSibling;if(f){f.style.display='flex';f.textContent='⚠️ IMAGE LOCALE MANQUANTE'}
-}
- if(me===room?.host){
-   window.__whoRetry=(window.__whoRetry||0)+1;
-   if(window.__whoRetry<=5)setTimeout(()=>s.emit('rerollWho',{code:room.code}),350);
- }
 }
 
 const s=io(),GL=['Quiz Battle','Tu me connais ?','Majorité','La Bombe',"L’Imposteur",'Duel','Mot interdit','Défi surprise','Trouve l’intrus','Qui est-ce ?'],TL=['Culture générale','Football','Sport','Cinéma & Séries','Anime & Manga','Musique','Jeux vidéo','Dessins animés','Internet & Réseaux','Mathématiques','Images'];let room,me,state,cg=new Set(['Quiz Battle']),ct=new Set(['Culture générale']);
@@ -140,7 +135,7 @@ function next(){s.emit('next',room)}function answer(i){s.emit('answer',{code:roo
 s.on('connect',()=>me=s.id);s.on('room',r=>{state=r;players.innerHTML=r.players.map(p=>`<span class="pill">${p.name} · ${p.score}</span> `).join('');let h=r.host===me;setup.classList.toggle('hide',!h);wait.classList.toggle('hide',h);if(h){cg=new Set(r.settings.games);ct=new Set(r.settings.themes);gameRounds={...(r.settings.gameRounds||{})};render()}});
 s.on('round',x=>{
 const jb=[...document.querySelectorAll('button')].find(b=>b.textContent==='Lancement…');if(jb){jb.disabled=false;jb.textContent='▶ JOUER'};lobby.classList.add('hide');play.classList.remove('hide');secret.classList.add('hide');rl.textContent=`${x.current.game} — Manche ${x.gameRound}/${x.gameTotal}`;gl.textContent=x.current.game;tl.textContent=x.current.theme||'';q.innerHTML=(x.current.q||'')+(x.current.difficulty?` <span class="pill">🎯 ${x.current.difficulty.toUpperCase()} • ${x.current.points} pts</span>`:'');
-if(x.current.game==='Qui est-ce ?' && me===room.host){award.innerHTML=`<button onclick="s.emit('rerollWho',{code:room.code})">🔄 CHANGER L’IMAGE / QUESTION</button>`;}
+if(x.current.game==='Qui est-ce ?' && me===room.host){award.innerHTML=`<button onclick="s.emit('rerollWho',{code:room})">🔄 CHANGER L’IMAGE / QUESTION</button>`;}
 if(x.current.typedBomb){
  answers.innerHTML=`<div class="card"><h2>💣 LA BOMBE — ${x.current.theme||''}</h2><p>${x.current.q}</p><input id="bombInput" type="text" autocomplete="off" maxlength="80" placeholder="ÉCRIS TA RÉPONSE ICI..." style="display:block;width:100%;box-sizing:border-box;padding:18px;margin:16px 0;font-size:20px;border:2px solid #fff;border-radius:14px;background:#fff;color:#111"><button id="bombSend" onclick="sendBomb()">📨 ENVOYER</button><div id="bombStatus"></div></div>`;
  award.innerHTML=me===room.host?'<div class="card"><h3>👑 Validation des réponses</h3><div id="bombReview">En attente...</div></div>':'';
@@ -161,14 +156,14 @@ s.on('gameRanking',x=>{
 s.on('duelResult',x=>{alert(x.stolen?`⚡ ${x.winner} gagne et vole ${x.stolen} points !`:`👑 ${x.winner} gagne : le classement reste inchangé.`)});
 
 
-function rerollImpostor(){if(confirm('Changer le mot pour tout le monde ?'))s.emit('rerollImpostor',{code:room.code})}
+function rerollImpostor(){if(confirm('Changer le mot pour tout le monde ?'))s.emit('rerollImpostor',{code:room})}
 function sendBomb(){
  const i=document.getElementById('bombInput');if(!i||!i.value.trim())return;
  s.emit('bombAnswer',{code:room.code,text:i.value.trim()});i.disabled=true;
  const b=i.nextElementSibling;if(b)b.disabled=true;
  document.getElementById('bombStatus').innerHTML='<p>⏳ Réponse envoyée. L’hôte doit la valider.</p>';
 }
-function bombDecision(id,accept){s.emit('bombDecision',{code:room.code,playerId:id,accept})}
+function bombDecision(id,accept){s.emit('bombDecision',{code:room,playerId:id,accept})}
 s.on('bombAnswers',all=>{
  const mine=all[me],st=document.getElementById('bombStatus');
  if(st&&mine)st.innerHTML=`<p>${mine.status==='pending'?'⏳ En attente de validation':mine.status==='accepted'?'✅ +500 points':'❌ Réponse refusée'}</p>`;
@@ -190,9 +185,9 @@ render();s.on('allAnswered',()=>{answers.innerHTML='<div class="card">✅ Tout l
 function renderPersistentHostControls(x){
  const z=document.getElementById('persistentHostControls'); if(!z)return;
  z.innerHTML='';
- if(me!==room?.host)return;
+ if(me!==state?.host)return;
  if(x?.current?.game==='Qui est-ce ?'){
-   z.innerHTML=`<div class="card" style="margin:12px auto;max-width:900px"><button onclick="s.emit('rerollWho',{code:room.code})" style="width:100%;padding:14px">🔄 IMAGE SUIVANTE / AUTRE QUESTION</button></div>`;
+   z.innerHTML=`<div class="card" style="margin:12px auto;max-width:900px"><button onclick="s.emit('rerollWho',{code:room})" style="width:100%;padding:14px">🔄 IMAGE SUIVANTE / AUTRE QUESTION</button></div>`;
  }
  if(x?.current?.game==='L’Imposteur'){
    z.innerHTML=`<div class="card" style="margin:12px auto;max-width:900px">
@@ -204,13 +199,13 @@ s.on('round',x=>setTimeout(()=>renderPersistentHostControls(x),20));
 
 
 s.on('bombAnswers',data=>{
- if(me!==room?.host)return;
+ if(me!==state?.host)return;
  const z=document.getElementById('persistentHostControls'); if(!z)return;
  const rows=Object.values(data||{}).map(a=>{
    const status=a.status||a.decision||'pending';
    return `<div class="card" style="margin:8px 0"><b>${a.name||a.pseudo||'Joueur'}</b><div style="font-size:20px;margin:8px 0">${a.answer||a.text||'—'}</div>
-   ${status==='pending'?`<button onclick="s.emit('bombDecision',{code:room.code,playerId:'${a.id}',accept:true})">✅ VALIDER +500</button>
-   <button onclick="s.emit('bombDecision',{code:room.code,playerId:'${a.id}',accept:false})">❌ REFUSER</button>`:`<b>${status==='accepted'||status===true?'✅ Validé':'❌ Refusé'}</b>`}</div>`;
+   ${status==='pending'?`<button onclick="s.emit('bombDecision',{code:room,playerId:'${a.id}',accept:true})">✅ VALIDER +500</button>
+   <button onclick="s.emit('bombDecision',{code:room,playerId:'${a.id}',accept:false})">❌ REFUSER</button>`:`<b>${status==='accepted'||status===true?'✅ Validé':'❌ Refusé'}</b>`}</div>`;
  }).join('');
  z.innerHTML=`<div class="card" style="max-width:900px;margin:12px auto"><h3>💣 Validation des réponses</h3>${rows}</div>`;
 });

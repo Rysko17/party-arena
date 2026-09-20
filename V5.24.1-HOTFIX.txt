@@ -1,0 +1,9 @@
+PARTY ARENA V5.24.1
+HOTFIX CRITIQUE :
+- Corrige une erreur JavaScript dans index.html qui empêchait le client de démarrer correctement et donc de lancer une partie.
+- Corrige aussi les contrôles hôte qui utilisaient room comme objet alors que room contient le code de partie.
+- Bouton Imposteur et reroll Qui est-ce utilisent maintenant le bon code de salle.
+- Banque locale Qui est-ce V5.24 conservée.
+VALIDATIONS :
+- server.js : node --check OK
+- JavaScript navigateur extrait de index.html : node --check OK
