@@ -1,12 +1,10 @@
-PARTY ARENA V5.5 — CORRECTIF ACCUEIL
+PARTY ARENA V5.6 — LOBBY FIX
 
-Correction importante :
-- Les boutons « Créer une partie » et « Rejoindre une partie » fonctionnent.
-- Le pseudo est obligatoire.
-- Le code n'apparaît que dans « Rejoindre ».
-- Conservation du choix jeux/thèmes et du passage automatique après les réponses.
-- Conservation des correctifs de « Tu me connais ? ».
+- Correction de la sélection des thèmes et des jeux.
+- Les cartes sont cliquables avec une sélection visuelle.
+- Suppression du bouton « Enregistrer ».
+- Un seul bouton « ▶ JOUER » : il valide, enregistre automatiquement la configuration puis lance la partie.
+- Au moins un jeu et un thème sont obligatoires.
+- Les correctifs précédents sont conservés : accueil, pseudo obligatoire, Tu me connais ?, images, passage automatique.
 
-Mise à jour :
-Remplace sur GitHub les fichiers par ceux de cette version, puis Commit changes.
-Render redéploiera automatiquement.
+Remplace les fichiers GitHub par ceux-ci puis Commit changes. Render Auto-Deploy fera la mise à jour.
