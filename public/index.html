@@ -22,7 +22,7 @@ s.on('answerFeedback',d=>{
 #answerFlash.good .feedbackBox{outline:6px solid #35d07f}
 #answerFlash.bad .feedbackBox{outline:6px solid #ff4d5a}
 </style>
-</head><body><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.22.1</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
+</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.24</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
 <div id="home" class="card">
 <h2>Que veux-tu faire ?</h2>
 <p>Crée une nouvelle partie ou rejoins tes amis avec leur code.</p>
@@ -50,7 +50,8 @@ function changeImpostorWord(){
 
 function whoImageFallback(img){
  img.style.display='none';
- const f=img.nextElementSibling;if(f){f.style.display='flex';f.textContent='⏳ IMAGE INDISPONIBLE — changement automatique...'}
+ const f=img.nextElementSibling;if(f){f.style.display='flex';f.textContent='⚠️ IMAGE LOCALE MANQUANTE'}
+}
  if(me===room?.host){
    window.__whoRetry=(window.__whoRetry||0)+1;
    if(window.__whoRetry<=5)setTimeout(()=>s.emit('rerollWho',{code:room.code}),350);
@@ -183,16 +184,35 @@ s.on('bombAnswers',all=>{
 });
 
 render();s.on('allAnswered',()=>{answers.innerHTML='<div class="card">✅ Tout le monde a répondu !<br>Question suivante…</div>'});
-s.on('round',x=>{
- setTimeout(()=>{
-   if(x?.current?.game!=='L’Imposteur' || me!==room?.host)return;
-   const zone=document.getElementById('award');
-   if(!zone || document.getElementById('changeImpostorWordBtn'))return;
-   const wrap=document.createElement('div');
-   wrap.className='card';
-   wrap.innerHTML=`<button id="changeImpostorWordBtn" onclick="changeImpostorWord()" style="font-size:20px;padding:16px 22px;width:100%">🔄 CHANGER LE MOT POUR TOUT LE MONDE</button><p style="margin:10px 0 0">Si quelqu’un ne connaît pas le mot, un nouveau mot est redistribué à tous sans changer de manche.</p>`;
-   zone.prepend(wrap);
- },80);
+
+
+
+function renderPersistentHostControls(x){
+ const z=document.getElementById('persistentHostControls'); if(!z)return;
+ z.innerHTML='';
+ if(me!==room?.host)return;
+ if(x?.current?.game==='Qui est-ce ?'){
+   z.innerHTML=`<div class="card" style="margin:12px auto;max-width:900px"><button onclick="s.emit('rerollWho',{code:room.code})" style="width:100%;padding:14px">🔄 IMAGE SUIVANTE / AUTRE QUESTION</button></div>`;
+ }
+ if(x?.current?.game==='L’Imposteur'){
+   z.innerHTML=`<div class="card" style="margin:12px auto;max-width:900px">
+   <button id="changeImpostorWordBtn" onclick="changeImpostorWord()" style="font-size:20px;padding:16px 22px;width:100%">🔄 CHANGER LE MOT POUR TOUT LE MONDE</button>
+   <p style="margin:8px 0 0">Si quelqu’un ne connaît pas le mot, redistribue une nouvelle paire à tous.</p></div>`;
+ }
+}
+s.on('round',x=>setTimeout(()=>renderPersistentHostControls(x),20));
+
+
+s.on('bombAnswers',data=>{
+ if(me!==room?.host)return;
+ const z=document.getElementById('persistentHostControls'); if(!z)return;
+ const rows=Object.values(data||{}).map(a=>{
+   const status=a.status||a.decision||'pending';
+   return `<div class="card" style="margin:8px 0"><b>${a.name||a.pseudo||'Joueur'}</b><div style="font-size:20px;margin:8px 0">${a.answer||a.text||'—'}</div>
+   ${status==='pending'?`<button onclick="s.emit('bombDecision',{code:room.code,playerId:'${a.id}',accept:true})">✅ VALIDER +500</button>
+   <button onclick="s.emit('bombDecision',{code:room.code,playerId:'${a.id}',accept:false})">❌ REFUSER</button>`:`<b>${status==='accepted'||status===true?'✅ Validé':'❌ Refusé'}</b>`}</div>`;
+ }).join('');
+ z.innerHTML=`<div class="card" style="max-width:900px;margin:12px auto"><h3>💣 Validation des réponses</h3>${rows}</div>`;
 });
 
 </script></body></html>

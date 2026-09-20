@@ -1,0 +1,9 @@
+PARTY ARENA V5.24 — BANQUE QUI EST-CE LOCALE
+- 76 images/cartes visuelles sont maintenant stockées directement dans le projet.
+- Aucun lien externe n'est utilisé par la nouvelle banque Qui est-ce.
+- Les images fonctionnent donc même si Wikimedia, un site d'anime ou un autre hébergeur change son URL.
+- Thèmes couverts : Football, Sport, Anime & Manga, Cinéma & Séries, Jeux vidéo, Culture générale, Musique, Dessins animés, Internet & Réseaux, Mathématiques.
+- Chaque question garde 4 choix.
+- Les cartes locales utilisent des indices visuels et ne montrent jamais le nom de la bonne réponse.
+- Le bouton « IMAGE SUIVANTE / AUTRE QUESTION » reste disponible.
+- server.js validé avec Node --check.

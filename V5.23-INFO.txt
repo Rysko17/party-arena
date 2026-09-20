@@ -1,0 +1,7 @@
+PARTY ARENA V5.23
+- IMPOSTEUR : bouton hôte persistant « CHANGER LE MOT POUR TOUT LE MONDE », placé hors de la zone qui était réécrite par les contrôles oraux.
+- LA BOMBE : panneau hôte persistant de validation/refus des réponses.
+- TROUVE L'INTRUS : nouvelle banque massive, 80 manches par thème pour 10 thèmes + exemples Anime faits à la main avec critères explicites.
+- QUI EST-CE : bouton hôte persistant « IMAGE SUIVANTE / AUTRE QUESTION » quand une image externe échoue.
+- Les images Qui est-ce externes ne peuvent pas être garanties à 100 %. Le correctif évite de rester bloqué sur une image cassée.
+- server.js validé avec Node --check.
