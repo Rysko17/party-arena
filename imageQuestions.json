@@ -1,0 +1,26 @@
+[
+  {
+    "theme": "Images",
+    "q": "Quel animal vois-tu sur cette image ?",
+    "a": [
+      "Chat",
+      "Chien",
+      "Lion",
+      "Lapin"
+    ],
+    "c": 0,
+    "image": "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='450'%3E%3Crect width='100%25' height='100%25' fill='%23eee'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle' font-size='180'%3E🐱%3C/text%3E%3C/svg%3E"
+  },
+  {
+    "theme": "Images",
+    "q": "Quel sport est représenté ?",
+    "a": [
+      "Football",
+      "Basket",
+      "Tennis",
+      "Boxe"
+    ],
+    "c": 0,
+    "image": "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='450'%3E%3Crect width='100%25' height='100%25' fill='%23eee'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle' font-size='180'%3E⚽%3C/text%3E%3C/svg%3E"
+  }
+]

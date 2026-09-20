@@ -1,10 +1,11 @@
-PARTY ARENA V5.6 — LOBBY FIX
+PARTY ARENA V5.7 — PARTIES STRUCTURÉES
 
-- Correction de la sélection des thèmes et des jeux.
-- Les cartes sont cliquables avec une sélection visuelle.
-- Suppression du bouton « Enregistrer ».
-- Un seul bouton « ▶ JOUER » : il valide, enregistre automatiquement la configuration puis lance la partie.
-- Au moins un jeu et un thème sont obligatoires.
-- Les correctifs précédents sont conservés : accueil, pseudo obligatoire, Tu me connais ?, images, passage automatique.
+Demandes intégrées :
+- 5 / 10 / 15 / 20 manches PAR JEU.
+- Les jeux ne doivent plus être mélangés : jeu 1 jusqu'à sa dernière manche, puis jeu 2, etc.
+- Fin de partie : Recommencer avec les mêmes réglages OU revenir changer jeux/thèmes.
+- Base de questions images locale ajoutée (pas de dépendance à des liens d'images externes).
+- Pour les jeux à réponse orale : système prévu pour que l'hôte valide ou refuse le point.
+- Les correctifs précédents restent présents.
 
-Remplace les fichiers GitHub par ceux-ci puis Commit changes. Render Auto-Deploy fera la mise à jour.
+Déploiement : remplace les fichiers du dépôt GitHub par cette version, Commit changes, puis attends le redéploiement Render.
