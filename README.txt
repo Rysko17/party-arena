@@ -1,14 +1,18 @@
-PARTY ARENA V5.12 — DIFFICULTÉ + MATHS + CONTENU
+PARTY ARENA V5.13 — VARIÉTÉ + IMAGES + DUEL DE CLASSEMENT
 
-- Nouveau thème : Mathématiques (30 questions).
-- Difficulté Quiz : SIMPLE = 250 pts, MOYEN = 500 pts, DUR = 1000 pts.
-- Badge difficulté + points affiché sur la question.
-- Tu me connais ? : 20 questions différentes.
-- Majorité : 25 questions différentes.
-- Les images de questions sont maintenant affichées au-dessus des réponses.
-- Banque Quiz Battle : 181 questions.
-- Répartition : {'Culture générale': 23, 'Football': 18, 'Cinéma & Séries': 17, 'Anime & Manga': 20, 'Musique': 14, 'Jeux vidéo': 17, 'Dessins animés': 14, 'Internet & Réseaux': 14, 'Images': 14, 'Mathématiques': 30}
-- Le moteur 5/10/15/20 manches par jeu est conservé.
-- Les jeux restent séquentiels.
+- Majorité : 4 choix par question, avec célébrités, anime, films et jeux vidéo.
+- Majorité : banque générée de plus de 200 variantes.
+- Tu me connais ? : banque de 200 variantes, avec personnages/célébrités.
+- Anti-répétition : une question utilisée est mémorisée pendant toute la partie et n'est pas reproposée tant que la banque n'est pas épuisée.
+- La Bombe : banque de 200 défis.
+- Quiz : banque actuelle 237 questions, avec anti-répétition.
+- Images : vraies images réutilisables Wikimedia Commons ajoutées, dont Ichigo Kurosaki, Luffy, Mario, monuments et animaux.
+- Les images apparaissent aussi dans leurs thèmes correspondants.
+- FIN DE CHAQUE JEU : classement complet affiché.
+- Puis duel 1 manche entre le PREMIER et le DERNIER.
+- Si le dernier répond juste en premier : il vole 500 points au premier.
+- Si le premier gagne : aucun score n'est modifié.
+- Ensuite seulement le jeu suivant commence.
+- 5/10/15/20 manches par jeu conservées.
 
-Pour les personnages d'anime/films/séries, la structure d'affichage est maintenant prête pour recevoir des images licenciées/stables sans modifier le moteur du jeu.
+IMPORTANT : les photos Wikimedia sont chargées depuis Internet. Les fichiers Commons utilisés ont des pages de licence publiques.

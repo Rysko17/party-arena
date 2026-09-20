@@ -252,6 +252,511 @@
       ],
       "c": 1,
       "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Allemagne ?",
+      "a": [
+        "Berlin",
+        "Paris",
+        "Rome",
+        "Madrid"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Portugal ?",
+      "a": [
+        "Paris",
+        "Rome",
+        "Madrid",
+        "Lisbonne"
+      ],
+      "c": 3,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Belgique ?",
+      "a": [
+        "Rome",
+        "Madrid",
+        "Bruxelles",
+        "Paris"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Pays-Bas ?",
+      "a": [
+        "Madrid",
+        "Amsterdam",
+        "Paris",
+        "Rome"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Grèce ?",
+      "a": [
+        "Athènes",
+        "Paris",
+        "Rome",
+        "Madrid"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Irlande ?",
+      "a": [
+        "Paris",
+        "Rome",
+        "Madrid",
+        "Dublin"
+      ],
+      "c": 3,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Autriche ?",
+      "a": [
+        "Rome",
+        "Madrid",
+        "Vienne",
+        "Paris"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Suisse ?",
+      "a": [
+        "Madrid",
+        "Berne",
+        "Paris",
+        "Rome"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Suède ?",
+      "a": [
+        "Stockholm",
+        "Paris",
+        "Rome",
+        "Madrid"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Norvège ?",
+      "a": [
+        "Paris",
+        "Rome",
+        "Madrid",
+        "Oslo"
+      ],
+      "c": 3,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Danemark ?",
+      "a": [
+        "Rome",
+        "Madrid",
+        "Copenhague",
+        "Paris"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Finlande ?",
+      "a": [
+        "Madrid",
+        "Helsinki",
+        "Paris",
+        "Rome"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Pologne ?",
+      "a": [
+        "Varsovie",
+        "Paris",
+        "Rome",
+        "Madrid"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Canada ?",
+      "a": [
+        "Paris",
+        "Rome",
+        "Madrid",
+        "Ottawa"
+      ],
+      "c": 3,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Australie ?",
+      "a": [
+        "Rome",
+        "Madrid",
+        "Canberra",
+        "Paris"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Japon ?",
+      "a": [
+        "Madrid",
+        "Tokyo",
+        "Paris",
+        "Rome"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Corée du Sud ?",
+      "a": [
+        "Séoul",
+        "Paris",
+        "Rome",
+        "Madrid"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Argentine ?",
+      "a": [
+        "Paris",
+        "Rome",
+        "Madrid",
+        "Buenos Aires"
+      ],
+      "c": 3,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Mexique ?",
+      "a": [
+        "Rome",
+        "Madrid",
+        "Mexico",
+        "Paris"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Thaïlande ?",
+      "a": [
+        "Madrid",
+        "Bangkok",
+        "Paris",
+        "Rome"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 2 × 2 ?",
+      "a": [
+        "4",
+        "6",
+        "2",
+        "6"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 3 × 3 ?",
+      "a": [
+        "9",
+        "12",
+        "6",
+        "11"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 4 × 4 ?",
+      "a": [
+        "16",
+        "20",
+        "12",
+        "18"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 5 × 5 ?",
+      "a": [
+        "25",
+        "30",
+        "20",
+        "27"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 6 × 6 ?",
+      "a": [
+        "36",
+        "42",
+        "30",
+        "38"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 7 × 7 ?",
+      "a": [
+        "49",
+        "56",
+        "42",
+        "51"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 8 × 8 ?",
+      "a": [
+        "64",
+        "72",
+        "56",
+        "66"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 9 × 9 ?",
+      "a": [
+        "81",
+        "90",
+        "72",
+        "83"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 10 × 10 ?",
+      "a": [
+        "100",
+        "110",
+        "90",
+        "102"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 11 × 11 ?",
+      "a": [
+        "121",
+        "132",
+        "110",
+        "123"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 12 × 12 ?",
+      "a": [
+        "144",
+        "156",
+        "132",
+        "146"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 13 × 13 ?",
+      "a": [
+        "169",
+        "182",
+        "156",
+        "171"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 14 × 14 ?",
+      "a": [
+        "196",
+        "210",
+        "182",
+        "198"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 15 × 15 ?",
+      "a": [
+        "225",
+        "240",
+        "210",
+        "227"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 16 × 16 ?",
+      "a": [
+        "256",
+        "272",
+        "240",
+        "258"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 17 × 17 ?",
+      "a": [
+        "289",
+        "306",
+        "272",
+        "291"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 18 × 18 ?",
+      "a": [
+        "324",
+        "342",
+        "306",
+        "326"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 19 × 19 ?",
+      "a": [
+        "361",
+        "380",
+        "342",
+        "363"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 20 × 20 ?",
+      "a": [
+        "400",
+        "420",
+        "380",
+        "402"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 21 × 21 ?",
+      "a": [
+        "441",
+        "462",
+        "420",
+        "443"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel monument apparaît sur cette image ?",
+      "a": [
+        "Tour Eiffel",
+        "Colisée",
+        "Big Ben",
+        "Taj Mahal"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Tour%20Eiffel%20Wikimedia%20Commons.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Culture générale"
+    },
+    {
+      "q": "Quel monument apparaît sur cette image ?",
+      "a": [
+        "Colisée",
+        "Tour Eiffel",
+        "Pyramides de Gizeh",
+        "Sagrada Família"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Colosseo%202020.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Culture générale"
+    },
+    {
+      "q": "Quel monument apparaît sur cette image ?",
+      "a": [
+        "Taj Mahal",
+        "Louvre",
+        "Big Ben",
+        "Arc de Triomphe"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Taj%20Mahal%2C%20Agra%2C%20India%20edit3.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Culture générale"
+    },
+    {
+      "q": "Quel animal apparaît sur cette image ?",
+      "a": [
+        "Lion",
+        "Tigre",
+        "Guépard",
+        "Léopard"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Lion%20waiting%20in%20Namibia.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Culture générale"
+    },
+    {
+      "q": "Quel animal apparaît sur cette image ?",
+      "a": [
+        "Panda géant",
+        "Koala",
+        "Ours brun",
+        "Panda roux"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Giant%20Panda%202004-03-2.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Culture générale"
     }
   ],
   "Football": [
@@ -863,6 +1368,32 @@
       ],
       "c": 0,
       "difficulty": "dur"
+    },
+    {
+      "q": "Quel personnage est représenté par ce cosplay ?",
+      "a": [
+        "Ichigo Kurosaki",
+        "Naruto Uzumaki",
+        "Monkey D. Luffy",
+        "Goku"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Ichigo%20kurosaki%20cosplay.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Anime & Manga"
+    },
+    {
+      "q": "Quel personnage est représenté par ce cosplay ?",
+      "a": [
+        "Monkey D. Luffy",
+        "Ichigo Kurosaki",
+        "Sasuke Uchiha",
+        "Saitama"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Cosplay%20of%20Monkey%20D.%20Luffy.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Anime & Manga"
     }
   ],
   "Musique": [
@@ -1208,6 +1739,19 @@
       ],
       "c": 0,
       "difficulty": "simple"
+    },
+    {
+      "q": "Quel personnage de jeu vidéo ce costume représente-t-il ?",
+      "a": [
+        "Mario",
+        "Sonic",
+        "Link",
+        "Kratos"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/50%20mario.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Jeux vidéo"
     }
   ],
   "Dessins animés": [
@@ -1690,6 +2234,110 @@
       "c": 0,
       "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Cristiano%20Ronaldo%202018.jpg",
       "difficulty": "moyen"
+    },
+    {
+      "q": "Quel personnage est représenté par ce cosplay ?",
+      "a": [
+        "Ichigo Kurosaki",
+        "Naruto Uzumaki",
+        "Monkey D. Luffy",
+        "Goku"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Ichigo%20kurosaki%20cosplay.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Anime & Manga"
+    },
+    {
+      "q": "Quel personnage est représenté par ce cosplay ?",
+      "a": [
+        "Monkey D. Luffy",
+        "Ichigo Kurosaki",
+        "Sasuke Uchiha",
+        "Saitama"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Cosplay%20of%20Monkey%20D.%20Luffy.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Anime & Manga"
+    },
+    {
+      "q": "Quel personnage de jeu vidéo ce costume représente-t-il ?",
+      "a": [
+        "Mario",
+        "Sonic",
+        "Link",
+        "Kratos"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/50%20mario.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Jeux vidéo"
+    },
+    {
+      "q": "Quel monument apparaît sur cette image ?",
+      "a": [
+        "Tour Eiffel",
+        "Colisée",
+        "Big Ben",
+        "Taj Mahal"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Tour%20Eiffel%20Wikimedia%20Commons.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Culture générale"
+    },
+    {
+      "q": "Quel monument apparaît sur cette image ?",
+      "a": [
+        "Colisée",
+        "Tour Eiffel",
+        "Pyramides de Gizeh",
+        "Sagrada Família"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Colosseo%202020.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Culture générale"
+    },
+    {
+      "q": "Quel monument apparaît sur cette image ?",
+      "a": [
+        "Taj Mahal",
+        "Louvre",
+        "Big Ben",
+        "Arc de Triomphe"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Taj%20Mahal%2C%20Agra%2C%20India%20edit3.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Culture générale"
+    },
+    {
+      "q": "Quel animal apparaît sur cette image ?",
+      "a": [
+        "Lion",
+        "Tigre",
+        "Guépard",
+        "Léopard"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Lion%20waiting%20in%20Namibia.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Culture générale"
+    },
+    {
+      "q": "Quel animal apparaît sur cette image ?",
+      "a": [
+        "Panda géant",
+        "Koala",
+        "Ours brun",
+        "Panda roux"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Giant%20Panda%202004-03-2.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Culture générale"
     }
   ],
   "Mathématiques": [
