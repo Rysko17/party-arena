@@ -12,11 +12,22 @@ function makeRound(r,g){
  if(g==='Quiz Battle'){let x=question(r);c={game:g,q:x.q,a:x.a,c:x.c,image:x.image||null,theme:x.theme}}
  else if(g==='Tu me connais ?'){let ps=Object.values(r.players),target=ps[(r.gameRound-1)%ps.length];r.secretChoice=null;r.guesses={};c={game:g,phase:'choose',target:target.id,targetName:target.name,q:'Quel univers préfères-tu ?',a:['Musique','Films/Séries','Jeux vidéo','Voyage']}}
  else if(g==='Majorité')c={game:g,q:['Soirée maison ou sortie ?','Sucré ou salé ?','Film ou série ?'][Math.floor(Math.random()*3)],a:['Choix A','Choix B']};
- else if(g==='La Bombe')c={game:g,q:'Donne '+['un rappeur français','un anime','un club de football','un jeu vidéo'][Math.floor(Math.random()*4)]+' avant la fin !',oral:true};
- else if(g==="L’Imposteur"){let w=[['Pizza','Burger'],['Paris','Londres'],['Naruto','One Piece'],['Football','Basket']][Math.floor(Math.random()*4)],ps=Object.values(r.players),imp=ps[Math.floor(Math.random()*ps.length)];r.secret={imp:imp.id,n:w[0],o:w[1]};c={game:g,q:"Décris ton mot sans le dire, puis trouvez l’imposteur !",oral:true}}
- else if(g==='Duel')c={game:g,q:'Duel éclair : le premier à donner la bonne réponse à l’oral gagne.',oral:true};
- else if(g==='Mot interdit')c={game:g,q:'Fais deviner « Plage » sans dire « mer ».',oral:true};
- else c={game:g,q:['Imite une célébrité sans parler.','Fais deviner un film en 3 mots.','Donne 5 animaux en 10 secondes.'][Math.floor(Math.random()*3)],oral:true};
+ else if(g==='La Bombe'){let qs=['Donne un rappeur français','Donne un anime','Donne un club de football','Donne un jeu vidéo','Donne un pays commençant par A','Donne un film Marvel','Donne un animal à quatre pattes','Donne une marque de voiture'];c={game:g,q:qs[Math.floor(Math.random()*qs.length)]+' avant la fin !',oral:true}}
+ else if(g==="L’Imposteur"){let w=[['Pizza','Burger'],['Paris','Londres'],['Naruto','One Piece'],['Football','Basket'],['Chat','Chien'],['Netflix','YouTube']][Math.floor(Math.random()*6)],ps=Object.values(r.players),imp=ps[Math.floor(Math.random()*ps.length)];r.secret={imp:imp.id,n:w[0],o:w[1]};c={game:g,q:"Décris ton mot sans le dire, puis trouvez l’imposteur !",oral:true}}
+ else if(g==='Duel'){let d=[
+ ['Quelle est la capitale du Japon ?','Tokyo'],['Combien font 7 × 8 ?','56'],['Quel animal est surnommé le roi de la jungle ?','Lion'],
+ ['Quel club joue au Parc des Princes ?','PSG'],['Dans quel manga trouve-t-on Luffy ?','One Piece'],['Quelle planète est la plus proche du Soleil ?','Mercure'],
+ ['Qui est le héros principal de Dragon Ball ?','Goku'],['Combien y a-t-il de continents ?','7'],['Quel pays a la forme d’une botte ?','Italie'],
+ ['Quel sport pratique Kylian Mbappé ?','Football']][Math.floor(Math.random()*10)];c={game:g,q:d[0],answer:d[1],oral:true}}
+ else if(g==='Mot interdit'){let m=[['Plage','mer'],['Football','ballon'],['Pizza','fromage'],['TikTok','vidéo'],['Chat','miaou'],['Paris','Eiffel']][Math.floor(Math.random()*6)];c={game:g,q:`Fais deviner « ${m[0]} » sans dire « ${m[1]} ».`,oral:true}}
+ else if(g==='Trouve l’intrus'){let sets=[
+ {q:'Trouve l’intrus : un seul n’est PAS un animal.',items:[['🐶','Chien'],['🐱','Chat'],['🍎','Pomme'],['🐰','Lapin']],c:2,why:'La pomme n’est pas un animal.'},
+ {q:'Trouve l’intrus : un seul n’est PAS un fruit.',items:[['🍎','Pomme'],['🍌','Banane'],['⚽','Ballon'],['🍓','Fraise']],c:2,why:'Le ballon n’est pas un fruit.'},
+ {q:'Trouve l’intrus : lequel n’a PAS les cheveux jaunes ?',items:[['👱','Blond 1'],['👱‍♀️','Blond 2'],['👨‍🦰','Roux'],['👱‍♂️','Blond 3']],c:2,why:'Le troisième personnage est roux.'},
+ {q:'Trouve l’intrus : un seul n’est PAS un moyen de transport.',items:[['🚗','Voiture'],['✈️','Avion'],['🚲','Vélo'],['🎸','Guitare']],c:3,why:'La guitare n’est pas un moyen de transport.'},
+ {q:'Trouve l’intrus : un seul n’est PAS lié au Japon.',items:[['🗾','Japon'],['🍣','Sushi'],['🗼','Tokyo'],['🗽','Statue de la Liberté']],c:3,why:'La Statue de la Liberté est à New York.'}
+ ][Math.floor(Math.random()*5)];c={game:g,q:sets.q,a:sets.items.map(x=>x[1]),images:sets.items.map(x=>x[0]),c:sets.c,why:sets.why,intruder:true}}
+ else c={game:g,q:['Imite une célébrité sans parler.','Fais deviner un film en 3 mots.','Donne 5 animaux en 10 secondes.','Fais une imitation choisie par les autres joueurs.','Cite 4 pays en moins de 10 secondes.'][Math.floor(Math.random()*5)],oral:true};
  return c;
 }
 function next(r){
@@ -25,7 +36,7 @@ function next(r){
  if(r.gameIndex>=r.settings.games.length){io.to(r.code).emit('finished',view(r));return}
  let limit=gameLimit(r);
  if(r.gameRound>=limit){r.gameIndex++;r.gameRound=0;if(r.gameIndex>=r.settings.games.length){io.to(r.code).emit('finished',view(r));return}limit=gameLimit(r)}
- r.gameRound++;r.round++;r.answers={};r.guesses={};r._advancing=false;
+ r.gameRound++;r.round++;r.answers={};r.guesses={};r.oralDecisions={};r._advancing=false;
  const g=r.settings.games[r.gameIndex],c=makeRound(r,g);r.current=c;
  io.to(r.code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:limit,gameIndex:r.gameIndex,current:c});
  if(g==="L’Imposteur")for(const p of Object.values(r.players))io.to(p.id).emit('secret',{word:p.id===r.secret.imp?r.secret.o:r.secret.n});
@@ -43,10 +54,17 @@ io.on('connection',s=>{
  s.on('join',({code:c,name},cb)=>{c=(c||'').toUpperCase();let r=rooms[c];if(!r)return cb({ok:false});r.players[s.id]={id:s.id,name:name||'Joueur',score:0};s.join(c);cb({ok:true});emit(r)});
  s.on('settings',(x,cb)=>{let r=rooms[x.code];if(!r||r.host!==s.id)return cb&&cb({ok:false});r.settings=x.settings;r.total=totalRounds(r);emit(r);cb&&cb({ok:true})});
  s.on('start',(c,cb)=>{let r=rooms[c];if(!r||r.host!==s.id)return cb&&cb({ok:false});if(!r.settings.games?.length)return cb&&cb({ok:false});r.round=0;r.gameIndex=0;r.gameRound=0;r.total=totalRounds(r);Object.values(r.players).forEach(p=>p.score=0);cb&&cb({ok:true});next(r)});
- s.on('answer',x=>{let r=rooms[x.code];if(!r||r.answers?.[s.id]!=null)return;r.answers=r.answers||{};r.answers[s.id]=x.value;if(r.current.game==='Quiz Battle'&&+x.value===r.current.c)r.players[s.id].score+=500;emit(r);scheduleNextIfAll(r)});
+ s.on('answer',x=>{let r=rooms[x.code];if(!r||r.answers?.[s.id]!=null)return;r.answers=r.answers||{};r.answers[s.id]=x.value;if((r.current.game==='Quiz Battle'||r.current.game==='Trouve l’intrus')&&+x.value===r.current.c)r.players[s.id].score+=500;emit(r);scheduleNextIfAll(r)});
  s.on('secretChoice',x=>{let r=rooms[x.code];if(!r||r.current.game!=='Tu me connais ?'||r.current.target!==s.id||r.current.phase!=='choose')return;r.secretChoice=+x.value;r.current.phase='guess';io.to(r.code).emit('tmcGuess',{q:r.current.q,a:r.current.a,target:r.current.target,targetName:r.current.targetName})});
  s.on('tmcGuess',x=>{let r=rooms[x.code];if(!r||r.current.game!=='Tu me connais ?'||r.current.phase!=='guess'||s.id===r.current.target||r.guesses[s.id]!=null)return;r.guesses[s.id]=+x.value;if(+x.value===r.secretChoice)r.players[s.id].score+=500;emit(r);io.to(s.id).emit('guessResult',{correct:+x.value===r.secretChoice});scheduleNextIfAll(r)});
- s.on('award',x=>{let r=rooms[x.code];if(r&&r.host===s.id&&r.players[x.id]){r.players[x.id].score+=+x.points||0;emit(r)}});
+ s.on('award',x=>{let r=rooms[x.code];if(r&&r.host===s.id&&r.players[x.id]){
+   if(r.oralDecisions?.[x.id]!=null)return;
+   r.oralDecisions=r.oralDecisions||{};r.oralDecisions[x.id]=+x.points>0?'ok':'no';
+   r.players[x.id].score+=+x.points||0;emit(r);
+   if(r.current?.oral&&Object.keys(r.players).every(id=>r.oralDecisions[id]!=null)){
+     r._advancing=true;io.to(r.code).emit('allAnswered');setTimeout(()=>next(r),900)
+   }
+ }});
  s.on('next',c=>{let r=rooms[c];if(r&&r.host===s.id)next(r)});
  s.on('restartSame',c=>{let r=rooms[c];if(r&&r.host===s.id){r.round=0;r.gameIndex=0;r.gameRound=0;r.total=totalRounds(r);Object.values(r.players).forEach(p=>p.score=0);next(r)}});
  s.on('backToSetup',c=>{let r=rooms[c];if(r&&r.host===s.id){r.round=0;r.gameIndex=0;r.gameRound=0;r.state='lobby';io.to(c).emit('backToSetup');emit(r)}});
