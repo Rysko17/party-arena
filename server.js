@@ -9,9 +9,40 @@ function gameLimit(r){const g=r.settings.games[r.gameIndex];return +(r.settings.
 function totalRounds(r){return (r.settings.games||[]).reduce((n,g)=>n+(+(r.settings.gameRounds?.[g]||5)),0)}
 function makeRound(r,g){
  let c={game:g};
- if(g==='Quiz Battle'){let x=question(r);c={game:g,q:x.q,a:x.a,c:x.c,image:x.image||null,theme:x.theme}}
- else if(g==='Tu me connais ?'){let ps=Object.values(r.players),target=ps[(r.gameRound-1)%ps.length];r.secretChoice=null;r.guesses={};c={game:g,phase:'choose',target:target.id,targetName:target.name,q:'Quel univers préfères-tu ?',a:['Musique','Films/Séries','Jeux vidéo','Voyage']}}
- else if(g==='Majorité')c={game:g,q:['Soirée maison ou sortie ?','Sucré ou salé ?','Film ou série ?'][Math.floor(Math.random()*3)],a:['Choix A','Choix B']};
+ if(g==='Quiz Battle'){let x=question(r);c={game:g,q:x.q,a:x.a,c:x.c,image:x.image||null,theme:x.theme,difficulty:x.difficulty||'simple',points:({simple:250,moyen:500,dur:1000}[x.difficulty]||250)}}
+ else if(g==='Tu me connais ?'){let ps=Object.values(r.players),target=ps[(r.gameRound-1)%ps.length];r.secretChoice=null;r.guesses={};let tq=[
+['Tu préfères quelle soirée ?',['Soirée maison','Boîte','Restaurant','Cinéma']],
+['Quel voyage tu choisis ?',['Tokyo','New York','Dubaï','Bali']],
+['Quel repas tu choisis ?',['Pizza','Burger','Sushi','Tacos']],
+['Quel pouvoir tu voudrais ?',['Voler','Téléportation','Invisibilité','Lire les pensées']],
+['Quel univers tu préfères ?',['Musique','Films/Séries','Jeux vidéo','Voyage']],
+['Quel animal tu préfères ?',['Chien','Chat','Lion','Dauphin']],
+['Quel réseau tu garderais ?',['TikTok','Instagram','YouTube','Snapchat']],
+['Quel style de film tu préfères ?',['Action','Comédie','Horreur','Science-fiction']],
+['Quel sport tu préfères ?',['Football','Basket','Boxe','Tennis']],
+['Quel anime tu choisirais ?',['One Piece','Naruto','Bleach','Dragon Ball']],
+['Quel luxe tu choisis ?',['Belle voiture','Grande maison','Voyages','Vêtements']],
+['Tu préfères vivre où ?',['Grande ville','Campagne','Bord de mer','Montagne']],
+['Quel moment tu préfères ?',['Matin','Après-midi','Soir','Nuit']],
+['Quel dessert tu prends ?',['Glace','Gâteau','Crêpe','Fruit']],
+['Quel type de musique tu choisis ?',['Rap','Afro','Pop','R&B']],
+['Quel défaut te dérange le plus ?',['Mensonge','Jalousie','Égoïsme','Retard']],
+['Quel cadeau te ferait le plus plaisir ?',['Argent','Voyage','Téléphone','Surprise']],
+['Si tu pouvais changer de vie 24h ?',['Star','Sportif pro','Milliardaire','Aventurier']],
+['Quel climat tu préfères ?',['Très chaud','Doux','Froid','Neige']],
+['Tu préfères gagner quoi ?',['10 000 €','Voyage illimité','Voiture','1 an sans travailler']]
+][Math.floor(Math.random()*20)];c={game:g,phase:'choose',target:target.id,targetName:target.name,q:tq[0],a:tq[1]}}
+ else if(g==='Majorité'){let mq=[
+['Soirée maison ou sortie ?',['Maison','Sortie']],['Sucré ou salé ?',['Sucré','Salé']],['Film ou série ?',['Film','Série']],
+['iPhone ou Android ?',['iPhone','Android']],['Mer ou montagne ?',['Mer','Montagne']],['Été ou hiver ?',['Été','Hiver']],
+['Rap ou R&B ?',['Rap','R&B']],['Pizza ou tacos ?',['Pizza','Tacos']],['PlayStation ou Xbox ?',['PlayStation','Xbox']],
+['Netflix ou YouTube ?',['Netflix','YouTube']],['Appel ou message ?',['Appel','Message']],['Chien ou chat ?',['Chien','Chat']],
+['Voyager ou acheter une voiture ?',['Voyager','Voiture']],['Matin ou nuit ?',['Matin','Nuit']],['Argent ou célébrité ?',['Argent','Célébrité']],
+['Anime ou série ?',['Anime','Série']],['Football ou basket ?',['Football','Basket']],['Ville ou campagne ?',['Ville','Campagne']],
+['Restaurant ou livraison ?',['Restaurant','Livraison']],['TikTok ou Instagram ?',['TikTok','Instagram']],
+['Être riche ou célèbre ?',['Riche','Célèbre']],['Vacances entre amis ou en couple ?',['Amis','Couple']],['PC ou console ?',['PC','Console']],
+['Musique avec écouteurs ou enceinte ?',['Écouteurs','Enceinte']],['Douche matin ou soir ?',['Matin','Soir']]
+][Math.floor(Math.random()*25)];c={game:g,q:mq[0],a:mq[1]}}
  else if(g==='La Bombe'){let qs=['Donne un rappeur français','Donne un anime','Donne un club de football','Donne un jeu vidéo','Donne un pays commençant par A','Donne un film Marvel','Donne un animal à quatre pattes','Donne une marque de voiture'];c={game:g,q:qs[Math.floor(Math.random()*qs.length)]+' avant la fin !',oral:true}}
  else if(g==="L’Imposteur"){let w=[['Pizza','Burger'],['Paris','Londres'],['Naruto','One Piece'],['Football','Basket'],['Chat','Chien'],['Netflix','YouTube']][Math.floor(Math.random()*6)],ps=Object.values(r.players),imp=ps[Math.floor(Math.random()*ps.length)];r.secret={imp:imp.id,n:w[0],o:w[1]};c={game:g,q:"Décris ton mot sans le dire, puis trouvez l’imposteur !",oral:true}}
  else if(g==='Duel'){let d=[
@@ -64,7 +95,7 @@ io.on('connection',s=>{
  s.on('join',({code:c,name},cb)=>{c=(c||'').toUpperCase();let r=rooms[c];if(!r)return cb({ok:false});r.players[s.id]={id:s.id,name:name||'Joueur',score:0};s.join(c);cb({ok:true});emit(r)});
  s.on('settings',(x,cb)=>{let r=rooms[x.code];if(!r||r.host!==s.id)return cb&&cb({ok:false});r.settings=x.settings;r.total=totalRounds(r);emit(r);cb&&cb({ok:true})});
  s.on('start',(c,cb)=>{let r=rooms[c];if(!r||r.host!==s.id)return cb&&cb({ok:false});if(!r.settings.games?.length)return cb&&cb({ok:false});r.round=0;r.gameIndex=0;r.gameRound=0;r.total=totalRounds(r);Object.values(r.players).forEach(p=>p.score=0);cb&&cb({ok:true});next(r)});
- s.on('answer',x=>{let r=rooms[x.code];if(!r||r.answers?.[s.id]!=null)return;r.answers=r.answers||{};r.answers[s.id]=x.value;if((r.current.game==='Quiz Battle'||r.current.game==='Trouve l’intrus')&&+x.value===r.current.c)r.players[s.id].score+=500;emit(r);scheduleNextIfAll(r)});
+ s.on('answer',x=>{let r=rooms[x.code];if(!r||r.answers?.[s.id]!=null)return;r.answers=r.answers||{};r.answers[s.id]=x.value;if((r.current.game==='Quiz Battle'||r.current.game==='Trouve l’intrus')&&+x.value===r.current.c)r.players[s.id].score+=(r.current.points||500);emit(r);scheduleNextIfAll(r)});
  s.on('secretChoice',x=>{let r=rooms[x.code];if(!r||r.current.game!=='Tu me connais ?'||r.current.target!==s.id||r.current.phase!=='choose')return;r.secretChoice=+x.value;r.current.phase='guess';io.to(r.code).emit('tmcGuess',{q:r.current.q,a:r.current.a,target:r.current.target,targetName:r.current.targetName})});
  s.on('tmcGuess',x=>{let r=rooms[x.code];if(!r||r.current.game!=='Tu me connais ?'||r.current.phase!=='guess'||s.id===r.current.target||r.guesses[s.id]!=null)return;r.guesses[s.id]=+x.value;if(+x.value===r.secretChoice)r.players[s.id].score+=500;emit(r);io.to(s.id).emit('guessResult',{correct:+x.value===r.secretChoice});scheduleNextIfAll(r)});
  s.on('award',x=>{let r=rooms[x.code];if(r&&r.host===s.id&&r.players[x.id]){
@@ -80,4 +111,4 @@ io.on('connection',s=>{
  s.on('backToSetup',c=>{let r=rooms[c];if(r&&r.host===s.id){r.round=0;r.gameIndex=0;r.gameRound=0;r.state='lobby';io.to(c).emit('backToSetup');emit(r)}});
  s.on('disconnect',()=>{for(const c in rooms){let r=rooms[c];if(r.players[s.id]){delete r.players[s.id];if(!Object.keys(r.players).length)delete rooms[c];else{if(r.host===s.id)r.host=Object.keys(r.players)[0];emit(r)}}}})
 });
-server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.11 lancé'));
+server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.12 lancé'));

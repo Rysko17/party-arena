@@ -8,7 +8,8 @@
         "Jupiter",
         "Mercure"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel est le plus grand océan ?",
@@ -18,7 +19,8 @@
         "Pacifique",
         "Arctique"
       ],
-      "c": 2
+      "c": 2,
+      "difficulty": "simple"
     },
     {
       "q": "Combien de côtés possède un hexagone ?",
@@ -28,7 +30,8 @@
         "7",
         "8"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel est le plus grand océan du monde ?",
@@ -38,7 +41,8 @@
         "Indien",
         "Arctique"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel gaz les humains respirent-ils principalement pour vivre ?",
@@ -48,7 +52,8 @@
         "Hydrogène",
         "Néon"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "dur"
     },
     {
       "q": "Combien de côtés possède un hexagone ?",
@@ -58,7 +63,8 @@
         "7",
         "8"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "simple"
     },
     {
       "q": "Quel est le plus grand mammifère ?",
@@ -68,7 +74,8 @@
         "Girafe",
         "Rhinocéros"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "simple"
     },
     {
       "q": "Quelle est la capitale de l’Espagne ?",
@@ -78,7 +85,8 @@
         "Séville",
         "Valence"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel métal a pour symbole Fe ?",
@@ -88,7 +96,8 @@
         "Argent",
         "Cuivre"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Combien y a-t-il de minutes dans 2 heures ?",
@@ -98,7 +107,8 @@
         "120",
         "140"
       ],
-      "c": 2
+      "c": 2,
+      "difficulty": "dur"
     },
     {
       "q": "Quel continent contient le Brésil ?",
@@ -108,7 +118,8 @@
         "Amérique du Sud",
         "Asie"
       ],
-      "c": 2
+      "c": 2,
+      "difficulty": "simple"
     },
     {
       "q": "Quel organe pompe le sang ?",
@@ -118,7 +129,8 @@
         "Foie",
         "Rein"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "simple"
     },
     {
       "q": "Quelle langue est principalement parlée au Brésil ?",
@@ -128,7 +140,8 @@
         "Français",
         "Italien"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel est le satellite naturel de la Terre ?",
@@ -138,7 +151,8 @@
         "Soleil",
         "Vénus"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "moyen"
     },
     {
       "q": "Combien de jours compte une année bissextile ?",
@@ -148,7 +162,8 @@
         "364",
         "367"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "dur"
     },
     {
       "q": "Quelle est la capitale de l’Italie ?",
@@ -158,7 +173,8 @@
         "Naples",
         "Turin"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "simple"
     },
     {
       "q": "Quel animal est le plus rapide sur terre ?",
@@ -168,7 +184,8 @@
         "Cheval",
         "Loup"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quelle planète possède des anneaux très visibles ?",
@@ -178,7 +195,8 @@
         "Mercure",
         "Vénus"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel pays possède les pyramides de Gizeh ?",
@@ -188,7 +206,8 @@
         "Mexique",
         "Inde"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel instrument mesure la température ?",
@@ -198,7 +217,8 @@
         "Chronomètre",
         "Altimètre"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "dur"
     },
     {
       "q": "Combien font 12 × 12 ?",
@@ -208,7 +228,8 @@
         "144",
         "154"
       ],
-      "c": 2
+      "c": 2,
+      "difficulty": "simple"
     },
     {
       "q": "Quel est le plus long fleuve de France ?",
@@ -218,7 +239,8 @@
         "Rhône",
         "Garonne"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quelle couleur obtient-on en mélangeant bleu et jaune ?",
@@ -228,7 +250,8 @@
         "Violet",
         "Rouge"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "moyen"
     }
   ],
   "Football": [
@@ -240,7 +263,8 @@
         "11",
         "12"
       ],
-      "c": 2
+      "c": 2,
+      "difficulty": "simple"
     },
     {
       "q": "Quelle compétition oppose les sélections européennes ?",
@@ -250,7 +274,8 @@
         "CAN",
         "Libertadores"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Trois buts du même joueur forment un…",
@@ -260,7 +285,8 @@
         "Ace",
         "Set"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Combien de minutes dure normalement un match sans prolongation ?",
@@ -270,7 +296,8 @@
         "100",
         "120"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel joueur peut utiliser ses mains dans sa surface ?",
@@ -280,7 +307,8 @@
         "Milieu",
         "Attaquant"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "dur"
     },
     {
       "q": "Quel carton signifie une expulsion ?",
@@ -290,7 +318,8 @@
         "Jaune",
         "Rouge"
       ],
-      "c": 3
+      "c": 3,
+      "difficulty": "simple"
     },
     {
       "q": "Combien vaut un but ?",
@@ -300,7 +329,8 @@
         "3",
         "5"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel pays a remporté la Coupe du monde 2018 ?",
@@ -310,7 +340,8 @@
         "Brésil",
         "Argentine"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel pays a remporté la Coupe du monde 2022 ?",
@@ -320,7 +351,8 @@
         "Espagne",
         "Allemagne"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "moyen"
     },
     {
       "q": "Dans quel club joue-t-on au Parc des Princes ?",
@@ -330,7 +362,8 @@
         "OL",
         "Monaco"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "dur"
     },
     {
       "q": "Quel club joue au Santiago Bernabéu ?",
@@ -340,7 +373,8 @@
         "Atlético Madrid",
         "Séville"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "simple"
     },
     {
       "q": "Quel club joue à Anfield ?",
@@ -350,7 +384,8 @@
         "Arsenal",
         "Everton"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "simple"
     },
     {
       "q": "Que signifie VAR ?",
@@ -360,7 +395,8 @@
         "Validation automatique du résultat",
         "Vision avancée du referee"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Combien de points rapporte une victoire en championnat ?",
@@ -370,7 +406,8 @@
         "3",
         "4"
       ],
-      "c": 2
+      "c": 2,
+      "difficulty": "moyen"
     },
     {
       "q": "Comment appelle-t-on trois buts d’un même joueur dans un match ?",
@@ -380,7 +417,8 @@
         "Carré",
         "Grand chelem"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "dur"
     },
     {
       "q": "Quel poste joue principalement devant le but adverse ?",
@@ -390,7 +428,8 @@
         "Arbitre",
         "Défenseur central"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "simple"
     },
     {
       "q": "Quelle compétition oppose les meilleures sélections européennes ?",
@@ -400,7 +439,8 @@
         "CAN",
         "Ligue des champions"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel pays accueille traditionnellement Wembley ?",
@@ -410,7 +450,8 @@
         "Italie",
         "Portugal"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "moyen"
     }
   ],
   "Cinéma & Séries": [
@@ -422,7 +463,8 @@
         "Cascadeur",
         "Exploitant"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Comment appelle-t-on un épisode test d’une série ?",
@@ -432,7 +474,8 @@
         "Trailer",
         "Remake"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Dans Harry Potter, quelle école fréquente Harry ?",
@@ -442,7 +485,8 @@
         "Nevermore",
         "Xavier"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel super-héros est Bruce Wayne ?",
@@ -452,7 +496,8 @@
         "Iron Man",
         "Thor"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel super-héros est Peter Parker ?",
@@ -462,7 +507,8 @@
         "Flash",
         "Aquaman"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "dur"
     },
     {
       "q": "Dans Titanic, comment s’appelle le personnage joué par Leonardo DiCaprio ?",
@@ -472,7 +518,8 @@
         "James",
         "Jake"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Dans Stranger Things, quelle ville fictive est au centre de l’histoire ?",
@@ -482,7 +529,8 @@
         "Gotham",
         "Springfield"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel objet permet de filmer une scène ?",
@@ -492,7 +540,8 @@
         "Projecteur uniquement",
         "Console"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Dans Star Wars, quelle arme utilisent les Jedi ?",
@@ -502,7 +551,8 @@
         "Marteau",
         "Trident"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel personnage dit souvent « Je s’appelle Groot » ?",
@@ -512,7 +562,8 @@
         "Thanos",
         "Loki"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "dur"
     },
     {
       "q": "Dans Avengers, quel héros manie Mjolnir ?",
@@ -522,7 +573,8 @@
         "Hawkeye",
         "Ant-Man"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel genre cherche principalement à faire peur ?",
@@ -532,7 +584,8 @@
         "Documentaire",
         "Musical"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "simple"
     },
     {
       "q": "Comment appelle-t-on la suite d’un film ?",
@@ -542,7 +595,8 @@
         "Trailer",
         "Casting"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel métier assemble les plans après le tournage ?",
@@ -552,7 +606,8 @@
         "Costumier",
         "Exploitant"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Dans La Casa de Papel, les braqueurs utilisent des noms de quoi ?",
@@ -562,7 +617,8 @@
         "Planètes",
         "Couleurs"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "dur"
     },
     {
       "q": "Quel personnage est le capitaine du Black Pearl ?",
@@ -572,7 +628,8 @@
         "Rocky",
         "Neo"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel studio est associé à Toy Story ?",
@@ -582,7 +639,8 @@
         "Netflix",
         "Paramount+"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     }
   ],
   "Anime & Manga": [
@@ -594,7 +652,8 @@
         "Luffy",
         "Ichigo"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "simple"
     },
     {
       "q": "Dans Naruto, Kurama est représenté comme quoi ?",
@@ -604,7 +663,8 @@
         "Loup",
         "Serpent"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "simple"
     },
     {
       "q": "Quel est le rêve de Luffy dans One Piece ?",
@@ -614,7 +674,8 @@
         "Devenir chasseur",
         "Trouver les Dragon Balls"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "moyen"
     },
     {
       "q": "Dans Naruto, quel village est celui de Naruto ?",
@@ -624,7 +685,8 @@
         "Kiri",
         "Ame"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Dans Death Note, comment s’appelle le protagoniste qui trouve le carnet ?",
@@ -634,7 +696,8 @@
         "Ryuk",
         "Near"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "dur"
     },
     {
       "q": "Dans Attack on Titan, que combattent principalement les héros ?",
@@ -644,7 +707,8 @@
         "Vampires",
         "Pirates"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Dans Demon Slayer, comment s’appelle le héros principal ?",
@@ -654,7 +718,8 @@
         "Eren",
         "Edward"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Dans Jujutsu Kaisen, qui est connu pour ses Six Yeux ?",
@@ -664,7 +729,8 @@
         "Megumi",
         "Nanami"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Dans Pokémon, quel Pokémon accompagne principalement Sacha ?",
@@ -674,7 +740,8 @@
         "Dracaufeu",
         "Évoli"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Dans Bleach, quel est le prénom du héros ?",
@@ -684,7 +751,8 @@
         "Inosuke",
         "Izuku"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "dur"
     },
     {
       "q": "Dans My Hero Academia, quel est le surnom d’Izuku Midoriya ?",
@@ -694,7 +762,8 @@
         "Zero",
         "Ace"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Dans Dragon Ball, de quelle race est Goku ?",
@@ -704,7 +773,8 @@
         "Titan",
         "Shinigami"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Dans Hunter x Hunter, quel est le prénom du meilleur ami de Gon ?",
@@ -714,7 +784,8 @@
         "Leorio",
         "Hisoka"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Dans Fullmetal Alchemist, quel est le prénom du frère d’Alphonse ?",
@@ -724,7 +795,8 @@
         "Erwin",
         "Envy"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Dans One Punch Man, comment s’appelle le héros chauve ?",
@@ -734,7 +806,8 @@
         "Garou",
         "King"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "dur"
     },
     {
       "q": "Dans Tokyo Ghoul, quel est le prénom de Kaneki ?",
@@ -744,7 +817,8 @@
         "Zen",
         "Sen"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Dans Chainsaw Man, quel est le prénom du héros ?",
@@ -754,7 +828,8 @@
         "Power",
         "Makima"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Dans Solo Leveling, quel est le nom du héros principal ?",
@@ -764,7 +839,8 @@
         "Yuji Itadori",
         "Eren Yeager"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Dans Blue Lock, quel sport est au centre de l’histoire ?",
@@ -774,7 +850,8 @@
         "Tennis",
         "Boxe"
       ],
-      "c": 1
+      "c": 1,
+      "difficulty": "moyen"
     },
     {
       "q": "Dans Haikyuu!!, quel sport est pratiqué ?",
@@ -784,7 +861,8 @@
         "Baseball",
         "Rugby"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "dur"
     }
   ],
   "Musique": [
@@ -796,7 +874,8 @@
         "Pont",
         "Solo"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Que signifie BPM ?",
@@ -806,7 +885,8 @@
         "Boucles par mix",
         "Balance piste/master"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel instrument possède généralement 88 touches ?",
@@ -816,7 +896,8 @@
         "Violon",
         "Flûte"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel appareil est utilisé par un DJ pour mixer ?",
@@ -826,7 +907,8 @@
         "Scanner",
         "Imprimante"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Comment appelle-t-on la vitesse d’un morceau ?",
@@ -836,7 +918,8 @@
         "Cadre",
         "Filtre"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "dur"
     },
     {
       "q": "Quel instrument possède six cordes dans sa version standard ?",
@@ -846,7 +929,8 @@
         "Trompette",
         "Batterie"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel terme désigne une chanson sans voix principale ?",
@@ -856,7 +940,8 @@
         "Podcast",
         "Remix vocal"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel format audio est très répandu ?",
@@ -866,7 +951,8 @@
         "PDF",
         "DOCX"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Comment appelle-t-on une nouvelle version d’un morceau créée par un DJ/producteur ?",
@@ -876,7 +962,8 @@
         "Episode",
         "Patch"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel élément donne souvent le rythme principal en rap ?",
@@ -886,7 +973,8 @@
         "Storyboard",
         "Logo"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "dur"
     },
     {
       "q": "Quel instrument fait partie des percussions ?",
@@ -896,7 +984,8 @@
         "Clarinette",
         "Harpe"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Comment appelle-t-on un album court de quelques titres ?",
@@ -906,7 +995,8 @@
         "CPU",
         "DLC"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel terme désigne les paroles d’une chanson ?",
@@ -916,7 +1006,8 @@
         "Layers",
         "Pixels"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel effet crée une sensation d’espace/écho ?",
@@ -926,7 +1017,8 @@
         "Zoom",
         "Mask"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     }
   ],
   "Jeux vidéo": [
@@ -938,7 +1030,8 @@
         "Canne",
         "Cisailles"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "GTA est surtout connu pour quel type de monde ?",
@@ -948,7 +1041,8 @@
         "Cartes",
         "Rails"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel personnage est la mascotte principale de Nintendo ?",
@@ -958,7 +1052,8 @@
         "Kratos",
         "Master Chief"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Dans Minecraft, quel ennemi vert explose ?",
@@ -968,7 +1063,8 @@
         "Enderman",
         "Squelette"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Dans Fortnite, quel genre domine ?",
@@ -978,7 +1074,8 @@
         "Échecs",
         "Simulation de train"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "dur"
     },
     {
       "q": "Dans GTA V, quelle ville fictive est principale ?",
@@ -988,7 +1085,8 @@
         "Vice City",
         "Night City"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel jeu met en scène Kratos ?",
@@ -998,7 +1096,8 @@
         "Minecraft",
         "Zelda"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel hérisson bleu est une mascotte de Sega ?",
@@ -1008,7 +1107,8 @@
         "Mario",
         "Kirby"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Dans League of Legends, combien de joueurs composent normalement une équipe ?",
@@ -1018,7 +1118,8 @@
         "5",
         "6"
       ],
-      "c": 2
+      "c": 2,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel jeu contient le mode Ultimate Team ?",
@@ -1028,7 +1129,8 @@
         "Valorant",
         "Zelda"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "dur"
     },
     {
       "q": "Dans Pokémon, que fait-on principalement avec les Pokémon ?",
@@ -1038,7 +1140,8 @@
         "Jouer au football uniquement",
         "Piloter des avions"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel jeu compétitif oppose attaquants et défenseurs avec des agents ?",
@@ -1048,7 +1151,8 @@
         "The Sims",
         "Mario Kart"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel studio est à l’origine de Minecraft ?",
@@ -1058,7 +1162,8 @@
         "Valve",
         "Ubisoft"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel objet emblématique de Zelda est souvent manié par Link ?",
@@ -1068,7 +1173,8 @@
         "Batte",
         "Raquette"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Dans Mario Kart, quel objet bleu est célèbre pour viser le premier ?",
@@ -1078,7 +1184,8 @@
         "Étoile noire",
         "Champignon violet"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "dur"
     },
     {
       "q": "Quel jeu est centré sur des voitures jouant au football ?",
@@ -1088,7 +1195,8 @@
         "Need for Speed",
         "Forza"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Dans Among Us, quel rôle élimine secrètement les autres ?",
@@ -1098,7 +1206,8 @@
         "Gardien",
         "Coach"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     }
   ],
   "Dessins animés": [
@@ -1110,7 +1219,8 @@
         "Chien",
         "Lapin"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Tom poursuit généralement qui ?",
@@ -1120,7 +1230,8 @@
         "Daffy",
         "Scooby"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel animal est Scooby-Doo ?",
@@ -1130,7 +1241,8 @@
         "Cheval",
         "Ours"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Dans Bob l’éponge, où vit Bob ?",
@@ -1140,7 +1252,8 @@
         "Gotham",
         "Paris"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel personnage poursuit souvent Bip Bip ?",
@@ -1150,7 +1263,8 @@
         "Daffy",
         "Bugs"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "dur"
     },
     {
       "q": "Quel duo est composé d’un chat et d’une souris ?",
@@ -1160,7 +1274,8 @@
         "Phinéas et Ferb",
         "Rick et Morty"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel personnage vit dans un ananas sous la mer ?",
@@ -1170,7 +1285,8 @@
         "Garfield",
         "Simba"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel canard Disney porte une marinière bleue ?",
@@ -1180,7 +1296,8 @@
         "Pluto",
         "Mickey"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Dans Les Simpson, comment s’appelle le père de famille ?",
@@ -1190,7 +1307,8 @@
         "Ned",
         "Moe"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel personnage adore les lasagnes ?",
@@ -1200,7 +1318,8 @@
         "Taz",
         "Stitch"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "dur"
     },
     {
       "q": "Dans Pokémon, quel type de créature est Pikachu ?",
@@ -1210,7 +1329,8 @@
         "Titan",
         "Saiyan"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel personnage Disney est un lion ?",
@@ -1220,7 +1340,8 @@
         "Stitch",
         "Aladdin"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Dans South Park, combien d’enfants forment le groupe principal classique ?",
@@ -1230,7 +1351,8 @@
         "6",
         "8"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel personnage est un ogre vert ?",
@@ -1240,7 +1362,8 @@
         "Woody",
         "Po"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     }
   ],
   "Internet & Réseaux": [
@@ -1252,7 +1375,8 @@
         "&",
         "%"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Que signifie souvent DM ?",
@@ -1262,7 +1386,8 @@
         "Donnée mobile",
         "Double mention"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel symbole sert à mentionner un compte sur de nombreux réseaux ?",
@@ -1272,7 +1397,8 @@
         "€",
         "&"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Que signifie DM sur les réseaux sociaux ?",
@@ -1282,7 +1408,8 @@
         "Donnée mobile",
         "Double média"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel format est souvent utilisé pour une courte vidéo verticale ?",
@@ -1292,7 +1419,8 @@
         "4:3",
         "21:9"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "dur"
     },
     {
       "q": "Comment appelle-t-on un contenu qui se propage très rapidement ?",
@@ -1302,7 +1430,8 @@
         "Compressé",
         "Privé"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Que signifie « like » ?",
@@ -1312,7 +1441,8 @@
         "Supprimer",
         "Télécharger"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel terme désigne une diffusion vidéo en direct ?",
@@ -1322,7 +1452,8 @@
         "Cache",
         "Archive"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Qu’est-ce qu’un hashtag ?",
@@ -1332,7 +1463,8 @@
         "Adresse IP",
         "Filtre audio"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Quel terme désigne les personnes abonnées à un compte ?",
@@ -1342,7 +1474,8 @@
         "Pixels",
         "Plugins"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "dur"
     },
     {
       "q": "Que signifie « POV » dans beaucoup de vidéos ?",
@@ -1352,7 +1485,8 @@
         "Private online voice",
         "Post original viral"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Quel format est généralement utilisé pour une image compressée ?",
@@ -1362,7 +1496,8 @@
         "WAV",
         "EXE"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "simple"
     },
     {
       "q": "Qu’est-ce qu’un emoji ?",
@@ -1372,7 +1507,8 @@
         "Navigateur",
         "Mot de passe"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     },
     {
       "q": "Que fait le bouton partager ?",
@@ -1382,7 +1518,8 @@
         "Change le mot de passe",
         "Supprime le compte"
       ],
-      "c": 0
+      "c": 0,
+      "difficulty": "moyen"
     }
   ],
   "Images": [
@@ -1395,7 +1532,8 @@
         "Arc de Triomphe"
       ],
       "c": 0,
-      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%235424a8%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23121a38%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%97%BC%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3EMONUMENT%3C/text%3E%0A%20%20%20%20%3C/svg%3E"
+      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%235424a8%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23121a38%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%97%BC%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3EMONUMENT%3C/text%3E%0A%20%20%20%20%3C/svg%3E",
+      "difficulty": "simple"
     },
     {
       "q": "Quel animal est représenté ?",
@@ -1406,7 +1544,8 @@
         "Tigre"
       ],
       "c": 0,
-      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23136f63%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23102542%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%90%BC%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3EANIMAL%3C/text%3E%0A%20%20%20%20%3C/svg%3E"
+      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23136f63%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23102542%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%90%BC%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3EANIMAL%3C/text%3E%0A%20%20%20%20%3C/svg%3E",
+      "difficulty": "simple"
     },
     {
       "q": "Quel sport est représenté ?",
@@ -1417,7 +1556,8 @@
         "Rugby"
       ],
       "c": 0,
-      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%230b7a3e%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23132238%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%E2%9A%BD%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3ESPORT%3C/text%3E%0A%20%20%20%20%3C/svg%3E"
+      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%230b7a3e%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23132238%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%E2%9A%BD%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3ESPORT%3C/text%3E%0A%20%20%20%20%3C/svg%3E",
+      "difficulty": "moyen"
     },
     {
       "q": "À quel univers cette image fait-elle penser ?",
@@ -1428,7 +1568,8 @@
         "Mode"
       ],
       "c": 0,
-      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%233c1b78%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2310162b%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%8E%AE%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3EGAMING%3C/text%3E%0A%20%20%20%20%3C/svg%3E"
+      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%233c1b78%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2310162b%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%8E%AE%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3EGAMING%3C/text%3E%0A%20%20%20%20%3C/svg%3E",
+      "difficulty": "moyen"
     },
     {
       "q": "Quel domaine est représenté ?",
@@ -1439,7 +1580,8 @@
         "Science"
       ],
       "c": 0,
-      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%238a185f%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2314162e%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%8E%A7%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3EMUSIQUE%3C/text%3E%0A%20%20%20%20%3C/svg%3E"
+      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%238a185f%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2314162e%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%8E%A7%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3EMUSIQUE%3C/text%3E%0A%20%20%20%20%3C/svg%3E",
+      "difficulty": "dur"
     },
     {
       "q": "Quel type de contenu est représenté ?",
@@ -1450,7 +1592,8 @@
         "Cuisine"
       ],
       "c": 0,
-      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%237d3b12%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23161728%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%8E%AC%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3ECIN%C3%89MA%3C/text%3E%0A%20%20%20%20%3C/svg%3E"
+      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%237d3b12%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23161728%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%8E%AC%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3ECIN%C3%89MA%3C/text%3E%0A%20%20%20%20%3C/svg%3E",
+      "difficulty": "simple"
     },
     {
       "q": "Quel monument vois-tu sur cette photo ?",
@@ -1461,7 +1604,8 @@
         "Sagrada Família"
       ],
       "c": 0,
-      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Tour%20Eiffel%20Wikimedia%20Commons.jpg"
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Tour%20Eiffel%20Wikimedia%20Commons.jpg",
+      "difficulty": "simple"
     },
     {
       "q": "Quel monument vois-tu sur cette photo ?",
@@ -1472,7 +1616,8 @@
         "Empire State Building"
       ],
       "c": 0,
-      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Colosseo%202020.jpg"
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Colosseo%202020.jpg",
+      "difficulty": "moyen"
     },
     {
       "q": "Quel monument vois-tu sur cette photo ?",
@@ -1483,7 +1628,8 @@
         "Arc de Triomphe"
       ],
       "c": 0,
-      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Taj%20Mahal%2C%20Agra%2C%20India%20edit3.jpg"
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Taj%20Mahal%2C%20Agra%2C%20India%20edit3.jpg",
+      "difficulty": "moyen"
     },
     {
       "q": "Quel animal vois-tu sur cette photo ?",
@@ -1494,7 +1640,8 @@
         "Guépard"
       ],
       "c": 0,
-      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Lion%20waiting%20in%20Namibia.jpg"
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Lion%20waiting%20in%20Namibia.jpg",
+      "difficulty": "dur"
     },
     {
       "q": "Quel animal vois-tu sur cette photo ?",
@@ -1505,7 +1652,8 @@
         "Panda roux"
       ],
       "c": 0,
-      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Giant%20Panda%202004-03-2.jpg"
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Giant%20Panda%202004-03-2.jpg",
+      "difficulty": "simple"
     },
     {
       "q": "Quel joueur de football est sur cette photo ?",
@@ -1516,7 +1664,8 @@
         "Neymar"
       ],
       "c": 0,
-      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Kylian%20Mbapp%C3%A9%202019.jpg"
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Kylian%20Mbapp%C3%A9%202019.jpg",
+      "difficulty": "simple"
     },
     {
       "q": "Quel joueur de football est sur cette photo ?",
@@ -1527,7 +1676,8 @@
         "Erling Haaland"
       ],
       "c": 0,
-      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Lionel%20Messi%2020180626.jpg"
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Lionel%20Messi%2020180626.jpg",
+      "difficulty": "moyen"
     },
     {
       "q": "Quel joueur de football est sur cette photo ?",
@@ -1538,7 +1688,340 @@
         "Sergio Ramos"
       ],
       "c": 0,
-      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Cristiano%20Ronaldo%202018.jpg"
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Cristiano%20Ronaldo%202018.jpg",
+      "difficulty": "moyen"
+    }
+  ],
+  "Mathématiques": [
+    {
+      "q": "Combien font 8 + 7 ?",
+      "a": [
+        "13",
+        "14",
+        "15",
+        "16"
+      ],
+      "c": 2,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 9 × 6 ?",
+      "a": [
+        "45",
+        "54",
+        "56",
+        "64"
+      ],
+      "c": 1,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 100 ÷ 4 ?",
+      "a": [
+        "20",
+        "25",
+        "30",
+        "40"
+      ],
+      "c": 1,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel est le double de 36 ?",
+      "a": [
+        "62",
+        "72",
+        "76",
+        "82"
+      ],
+      "c": 1,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quelle est la moitié de 90 ?",
+      "a": [
+        "40",
+        "45",
+        "50",
+        "55"
+      ],
+      "c": 1,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 15 - 8 ?",
+      "a": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "c": 2,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel nombre vient après 999 ?",
+      "a": [
+        "1000",
+        "1001",
+        "990",
+        "9990"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien de degrés possède un angle droit ?",
+      "a": [
+        "45°",
+        "90°",
+        "120°",
+        "180°"
+      ],
+      "c": 1,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 12 × 12 ?",
+      "a": [
+        "124",
+        "134",
+        "144",
+        "154"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 144 ÷ 12 ?",
+      "a": [
+        "10",
+        "11",
+        "12",
+        "14"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel est 25 % de 200 ?",
+      "a": [
+        "25",
+        "40",
+        "50",
+        "75"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel est le carré de 15 ?",
+      "a": [
+        "125",
+        "200",
+        "225",
+        "250"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Résous : 3x = 27. x vaut…",
+      "a": [
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "c": 3,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 2³ ?",
+      "a": [
+        "6",
+        "8",
+        "9",
+        "12"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Un triangle a des angles de 50° et 60°. Le troisième vaut…",
+      "a": [
+        "60°",
+        "70°",
+        "80°",
+        "90°"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle fraction est égale à 0,5 ?",
+      "a": [
+        "1/4",
+        "1/3",
+        "1/2",
+        "2/3"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 7² + 1 ?",
+      "a": [
+        "48",
+        "49",
+        "50",
+        "51"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Si 5 objets coûtent 30 €, un objet coûte…",
+      "a": [
+        "5 €",
+        "6 €",
+        "7 €",
+        "8 €"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la racine carrée de 169 ?",
+      "a": [
+        "11",
+        "12",
+        "13",
+        "14"
+      ],
+      "c": 2,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Résous : 2x + 5 = 19. x vaut…",
+      "a": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "c": 2,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Combien font 15 % de 360 ?",
+      "a": [
+        "44",
+        "54",
+        "64",
+        "74"
+      ],
+      "c": 1,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quel est le PGCD de 18 et 24 ?",
+      "a": [
+        "3",
+        "6",
+        "9",
+        "12"
+      ],
+      "c": 1,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quel est le PPCM de 6 et 8 ?",
+      "a": [
+        "12",
+        "18",
+        "24",
+        "48"
+      ],
+      "c": 2,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Un article à 80 € baisse de 25 %. Nouveau prix ?",
+      "a": [
+        "55 €",
+        "60 €",
+        "65 €",
+        "70 €"
+      ],
+      "c": 1,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Combien font 3⁴ ?",
+      "a": [
+        "27",
+        "64",
+        "81",
+        "243"
+      ],
+      "c": 2,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Si x² = 121 et x est positif, x vaut…",
+      "a": [
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "c": 2,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quelle est l’aire d’un cercle de rayon 3, en fonction de π ?",
+      "a": [
+        "3π",
+        "6π",
+        "9π",
+        "12π"
+      ],
+      "c": 2,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Une voiture roule à 90 km/h pendant 2 h 30. Distance ?",
+      "a": [
+        "180 km",
+        "205 km",
+        "225 km",
+        "250 km"
+      ],
+      "c": 2,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quel nombre est premier ?",
+      "a": [
+        "21",
+        "27",
+        "29",
+        "33"
+      ],
+      "c": 2,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Combien font (8 + 4) × 3 - 6 ?",
+      "a": [
+        "24",
+        "30",
+        "32",
+        "36"
+      ],
+      "c": 1,
+      "difficulty": "dur"
     }
   ]
 }

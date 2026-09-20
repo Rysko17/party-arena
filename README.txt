@@ -1,15 +1,14 @@
-PARTY ARENA V5.11 — GROS PACK QUESTIONS
+PARTY ARENA V5.12 — DIFFICULTÉ + MATHS + CONTENU
 
-Banque Quiz Battle : 151 questions au total.
-Répartition : {'Culture générale': 23, 'Football': 18, 'Cinéma & Séries': 17, 'Anime & Manga': 20, 'Musique': 14, 'Jeux vidéo': 17, 'Dessins animés': 14, 'Internet & Réseaux': 14, 'Images': 14}
+- Nouveau thème : Mathématiques (30 questions).
+- Difficulté Quiz : SIMPLE = 250 pts, MOYEN = 500 pts, DUR = 1000 pts.
+- Badge difficulté + points affiché sur la question.
+- Tu me connais ? : 20 questions différentes.
+- Majorité : 25 questions différentes.
+- Les images de questions sont maintenant affichées au-dessus des réponses.
+- Banque Quiz Battle : 181 questions.
+- Répartition : {'Culture générale': 23, 'Football': 18, 'Cinéma & Séries': 17, 'Anime & Manga': 20, 'Musique': 14, 'Jeux vidéo': 17, 'Dessins animés': 14, 'Internet & Réseaux': 14, 'Images': 14, 'Mathématiques': 30}
+- Le moteur 5/10/15/20 manches par jeu est conservé.
+- Les jeux restent séquentiels.
 
-Ajouts :
-- Beaucoup plus de questions dans tous les thèmes.
-- Plus de questions Anime/Manga, football, cinéma, jeux vidéo, musique, dessins animés, internet et culture générale.
-- Questions avec vraies photos ajoutées dans Images (monuments, animaux, joueurs de football) via Wikimedia Commons.
-- Trouve l’intrus enrichi avec 15 configurations visuelles.
-- Duel enrichi avec 20 questions orales.
-- Les réglages 5/10/15/20 manches par jeu restent conservés.
-- Les jeux restent joués l’un après l’autre.
-
-Note : les vraies photos Wikimedia nécessitent une connexion Internet côté joueur.
+Pour les personnages d'anime/films/séries, la structure d'affichage est maintenant prête pour recevoir des images licenciées/stables sans modifier le moteur du jeu.
