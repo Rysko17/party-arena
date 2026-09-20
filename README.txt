@@ -1,12 +1,13 @@
-PARTY ARENA V5.1 — CORRECTIF
+PARTY ARENA V5.2 — LOBBY FIX
 
-CORRECTIONS :
-- Tu me connais ? fonctionne maintenant en 2 phases :
-  1. seul le joueur cible peut choisir sa réponse secrète ;
-  2. les autres sont bloqués jusqu'à son choix ;
-  3. ensuite seulement ils peuvent deviner.
-- Ajout de 6 questions avec images intégrées directement dans le jeu.
-- Les images ne dépendent plus d'un site externe.
-- Pour tester les images, sélectionne le thème « Images » + « Quiz Battle ».
+- Accueil plus logique : Créer une partie / Rejoindre une partie.
+- Le champ code est masqué tant que le joueur ne choisit pas Rejoindre.
+- Correction du bouton Lancer : l'hôte enregistre puis démarre la partie.
+- Validation serveur du lancement.
+- Conservation des correctifs V5.1 : Tu me connais ? en deux phases + questions images.
 
-Remplace les fichiers GitHub par ceux de cette version. Render Auto-Deploy redéploiera automatiquement.
+MISE À JOUR :
+1. Décompresse ce ZIP.
+2. Sur GitHub, remplace les fichiers par ceux de ce dossier (sans node_modules).
+3. Commit changes.
+4. Render Auto-Deploy redéploiera automatiquement.
