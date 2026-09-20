@@ -1,51 +1,39 @@
 <!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Party Arena V5</title><script src="/socket.io/socket.io.js"></script><style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial;background:radial-gradient(circle at 50% 0,#241069,#060814 55%);color:#fff;min-height:100vh}.w{max-width:1200px;margin:auto;padding:24px}.logo{font-size:40px;font-weight:900;font-style:italic;color:#d88cff}.card{background:#10162bd9;border:1px solid #2c3e70;border-radius:18px;padding:20px;margin:14px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:11px}.pick{background:#0b1428;border:1px solid #31527f;border-radius:14px;padding:17px;text-align:center;cursor:pointer}.pick.on{border:2px solid #c344ff;box-shadow:0 0 15px #8b22ff;background:#24164d}button{border:0;border-radius:11px;padding:13px 17px;background:linear-gradient(90deg,#7924ff,#d52cff);color:#fff;font-weight:800;cursor:pointer}input,select{background:#091126;color:#fff;border:1px solid #3a5077;border-radius:10px;padding:12px}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.hide{display:none}.code{font-size:50px;font-weight:900;letter-spacing:5px}.pill{background:#17213d;padding:9px 12px;border-radius:20px}.q{font-size:27px;font-weight:800;margin:18px 0}.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ans{padding:17px;background:#172544;border:1px solid #385b91;border-radius:13px;cursor:pointer}.img{width:100%;max-height:380px;object-fit:cover;border-radius:16px}.score{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #26314f}@media(max-width:650px){.answers{grid-template-columns:1fr}.w{padding:10px}}</style>
-<style>
-.home-actions{display:flex;gap:14px;flex-wrap:wrap;margin:22px 0}
-.home-actions button{min-width:220px}
-#joinPanel{display:none;margin-top:18px}
-.notice{padding:12px 15px;border:1px solid #39466e;border-radius:12px;margin-top:12px;background:#0d1630}
-.notice.err{border-color:#d14b65}
-</style>
-</head><body><div class="w"><div class="logo">⚡ PARTY ARENA V5</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
-<div id="home" class="card"><h2>Créer ou rejoindre</h2><div class="row"><input id="name" placeholder="Pseudo"><button onclick="create()">Créer une salle</button><input id="ci" maxlength="4" placeholder="CODE"><button onclick="join()">Rejoindre</button></div></div>
+*{box-sizing:border-box}body{margin:0;font-family:Arial;background:radial-gradient(circle at 50% 0,#241069,#060814 55%);color:#fff;min-height:100vh}.w{max-width:1200px;margin:auto;padding:24px}.logo{font-size:40px;font-weight:900;font-style:italic;color:#d88cff}.card{background:#10162bd9;border:1px solid #2c3e70;border-radius:18px;padding:20px;margin:14px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:11px}.pick{background:#0b1428;border:1px solid #31527f;border-radius:14px;padding:17px;text-align:center;cursor:pointer}.pick.on{border:2px solid #c344ff;box-shadow:0 0 15px #8b22ff;background:#24164d}button{border:0;border-radius:11px;padding:13px 17px;background:linear-gradient(90deg,#7924ff,#d52cff);color:#fff;font-weight:800;cursor:pointer}input,select{background:#091126;color:#fff;border:1px solid #3a5077;border-radius:10px;padding:12px}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.hide{display:none}.code{font-size:50px;font-weight:900;letter-spacing:5px}.pill{background:#17213d;padding:9px 12px;border-radius:20px}.q{font-size:27px;font-weight:800;margin:18px 0}.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ans{padding:17px;background:#172544;border:1px solid #385b91;border-radius:13px;cursor:pointer}.img{width:100%;max-height:380px;object-fit:cover;border-radius:16px}.score{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #26314f}@media(max-width:650px){.answers{grid-template-columns:1fr}.w{padding:10px}}
+.homeChoice{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.homeBig{padding:24px 18px;font-size:18px}
+.homePanel{margin-top:16px;padding-top:16px;border-top:1px solid #2c3e70}
+.homePanel .row{margin-top:10px}
+.backBtn{background:#172544}
+@media(max-width:650px){.homeChoice{grid-template-columns:1fr}}
+</style></head><body><div class="w"><div class="logo">⚡ PARTY ARENA V5</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
+<div id="home" class="card">
+<h2>Que veux-tu faire ?</h2>
+<p>Crée une nouvelle partie ou rejoins tes amis avec leur code.</p>
+<div id="homeChoices" class="homeChoice">
+<button class="homeBig" onclick="showCreate()">🎮 Créer une partie</button>
+<button class="homeBig" onclick="showJoin()">🔑 Rejoindre une partie</button>
+</div>
+<div id="createPanel" class="homePanel hide">
+<h3>🎮 Créer une partie</h3>
+<div class="row"><input id="name" placeholder="Ton pseudo"><button onclick="create()">Créer la salle</button><button class="backBtn" onclick="backHome()">← Retour</button></div>
+</div>
+<div id="joinPanel" class="homePanel hide">
+<h3>🔑 Rejoindre une partie</h3>
+<div class="row"><input id="joinName" placeholder="Ton pseudo"><input id="ci" maxlength="4" placeholder="CODE DE LA SALLE"><button onclick="join()">Rejoindre</button><button class="backBtn" onclick="backHome()">← Retour</button></div>
+</div>
+</div>
 <div id="lobby" class="hide"><div class="card"><div class="row"><div><small>CODE DE LA SALLE</small><div id="code" class="code"></div></div><div id="players"></div></div></div><div id="setup" class="card hide"><h2>1. Choisir les jeux</h2><div id="games" class="grid"></div><h2>2. Choisir les thèmes</h2><div id="themes" class="grid"></div><div class="row" style="margin-top:18px"><select id="rounds"><option>7</option><option selected>14</option><option>21</option><option>28</option></select><button onclick="save()">Enregistrer</button><button onclick="start()">▶ Lancer</button></div></div><div id="wait" class="card">En attente de l’hôte…</div></div>
 <div id="play" class="card hide"><div class="row"><b id="rl"></b><b id="gl"></b></div><small id="tl"></small><div id="secret" class="card hide"></div><div id="q" class="q"></div><img id="img" class="img hide"><div id="answers" class="answers"></div><div id="hc" class="hide"><h3>Points manuels</h3><div id="award"></div><br><button onclick="next()">Manche suivante ➜</button></div></div>
 <div id="final" class="card hide"><h1>🏆 Classement final</h1><div id="rank"></div></div></div><script>
 const s=io(),GL=['Quiz Battle','Tu me connais ?','Majorité','La Bombe',"L’Imposteur",'Duel','Mot interdit','Défi surprise'],TL=['Culture générale','Football','Cinéma & Séries','Anime & Manga','Musique','Jeux vidéo','Dessins animés','Internet & Réseaux','Images'];let room,me,state,cg=new Set(['Quiz Battle']),ct=new Set(['Culture générale']);
 function render(){games.innerHTML=GL.map(x=>`<div class="pick ${cg.has(x)?'on':''}" onclick="tg(${JSON.stringify(x)})">🎮<b>${x}</b></div>`).join('');themes.innerHTML=TL.map(x=>`<div class="pick ${ct.has(x)?'on':''}" onclick="tt(${JSON.stringify(x)})">✨<b>${x}</b></div>`).join('')}function tg(x){cg.has(x)?cg.delete(x):cg.add(x);if(!cg.size)cg.add('Quiz Battle');render()}function tt(x){ct.has(x)?ct.delete(x):ct.add(x);if(!ct.size)ct.add('Culture générale');render()}
-function create(){s.emit('create',{name:name.value||'Hôte'},r=>{if(r.ok){room=r.code;openL()}})}function join(){s.emit('join',{code:ci.value,name:name.value||'Joueur'},r=>{if(r.ok){room=ci.value.toUpperCase();openL()}else alert('Salle introuvable')})}function openL(){home.classList.add('hide');lobby.classList.remove('hide');code.textContent=room}function save(){s.emit('settings',{code:room,settings:{games:[...cg],themes:[...ct],rounds:+rounds.value}})}function start(){save();setTimeout(()=>s.emit('start',room),150)}function next(){s.emit('next',room)}function answer(i){s.emit('answer',{code:room,value:i});document.querySelectorAll('.ans').forEach(x=>x.style.pointerEvents='none')}function give(id){s.emit('award',{code:room,id,points:500})}function secretChoice(i){s.emit('secretChoice',{code:room,value:i});answers.innerHTML='<div class="card">✅ Réponse secrète enregistrée. Les autres peuvent maintenant deviner.</div>'}
+function showCreate(){homeChoices.classList.add('hide');createPanel.classList.remove('hide');joinPanel.classList.add('hide')}
+function showJoin(){homeChoices.classList.add('hide');joinPanel.classList.remove('hide');createPanel.classList.add('hide')}
+function backHome(){homeChoices.classList.remove('hide');createPanel.classList.add('hide');joinPanel.classList.add('hide')}
+function create(){s.emit('create',{name:name.value||'Hôte'},r=>{if(r.ok){room=r.code;openL()}else alert('Impossible de créer la salle')})}
+function join(){let c=ci.value.trim().toUpperCase();if(c.length!==4)return alert('Entre le code à 4 caractères.');s.emit('join',{code:c,name:joinName.value||'Joueur'},r=>{if(r.ok){room=c;openL()}else alert('Salle introuvable')})}
+function openL(){home.classList.add('hide');lobby.classList.remove('hide');code.textContent=room}function save(){s.emit('settings',{code:room,settings:{games:[...cg],themes:[...ct],rounds:+rounds.value}})}function start(){save();setTimeout(()=>s.emit('start',room),150)}function next(){s.emit('next',room)}function answer(i){s.emit('answer',{code:room,value:i});document.querySelectorAll('.ans').forEach(x=>x.style.pointerEvents='none')}function give(id){s.emit('award',{code:room,id,points:500})}function secretChoice(i){s.emit('secretChoice',{code:room,value:i});answers.innerHTML='<div class="card">✅ Réponse secrète enregistrée. Les autres peuvent maintenant deviner.</div>'}
 s.on('connect',()=>me=s.id);s.on('room',r=>{state=r;players.innerHTML=r.players.map(p=>`<span class="pill">${p.name} · ${p.score}</span> `).join('');let h=r.host===me;setup.classList.toggle('hide',!h);wait.classList.toggle('hide',h);if(h){cg=new Set(r.settings.games);ct=new Set(r.settings.themes);rounds.value=r.settings.rounds||14;render()}});
 s.on('round',x=>{lobby.classList.add('hide');play.classList.remove('hide');secret.classList.add('hide');rl.textContent=`Manche ${x.round}/${x.total}`;gl.textContent=x.current.game;tl.textContent=x.current.theme||'';q.textContent=x.current.q||'';img.classList.toggle('hide',!x.current.image);if(x.current.image)img.src=x.current.image;if(x.current.game==='Tu me connais ?'&&x.current.phase==='choose'){if(me===x.current.target){q.textContent=x.current.q+' — choisis ta réponse secrètement';answers.innerHTML=x.current.a.map((a,i)=>`<div class="ans" onclick="secretChoice(${i})">${a}</div>`).join('')}else{q.textContent=x.current.targetName+' choisit sa réponse secrète…';answers.innerHTML='<div class="card">⏳ Attends que '+x.current.targetName+' ait choisi. Tu ne peux pas répondre avant.</div>'}}else{answers.innerHTML=x.current.a?x.current.a.map((a,i)=>`<div class="ans" onclick="answer(${i})">${a}</div>`).join(''):''}let h=state&&state.host===me;hc.classList.toggle('hide',!h);if(h)award.innerHTML=state.players.map(p=>`<button onclick="give('${p.id}')">+500 ${p.name}</button> `).join('')});s.on('tmcGuess',x=>{q.textContent=x.q;if(me===x.target){answers.innerHTML='<div class="card">🤫 Ta réponse est enregistrée. Attends les réponses des autres.</div>'}else{answers.innerHTML=x.a.map((a,i)=>`<div class="ans" onclick="tmcGuess(${i})">${a}</div>`).join('')}});function tmcGuess(i){s.emit('tmcGuess',{code:room,value:i});answers.innerHTML='<div class="card">🔒 Réponse enregistrée.</div>'}s.on('guessResult',x=>{answers.innerHTML+=`<div class="card">${x.correct?'✅ Bonne réponse ! +500':'❌ Mauvaise réponse'}</div>`});
-s.on('secret',x=>{secret.classList.remove('hide');secret.innerHTML=`🤫 TON MOT SECRET : <h1>${x.word}</h1>Ne le montre pas.`});s.on('finished',r=>{play.classList.add('hide');final.classList.remove('hide');rank.innerHTML=[...r.players].sort((a,b)=>b.score-a.score).map((p,i)=>`<div class="score"><b>${i+1}. ${p.name}</b><b>${p.score} pts</b></div>`).join('')});render();</script>
-<script>
-document.addEventListener('DOMContentLoaded',()=>{
-  // Nettoyage de l'accueil : on masque les anciens champs jusqu'au choix Rejoindre.
-  const inputs=[...document.querySelectorAll('input')];
-  const codeInput=inputs.find(i=>/code/i.test(i.placeholder||''));
-  if(codeInput){
-    const wrap=codeInput.parentElement;
-    if(wrap) wrap.dataset.legacyJoin='1';
-  }
-  // Les boutons existants sont conservés pour compatibilité, mais le champ code
-  // n'est visible que lorsqu'on choisit de rejoindre.
-  const createBtn=[...document.querySelectorAll('button')].find(b=>/créer|creer/i.test(b.textContent));
-  const joinBtn=[...document.querySelectorAll('button')].find(b=>/rejoindre/i.test(b.textContent));
-  const legacy=codeInput && codeInput.parentElement;
-  if(legacy) legacy.style.display='none';
-  if(joinBtn) joinBtn.addEventListener('click',()=>{ if(legacy) legacy.style.display=''; });
-  if(createBtn) createBtn.addEventListener('click',()=>{ if(legacy) legacy.style.display='none'; });
-});
-
-// Message clair si l'hôte tente de lancer sans sélection.
-function showLaunchNotice(msg){
-  let n=document.getElementById('launchNotice');
-  if(!n){ n=document.createElement('div'); n.id='launchNotice'; n.className='notice err';
-    const launch=[...document.querySelectorAll('button')].find(b=>/lancer/i.test(b.textContent));
-    if(launch && launch.parentElement) launch.parentElement.appendChild(n);
-  }
-  n.textContent=msg;
-}
-s.on && s.on('uiError',m=>showLaunchNotice(m));
-</script>
-</body></html>
+s.on('secret',x=>{secret.classList.remove('hide');secret.innerHTML=`🤫 TON MOT SECRET : <h1>${x.word}</h1>Ne le montre pas.`});s.on('finished',r=>{play.classList.add('hide');final.classList.remove('hide');rank.innerHTML=[...r.players].sort((a,b)=>b.score-a.score).map((p,i)=>`<div class="score"><b>${i+1}. ${p.name}</b><b>${p.score} pts</b></div>`).join('')});render();</script></body></html>

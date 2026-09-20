@@ -1,13 +1,17 @@
-PARTY ARENA V5.2 — LOBBY FIX
+PARTY ARENA V5.3 — ACCUEIL PROPRE
 
-- Accueil plus logique : Créer une partie / Rejoindre une partie.
-- Le champ code est masqué tant que le joueur ne choisit pas Rejoindre.
-- Correction du bouton Lancer : l'hôte enregistre puis démarre la partie.
-- Validation serveur du lancement.
-- Conservation des correctifs V5.1 : Tu me connais ? en deux phases + questions images.
+Cette version repart de la V5.1 stable.
 
-MISE À JOUR :
-1. Décompresse ce ZIP.
-2. Sur GitHub, remplace les fichiers par ceux de ce dossier (sans node_modules).
-3. Commit changes.
-4. Render Auto-Deploy redéploiera automatiquement.
+ACCUEIL :
+- Deux choix seulement au départ : « Créer une partie » / « Rejoindre une partie ».
+- Le champ CODE n'apparaît QUE après avoir choisi « Rejoindre ».
+- Créer demande uniquement le pseudo puis génère le code de salle.
+- Bouton Retour sur les deux parcours.
+
+CONSERVÉ :
+- Lobby avec choix des jeux et thèmes.
+- Questions images.
+- Correctif « Tu me connais ? » en deux phases.
+- Jeu en ligne / Socket.IO.
+
+Mise à jour : remplace les fichiers GitHub par ceux-ci puis Commit changes. Render redéploiera automatiquement.
