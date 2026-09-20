@@ -6,7 +6,7 @@
 .homePanel .row{margin-top:10px}
 .backBtn{background:#172544}
 @media(max-width:650px){.homeChoice{grid-template-columns:1fr}}
-</style></head><body><div class="w"><div class="logo">⚡ PARTY ARENA V5.13</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
+</style></head><body><div class="w"><div class="logo">⚡ PARTY ARENA V5.15</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
 <div id="home" class="card">
 <h2>Que veux-tu faire ?</h2>
 <p>Crée une nouvelle partie ou rejoins tes amis avec leur code.</p>
@@ -121,5 +121,27 @@ s.on('gameRanking',x=>{
  document.body.appendChild(box);setTimeout(()=>box.remove(),2000);
 });
 s.on('duelResult',x=>{alert(x.stolen?`⚡ ${x.winner} gagne et vole ${x.stolen} points !`:`👑 ${x.winner} gagne : le classement reste inchangé.`)});
+
+
+function sendBomb(){
+ const i=document.getElementById('bombInput');if(!i||!i.value.trim())return;
+ s.emit('bombAnswer',{code:room.code,text:i.value.trim()});i.disabled=true;
+ const b=i.nextElementSibling;if(b)b.disabled=true;
+ document.getElementById('bombStatus').innerHTML='<p>⏳ Réponse envoyée. L’hôte doit la valider.</p>';
+}
+function bombDecision(id,accept){s.emit('bombDecision',{code:room.code,playerId:id,accept})}
+s.on('bombAnswers',all=>{
+ const mine=all[me],st=document.getElementById('bombStatus');
+ if(st&&mine)st.innerHTML=`<p>${mine.status==='pending'?'⏳ En attente de validation':mine.status==='accepted'?'✅ +500 points':'❌ Réponse refusée'}</p>`;
+ const rev=document.getElementById('bombReview');
+ if(rev&&room&&me===room.host){
+  rev.innerHTML=Object.entries(room.players||{}).map(()=> '').join('');
+  rev.innerHTML=Object.values(room.players||{}).map(p=>{
+    const a=all[p.id]; if(!a)return `<div class="score"><b>${p.name}</b><span>⏳ pas encore répondu</span></div>`;
+    if(a.status!=='pending')return `<div class="score"><b>${p.name}: ${a.text}</b><span>${a.status==='accepted'?'✅ validé':'❌ refusé'}</span></div>`;
+    return `<div class="card"><b>${p.name}</b> : ${a.text}<br><button onclick="bombDecision('${p.id}',true)">✅ Valider +500</button> <button onclick="bombDecision('${p.id}',false)">❌ Refuser</button></div>`;
+  }).join('');
+ }
+});
 
 render();s.on('allAnswered',()=>{answers.innerHTML='<div class="card">✅ Tout le monde a répondu !<br>Question suivante…</div>'});</script></body></html>

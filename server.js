@@ -15,6 +15,7 @@ function question(r){
 function gameLimit(r){const g=r.settings.games[r.gameIndex];return +(r.settings.gameRounds?.[g]||5)}
 function totalRounds(r){return (r.settings.games||[]).reduce((n,g)=>n+(+(r.settings.gameRounds?.[g]||5)),0)}
 
+const BOMB_TYPED_BANK=["Écris le nom d’un pays d’Europe.", "Écris le nom d’un personnage d’anime.", "Écris le nom d’un club de football.", "Écris le nom d’un rappeur français.", "Écris le nom d’un jeu vidéo.", "Écris le nom d’une capitale.", "Écris le nom d’un film Marvel ou DC.", "Écris le nom d’un animal marin.", "Écris une marque de voiture.", "Écris le nom d’un pays d’Afrique.", "Écris le nom d’un fruit.", "Écris le nom d’une série.", "Écris le nom d’un Pokémon.", "Écris le nom d’un footballeur.", "Écris le nom d’une ville française.", "Écris le nom d’un personnage de jeu vidéo.", "Écris le nom d’un sport.", "Écris le nom d’un métier.", "Écris le nom d’un manga.", "Écris le nom d’une célébrité internationale.", "Écris un aliment commençant par P.", "Écris un pays commençant par A.", "Écris un personnage de One Piece.", "Écris un personnage de Naruto.", "Écris un super-héros.", "Écris un réseau social.", "Écris une marque de vêtements.", "Écris un film d’animation.", "Écris une console de jeux.", "Écris un joueur ayant remporté la Ligue des champions."];
 const MAJORITY_BANK=(()=>{
  const A=['Ichigo Kurosaki','Naruto Uzumaki','Monkey D. Luffy','Goku','Satoru Gojo','Eren Yeager','Saitama','Tanjiro Kamado',
  'Spider-Man','Batman','Iron Man','Jack Sparrow','Wednesday Addams','Harry Potter','Darth Vader','Rocky Balboa',
@@ -31,7 +32,11 @@ const MAJORITY_BANK=(()=>{
  ['Quel style musical choisissez-vous ?',['Rap','Afro','Pop','R&B']],['Quel climat préférez-vous ?',['Très chaud','Doux','Froid','Neige']],
  ['Quelle plateforme choisissez-vous ?',['Netflix','Disney+','Prime Video','YouTube']],['Quel animal préférez-vous ?',['Chien','Chat','Lion','Dauphin']]
  ]; qs.push(...cats);
- const out=[];for(let n=0;n<10;n++)for(const x of qs)out.push({q:x.q+(n?` — choix ${n+1}`:''),a:[...x.a].sort((a,b)=>(a.charCodeAt(0)+n)%7-(b.charCodeAt(0)+n)%7)});
+ const out=[];for(let n=0;n<10;n++)for(const x of qs){
+ const question=Array.isArray(x)?x[0]:x.q;
+ const choices=Array.isArray(x)?x[1]:x.a;
+ out.push({q:question+(n?` — choix ${n+1}`:''),a:[...choices].sort((a,b)=>(a.charCodeAt(0)+n)%7-(b.charCodeAt(0)+n)%7)});
+}
  return out;
 })();
 const TMC_BANK=(()=>{
@@ -67,7 +72,7 @@ function makeRound(r,g){
  if(g==='Quiz Battle'){let x=question(r);c={game:g,q:x.q,a:x.a,c:x.c,image:x.image||null,theme:x.theme,difficulty:x.difficulty||'simple',points:({simple:250,moyen:500,dur:1000}[x.difficulty]||250)}}
  else if(g==='Tu me connais ?'){let ps=Object.values(r.players),target=ps[(r.gameRound-1)%ps.length];r.secretChoice=null;r.guesses={};let tq=unusedPick(r,'tmc',TMC_BANK);c={game:g,phase:'choose',target:target.id,targetName:target.name,q:tq.q,a:tq.a}}
  else if(g==='Majorité'){let mq=unusedPick(r,'majority',MAJORITY_BANK);c={game:g,q:mq.q,a:mq.a}}
- else if(g==='La Bombe'){c={game:g,q:unusedPick(r,'bomb',ORAL_BANK)+' avant la fin !',oral:true}}
+ else if(g==='La Bombe'){c={game:g,q:unusedPick(r,'bombTyped',BOMB_TYPED_BANK),typedBomb:true,points:500}}
  else if(g==="L’Imposteur"){let w=[['Pizza','Burger'],['Paris','Londres'],['Naruto','One Piece'],['Football','Basket'],['Chat','Chien'],['Netflix','YouTube']][Math.floor(Math.random()*6)],ps=Object.values(r.players),imp=ps[Math.floor(Math.random()*ps.length)];r.secret={imp:imp.id,n:w[0],o:w[1]};c={game:g,q:"Décris ton mot sans le dire, puis trouvez l’imposteur !",oral:true}}
  else if(g==='Duel'){let d=[
  ['Quelle est la capitale du Japon ?','Tokyo'],['Combien font 7 × 8 ?','56'],['Quel animal est surnommé le roi de la jungle ?','Lion'],
@@ -145,7 +150,28 @@ io.on('connection',s=>{
  r.answers=r.answers||{};r.answers[s.id]=x.value;if((r.current.game==='Quiz Battle'||r.current.game==='Trouve l’intrus')&&+x.value===r.current.c)r.players[s.id].score+=(r.current.points||500);emit(r);scheduleNextIfAll(r)});
  s.on('secretChoice',x=>{let r=rooms[x.code];if(!r||r.current.game!=='Tu me connais ?'||r.current.target!==s.id||r.current.phase!=='choose')return;r.secretChoice=+x.value;r.current.phase='guess';io.to(r.code).emit('tmcGuess',{q:r.current.q,a:r.current.a,target:r.current.target,targetName:r.current.targetName})});
  s.on('tmcGuess',x=>{let r=rooms[x.code];if(!r||r.current.game!=='Tu me connais ?'||r.current.phase!=='guess'||s.id===r.current.target||r.guesses[s.id]!=null)return;r.guesses[s.id]=+x.value;if(+x.value===r.secretChoice)r.players[s.id].score+=500;emit(r);io.to(s.id).emit('guessResult',{correct:+x.value===r.secretChoice});scheduleNextIfAll(r)});
- s.on('award',x=>{let r=rooms[x.code];if(r&&r.host===s.id&&r.players[x.id]){
+ 
+s.on('bombAnswer',x=>{
+ let r=rooms[x.code];if(!r||!r.current?.typedBomb||!r.players[s.id])return;
+ r.bombAnswers=r.bombAnswers||{};
+ if(r.bombAnswers[s.id])return;
+ let txt=String(x.text||'').trim().slice(0,80);if(!txt)return;
+ r.bombAnswers[s.id]={text:txt,status:'pending'};
+ io.to(r.code).emit('bombAnswers',r.bombAnswers);
+});
+s.on('bombDecision',x=>{
+ let r=rooms[x.code];if(!r||s.id!==r.host||!r.current?.typedBomb)return;
+ let a=r.bombAnswers?.[x.playerId];if(!a||a.status!=='pending')return;
+ a.status=x.accept?'accepted':'refused';
+ if(x.accept&&r.players[x.playerId])r.players[x.playerId].score+=(r.current.points||500);
+ io.to(r.code).emit('bombAnswers',r.bombAnswers);emit(r);
+ const ids=Object.keys(r.players);
+ if(ids.every(id=>r.bombAnswers?.[id]&&r.bombAnswers[id].status!=='pending')){
+   io.to(r.code).emit('allAnswered');setTimeout(()=>next(r),900);
+ }
+});
+
+s.on('award',x=>{let r=rooms[x.code];if(r&&r.host===s.id&&r.players[x.id]){
    if(r.oralDecisions?.[x.id]!=null)return;
    r.oralDecisions=r.oralDecisions||{};r.oralDecisions[x.id]=+x.points>0?'ok':'no';
    r.players[x.id].score+=+x.points||0;emit(r);
