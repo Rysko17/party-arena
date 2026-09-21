@@ -19,7 +19,7 @@
 #gameImg:not(.hide){display:block!important;width:min(100%,760px)!important;height:390px!important;object-fit:contain!important;object-position:center center!important;margin:14px auto!important;border-radius:18px;background:rgba(0,0,0,.18);padding:8px;box-sizing:border-box}
 @media(max-width:700px){#gameImg:not(.hide){height:300px!important}}
 </style>
-</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.44 — HARD MODE</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
+</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.46 — BLIND DOUBLE / ANTI-REPEAT</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
 <div id="home" class="card">
 <h2>Que veux-tu faire ?</h2>
 <p>Crée une nouvelle partie ou rejoins tes amis avec leur code.</p>
@@ -196,7 +196,8 @@ let roundTimerInt=null;
 function startRoundTimer(sec){clearInterval(roundTimerInt);let el=document.getElementById('roundTimer');if(!el){el=document.createElement('div');el.id='roundTimer';el.className='pill';el.style.cssText='font-size:22px;font-weight:900;margin:10px auto;display:block;width:max-content';(document.getElementById('play')||document.body).prepend(el)}if(!sec){el.style.display='none';return}el.style.display='block';let left=sec;el.textContent=`⏱️ ${left}s`;roundTimerInt=setInterval(()=>{left--;el.textContent=`⏱️ ${Math.max(0,left)}s`;if(left<=0)clearInterval(roundTimerInt)},1000)}
 function timerForGame(g){if(g==='Blind Test')return 12;if(g==='Mot interdit')return 30;if(g==='Trouve l’intrus')return 20;if(['Quiz Battle','Qui est-ce ?','Duel','La Bombe'].includes(g))return 10;return 0}
 
-s.on('round',x=>{startRoundTimer(timerForGame(x.current.game));const ac=document.getElementById('answerCount');if(ac)ac.textContent='Réponses : 0/0';const rf=document.getElementById('roundFeedback');if(rf)rf.innerHTML='';
+s.on('connect',()=>{try{s.emit('blindHistory',JSON.parse(localStorage.getItem('partyArenaBlindSeen')||'[]'))}catch(e){}});
+s.on('round',x=>{startRoundTimer(timerForGame(x.current.game));if(x.current&&x.current.game==='Blind Test'&&x.current.excerptId){try{let a=JSON.parse(localStorage.getItem('partyArenaBlindSeen')||'[]');if(!a.includes(x.current.excerptId)){a.push(x.current.excerptId);if(a.length>5000)a=a.slice(-5000);localStorage.setItem('partyArenaBlindSeen',JSON.stringify(a));}}catch(e){}}const ac=document.getElementById('answerCount');if(ac)ac.textContent='Réponses : 0/0';const rf=document.getElementById('roundFeedback');if(rf)rf.innerHTML='';
 const jb=[...document.querySelectorAll('button')].find(b=>b.textContent==='Lancement…');if(jb){jb.disabled=false;jb.textContent='▶ JOUER'};lobby.classList.add('hide');play.classList.remove('hide');secret.classList.add('hide');rl.textContent=`${x.current.game} — Manche ${x.gameRound}/${x.gameTotal}`;gl.textContent=x.current.game;tl.textContent=x.current.theme||'';q.innerHTML=(x.current.q||'')+(x.current.difficulty?` <span class="pill">🎯 ${x.current.difficulty.toUpperCase()} • ${x.current.points} pts</span>`:'');
 if(x.current.game==='Qui est-ce ?' && me===state?.host){award.innerHTML=`<button onclick="s.emit('rerollWho',{code:room})">🔄 CHANGER L’IMAGE / QUESTION</button>`;}
 if(x.current.typedBomb){
