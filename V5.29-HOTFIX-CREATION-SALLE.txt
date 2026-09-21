@@ -1,0 +1,12 @@
+V5.29 — HOTFIX CRÉATION DE SALLE
+Cause corrigée : le client supposait que `r.settings` existait toujours dès le premier événement `room`.
+Lors de la création d'une nouvelle salle, ce n'est pas garanti. L'accès direct à
+`r.settings.games` / `r.settings.themes` pouvait donc provoquer une erreur JavaScript
+juste après la création et donner l'impression que la salle ne se créait pas.
+
+Correction :
+- `r.settings` est maintenant optionnel et protégé.
+- Les réglages locaux ne sont remplacés que si le serveur fournit réellement des réglages.
+- Le lobby hôte se rend même sans settings serveur.
+- La conservation des paramètres à l'arrivée d'un joueur reste active.
+- server.js et JavaScript navigateur passent `node --check`.
