@@ -1,5 +1,5 @@
 const express=require('express'),http=require('http'),{Server}=require('socket.io'),fs=require('fs'),path=require('path');
-const app=express(),server=http.createServer(app),io=new Server(server),DB=JSON.parse(fs.readFileSync(path.join(__dirname,'questions.json'),'utf8')),rooms={};
+const app=express(),server=http.createServer(app),io=new Server(server),GLOBAL_USED={},DB=JSON.parse(fs.readFileSync(path.join(__dirname,'questions.json'),'utf8')),rooms={};
 app.use(express.static(path.join(__dirname,'public')));
 function code(){let s='',a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';for(let i=0;i<4;i++)s+=a[Math.floor(Math.random()*a.length)];return s}
 function view(r){return{code:r.code,host:r.host,players:Object.values(r.players).map(p=>({id:p.id,name:p.name,score:p.score})),settings:r.settings,round:r.round,total:r.total,state:r.state,gameIndex:r.gameIndex,gameRound:r.gameRound}}
@@ -120,10 +120,15 @@ function themedPick(r,kind){
 }
 
 function unusedPick(r,key,arr){
- r.used=r.used||{};r.used[key]=r.used[key]||[];
- let available=arr.map((x,i)=>i).filter(i=>!r.used[key].includes(i));
- if(!available.length){r.used[key]=[];available=arr.map((x,i)=>i)}
- const i=available[Math.floor(Math.random()*available.length)];r.used[key].push(i);return arr[i];
+ r.used=r.used||{};r.used[key]=r.used[key]||[];GLOBAL_USED[key]=GLOBAL_USED[key]||[];
+ const sig=x=>JSON.stringify(x);
+ let a=arr.filter(x=>!r.used[key].includes(sig(x))&&!GLOBAL_USED[key].includes(sig(x)));
+ if(!a.length)a=arr.filter(x=>!r.used[key].includes(sig(x)));
+ if(!a.length){r.used[key]=[];a=arr.slice()}
+ const x=a[Math.floor(Math.random()*a.length)],id=sig(x);
+ r.used[key].push(id);GLOBAL_USED[key].push(id);
+ if(GLOBAL_USED[key].length>Math.max(5000,arr.length*2))GLOBAL_USED[key]=GLOBAL_USED[key].slice(-Math.max(5000,arr.length));
+ return x;
 }
 
 TMC_THEME_BANK['Anime & Manga'].push(...[{"q": "Dans Bleach, quel personnage préfères-tu ?", "a": ["Ichigo", "Rukia", "Aizen", "Byakuya"]}, {"q": "Dans Bleach, qui choisirais-tu dans ton équipe ?", "a": ["Rukia", "Aizen", "Byakuya", "Kenpachi"]}, {"q": "Dans Naruto, quel personnage préfères-tu ?", "a": ["Naruto", "Sasuke", "Kakashi", "Itachi"]}, {"q": "Dans Naruto, qui choisirais-tu dans ton équipe ?", "a": ["Sasuke", "Kakashi", "Itachi", "Madara"]}, {"q": "Dans One Piece, quel personnage préfères-tu ?", "a": ["Luffy", "Zoro", "Sanji", "Nami"]}, {"q": "Dans One Piece, qui choisirais-tu dans ton équipe ?", "a": ["Zoro", "Sanji", "Nami", "Shanks"]}, {"q": "Dans Dragon Ball, quel personnage préfères-tu ?", "a": ["Goku", "Vegeta", "Gohan", "Piccolo"]}, {"q": "Dans Dragon Ball, qui choisirais-tu dans ton équipe ?", "a": ["Vegeta", "Gohan", "Piccolo", "Freezer"]}, {"q": "Dans Jujutsu Kaisen, quel personnage préfères-tu ?", "a": ["Gojo", "Yuji", "Megumi", "Nobara"]}, {"q": "Dans Jujutsu Kaisen, qui choisirais-tu dans ton équipe ?", "a": ["Yuji", "Megumi", "Nobara", "Sukuna"]}, {"q": "Dans Demon Slayer, quel personnage préfères-tu ?", "a": ["Tanjiro", "Nezuko", "Zenitsu", "Inosuke"]}, {"q": "Dans Demon Slayer, qui choisirais-tu dans ton équipe ?", "a": ["Nezuko", "Zenitsu", "Inosuke", "Rengoku"]}, {"q": "Dans Attack on Titan, quel personnage préfères-tu ?", "a": ["Eren", "Mikasa", "Levi", "Armin"]}, {"q": "Dans Attack on Titan, qui choisirais-tu dans ton équipe ?", "a": ["Mikasa", "Levi", "Armin", "Reiner"]}, {"q": "Dans My Hero Academia, quel personnage préfères-tu ?", "a": ["Deku", "Bakugo", "Todoroki", "All Might"]}, {"q": "Dans My Hero Academia, qui choisirais-tu dans ton équipe ?", "a": ["Bakugo", "Todoroki", "All Might", "Shigaraki"]}, {"q": "Dans Hunter x Hunter, quel personnage préfères-tu ?", "a": ["Gon", "Killua", "Kurapika", "Hisoka"]}, {"q": "Dans Hunter x Hunter, qui choisirais-tu dans ton équipe ?", "a": ["Killua", "Kurapika", "Hisoka", "Meruem"]}, {"q": "Dans Death Note, quel personnage préfères-tu ?", "a": ["Light", "L", "Misa", "Ryuk"]}, {"q": "Dans Death Note, qui choisirais-tu dans ton équipe ?", "a": ["L", "Misa", "Ryuk", "Near"]}, {"q": "Dans One Punch Man, quel personnage préfères-tu ?", "a": ["Saitama", "Genos", "Tatsumaki", "Garou"]}, {"q": "Dans One Punch Man, qui choisirais-tu dans ton équipe ?", "a": ["Genos", "Tatsumaki", "Garou", "King"]}, {"q": "Dans Chainsaw Man, quel personnage préfères-tu ?", "a": ["Denji", "Power", "Makima", "Aki"]}, {"q": "Dans Chainsaw Man, qui choisirais-tu dans ton équipe ?", "a": ["Power", "Makima", "Aki", "Kobeni"]}, {"q": "Dans Spy x Family, quel personnage préfères-tu ?", "a": ["Anya", "Loid", "Yor", "Bond"]}, {"q": "Dans Spy x Family, qui choisirais-tu dans ton équipe ?", "a": ["Loid", "Yor", "Bond", "Damian"]}, {"q": "Dans Fairy Tail, quel personnage préfères-tu ?", "a": ["Natsu", "Lucy", "Erza", "Gray"]}, {"q": "Dans Fairy Tail, qui choisirais-tu dans ton équipe ?", "a": ["Lucy", "Erza", "Gray", "Happy"]}, {"q": "Dans Blue Lock, quel personnage préfères-tu ?", "a": ["Isagi", "Bachira", "Rin", "Nagi"]}, {"q": "Dans Blue Lock, qui choisirais-tu dans ton équipe ?", "a": ["Bachira", "Rin", "Nagi", "Barou"]}, {"q": "Dans Solo Leveling, quel personnage préfères-tu ?", "a": ["Sung Jinwoo", "Cha Hae-In", "Igris", "Beru"]}, {"q": "Dans Solo Leveling, qui choisirais-tu dans ton équipe ?", "a": ["Cha Hae-In", "Igris", "Beru", "Go Gunhee"]}]);
@@ -223,6 +228,39 @@ const SURPRISE_CLEAN={
 'Mathématiques':["Donne 5 multiples de 7 en moins de 10 secondes.","Fais calculer 25 × 4 sans dire le résultat.","Cite 4 formes géométriques.","Trouve mentalement le double de 125."],
 'Images':["Fais deviner un objet uniquement en le décrivant.","Mime un animal et fais-le deviner.","Décris un monument célèbre sans donner son nom.","Fais deviner une couleur sans la nommer."]
 };
+SURPRISE_CLEAN["Football"].push(...["Cite 5 gardiens célèbres en 12 secondes.", "Donne 4 clubs ayant gagné la Ligue des champions.", "Fais deviner un stade célèbre avec 3 indices.", "Cite 5 Ballons d’Or différents.", "Donne 4 clubs italiens en 10 secondes.", "Mime un poste de football.", "Cite 5 joueurs ayant joué en Premier League.", "Fais deviner un entraîneur avec 3 indices."]);
+SURPRISE_CLEAN["Sport"].push(...["Cite 5 champions olympiques célèbres.", "Donne 4 sports de combat.", "Fais deviner un pilote de F1 avec 3 indices.", "Cite 5 sports sans ballon.", "Donne 4 pays forts en rugby.", "Mime une discipline olympique.", "Cite 5 joueurs NBA.", "Fais deviner un tennisman avec 3 indices."]);
+SURPRISE_CLEAN["Cinéma & Séries"].push(...["Cite 5 films de science-fiction.", "Fais deviner un réalisateur avec 3 indices.", "Cite 4 séries Netflix connues.", "Mime un super-héros de cinéma.", "Cite 5 acteurs ou actrices célèbres.", "Fais deviner un méchant de film.", "Cite 4 sagas de cinéma.", "Décris une série sans citer personnage ni titre."]);
+SURPRISE_CLEAN["Anime & Manga"].push(...["Cite 5 antagonistes d’anime.", "Fais deviner un personnage uniquement par ses pouvoirs.", "Cite 4 anime de sport.", "Mime une transformation célèbre.", "Cite 5 membres d’équipages ou équipes d’anime.", "Fais deviner un manga sans nommer son héros.", "Cite 4 sensei célèbres.", "Donne 5 anime sortis après 2010."]);
+SURPRISE_CLEAN["Musique"].push(...["Cite 5 artistes R&B.", "Fais deviner un rappeur avec 3 titres sans les chanter.", "Cite 4 groupes célèbres.", "Mime un instrument.", "Cite 5 artistes français.", "Fais deviner un artiste par son pays et deux indices.", "Cite 5 artistes américains.", "Donne 4 genres musicaux."]);
+SURPRISE_CLEAN["Jeux vidéo"].push(...["Cite 5 jeux Nintendo.", "Fais deviner un héros de jeu par 3 indices.", "Cite 4 jeux Rockstar.", "Mime une mécanique de jeu connue.", "Cite 5 jeux compétitifs.", "Fais deviner une console.", "Cite 4 jeux de course.", "Donne 5 personnages PlayStation."]);
+SURPRISE_CLEAN["Culture générale"].push(...["Cite 5 pays d’Amérique du Sud.", "Donne 4 capitales asiatiques.", "Fais deviner un monument avec 3 indices.", "Cite 5 éléments chimiques.", "Donne 4 océans ou mers.", "Fais deviner un personnage historique.", "Cite 5 langues.", "Donne 4 inventions majeures."]);
+SURPRISE_CLEAN["Mathématiques"].push(...["Calcule mentalement 17 × 6.", "Donne les 5 premiers nombres premiers après 10.", "Calcule 15% de 200.", "Donne le carré de 17.", "Calcule 144 ÷ 12.", "Donne 4 multiples de 13.", "Calcule 7³.", "Résous mentalement 3x+5=26."]);
+
+
+
+const SURPRISE_SUBJECTS={
+'Football':['clubs de Ligue des champions','buteurs célèbres','gardiens célèbres','stades européens','sélections nationales','joueurs français','joueurs sud-américains','entraîneurs célèbres','clubs anglais','clubs espagnols'],
+'Sport':['sports olympiques','champions olympiques','joueurs NBA','pilotes de F1','tennismen célèbres','sports de combat','sports collectifs','athlètes français','records sportifs','disciplines d’hiver'],
+'Cinéma & Séries':['films oscarisés','séries célèbres','acteurs célèbres','réalisateurs','films de science-fiction','films d’animation','sagas de cinéma','méchants célèbres','héros de séries','comédies'],
+'Anime & Manga':['héros d’anime','antagonistes','sensei','anime de sport','mangas shōnen','pouvoirs célèbres','équipes ou équipages','transformations','personnages aux cheveux blancs','anime sortis après 2010'],
+'Musique':['rappeurs français','artistes R&B','groupes célèbres','chanteuses internationales','rappeurs américains','instruments','genres musicaux','artistes français','albums célèbres','duos musicaux'],
+'Jeux vidéo':['jeux Nintendo','héros PlayStation','jeux Rockstar','jeux compétitifs','jeux de course','consoles','boss célèbres','jeux indépendants','FPS célèbres','RPG célèbres'],
+'Dessins animés':['héros de dessins animés','méchants','animaux célèbres','séries Disney','séries Cartoon Network','personnages comiques','duos célèbres','familles animées','robots','personnages des années 2000'],
+'Internet & Réseaux':['réseaux sociaux','créateurs de contenu','mèmes connus','plateformes vidéo','applications mobiles','termes internet','formats courts','métiers du web','émoticônes','tendances virales'],
+'Culture générale':['capitales','pays européens','pays africains','éléments chimiques','monuments','personnages historiques','langues','inventions','océans et mers','scientifiques célèbres'],
+'Mathématiques':['multiples','nombres premiers','carrés parfaits','fractions simples','pourcentages','formes géométriques','puissances','équations simples','diviseurs','suites numériques'],
+'Images':['objets du quotidien','animaux','monuments','logos célèbres','formes','véhicules','aliments','drapeaux','instruments','bâtiments']
+};
+for(const [t,subjects] of Object.entries(SURPRISE_SUBJECTS)){
+ SURPRISE_CLEAN[t]=SURPRISE_CLEAN[t]||[];
+ for(let n=3;n<=12;n++)for(const subject of subjects){
+   SURPRISE_CLEAN[t].push(`Cite ${n} ${subject} sans répéter une réponse.`);
+   SURPRISE_CLEAN[t].push(`Fais deviner ${subject} avec exactement ${Math.min(5,n)} indices, sans prononcer le nom.`);
+ }
+}
+
+for(const t of Object.keys(SURPRISE_CLEAN))SURPRISE_CLEAN[t]=[...new Set(SURPRISE_CLEAN[t])];
 
 const WHO_PHOTOS=[{"answer": "Lionel Messi", "theme": "Football", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Lionel%20Messi%20WC2022.jpg?width=700"}, {"answer": "Cristiano Ronaldo", "theme": "Football", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Cristiano%20Ronaldo%2C%202023.jpg?width=700"}, {"answer": "Neymar", "theme": "Football", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Neymar%202018.jpg?width=700"}, {"answer": "Kylian Mbappé", "theme": "Football", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Kylian%20Mbapp%C3%A9%202019.jpg?width=700"}, {"answer": "Zinedine Zidane", "theme": "Football", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Zinedine%20Zidane%20by%20Tasnim%2003.jpg?width=700"}, {"answer": "Ronaldinho", "theme": "Football", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Ronaldinho%20in%202019.jpg?width=700"}, {"answer": "Erling Haaland", "theme": "Football", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Erling%20Haaland%202023.jpg?width=700"}, {"answer": "Michael Jordan", "theme": "Sport", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Michael%20Jordan%20in%202014.jpg?width=700"}, {"answer": "LeBron James", "theme": "Sport", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/LeBron%20James%20%2851959977144%29%20%28cropped2%29.jpg?width=700"}, {"answer": "Stephen Curry", "theme": "Sport", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Stephen%20Curry%202.jpg?width=700"}, {"answer": "Rafael Nadal", "theme": "Sport", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Rafael%20Nadal%20US%20Open%202022%20cropped.jpg?width=700"}, {"answer": "Novak Djokovic", "theme": "Sport", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Novak%20Djokovic%20Wimbledon%202022.jpg?width=700"}, {"answer": "Lewis Hamilton", "theme": "Sport", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Lewis%20Hamilton%2C%20British%20GP%202022%20%2852382788875%29%20%28cropped%29.jpg?width=700"}, {"answer": "Usain Bolt", "theme": "Sport", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Usain%20Bolt%20after%204%20%C3%97%20100%20m%20Rio%202016.jpg?width=700"}, {"answer": "Eminem", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Eminem%202021%20Color%20Corrected.jpg?width=700"}, {"answer": "Rihanna", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Rihanna%20Fenty%202018.png?width=700"}, {"answer": "Beyoncé", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Beyonce%20-%20The%20Lion%20King%20European%20Premiere%202019.png?width=700"}, {"answer": "Drake", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Drake%20July%202016.jpg?width=700"}, {"answer": "The Weeknd", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/The%20Weeknd%20Cannes%202023.png?width=700"}, {"answer": "Snoop Dogg", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Snoop%20Dogg%202019%20by%20Glenn%20Francis.jpg?width=700"}, {"answer": "Stromae", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Stromae%202011%20cropped.jpg?width=700"}, {"answer": "Bruno Mars", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Bruno%20Mars%2024K%20Magic%20World%20Tour%202018.jpg?width=700"}, {"answer": "Tour Eiffel", "theme": "Culture générale", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Eiffel%20Tower%20from%20the%20Champ%20de%20Mars%2C%20Paris%205%20August%202014.jpg?width=700"}, {"answer": "Statue de la Liberté", "theme": "Culture générale", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Statue%20of%20Liberty%207.jpg?width=700"}, {"answer": "Big Ben", "theme": "Culture générale", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Elizabeth%20Tower%2C%20June%202022.jpg?width=700"}, {"answer": "Colisée", "theme": "Culture générale", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Colosseum%20in%20Rome%2C%20Italy%20-%20April%202007.jpg?width=700"}, {"answer": "Taj Mahal", "theme": "Culture générale", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Taj%20Mahal%2C%20Agra%2C%20India%20edit3.jpg?width=700"}, {"answer": "Mont Fuji", "theme": "Culture générale", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Mt.%20Fuji%20from%20Mt.%20Hachijo-Fuji%2001.jpg?width=700"}];
 const WHO_REBUS=[
@@ -317,9 +355,9 @@ function pickWhoMixed(r){
    const z=unusedPick(r,'whoPhoto',photos);
    const pool=[...new Set([...WHO_PHOTOS.filter(x=>x.theme===z.theme).map(x=>x.answer),...WHO_REBUS.filter(x=>x.theme===z.theme).flatMap(x=>x.a)])].filter(x=>x!==z.answer);
    const wrong=pool.sort(()=>Math.random()-.5).slice(0,3);
-   if(wrong.length===3){const a=[z.answer,...wrong].sort(()=>Math.random()-.5);return {q:'Qui est-ce ?',a,c:a.indexOf(z.answer),theme:z.theme,image:z.image,whoPhoto:true}}
+   if(wrong.length===3){const a=[z.answer,...wrong].sort(()=>Math.random()-.5);return {q:'Qui est-ce ?',a,c:a.indexOf(z.answer),theme:z.theme,image:z.image,whoPhoto:true,difficulty:'moyen'}}
  }
- const z=unusedPick(r,'whoRebus',rebus.length?rebus:WHO_REBUS);return {...z,whoRebus:true};
+ const z=unusedPick(r,'whoRebus',rebus.length?rebus:WHO_REBUS);return {...z,whoRebus:true,difficulty:'dur'};
 }
 
 const BLIND_TEST_BANK={
@@ -366,7 +404,14 @@ function blindRound(r){
  const t=chooseTheme(r,'blindTheme',themes),pool=BLIND_TEST_BANK[t],z=unusedPick(r,'blind:'+t,pool);
  const wrong=pool.filter(x=>x.title!==z.title).sort(()=>Math.random()-.5).slice(0,3).map(x=>x.title);
  const a=[z.title,...wrong].sort(()=>Math.random()-.5);
- return {game:'Blind Test',q:'🎧 BLIND TEST — écoute les 10 secondes',a,c:a.indexOf(z.title),theme:t,blind:true,video:z.video,start:z.start,end:z.start+10,points:500};
+ const difficulty=['simple','moyen','dur'][(Math.max(1,r.gameRound)-1)%3];
+ return {game:'Blind Test',q:'🎧 BLIND TEST — écoute les 10 secondes',a,c:a.indexOf(z.title),theme:t,blind:true,video:z.video,start:z.start,end:z.start+10,difficulty,points:difficultyPoints(difficulty)};
+}
+
+function difficultyPoints(d){return ({simple:250,moyen:500,dur:1000}[d]||500)}
+function speedPoints(base,rank){
+ const mult=[1,0.85,0.70,0.60,0.50,0.45,0.40,0.35,0.30,0.25][Math.min(Math.max(rank-1,0),9)];
+ return Math.max(100,Math.round(base*mult/50)*50);
 }
 function makeRound(r,g){
  let c={game:g};
@@ -374,17 +419,17 @@ function makeRound(r,g){
  else if(g==='Tu me connais ?'){let ps=Object.values(r.players),target=ps[(r.gameRound-1)%ps.length];r.secretChoice=null;r.guesses={};let pool=[];for(const t of r.settings.themes||[])for(const x of (TMC_THEME_BANK[t]||[]))pool.push({t,x});if(!pool.length)for(const [t,a] of Object.entries(TMC_THEME_BANK))for(const x of a)pool.push({t,x});let av=[...new Set(pool.map(o=>o.t))],tt=chooseTheme(r,'allGames',av),tp=pool.filter(o=>o.t===tt),z=unusedPick(r,'tmcTheme:'+tt,tp);c={game:g,phase:'choose',target:target.id,targetName:target.name,q:`🎯 Question sur ${target.name} : ${z.x.q}`,a:z.x.a}}
  else if(g==='Majorité'){let mq=unusedPick(r,'majority',MAJORITY_BANK);c={game:g,q:mq.q,a:mq.a}}
  else if(g==='La Bombe'){let z=themedPick(r,'bomb');c={game:g,q:z.value,theme:z.theme,typedBomb:true,points:500}}
- else if(g==="L’Imposteur"){let z=themedPick(r,'impostor'),w=z.value,ps=Object.values(r.players),imp=ps[Math.floor(Math.random()*ps.length)];r.secret={imp:imp.id,n:w[0],o:w[1]};c={game:g,q:`Thème : ${z.theme} — Décris ton mot sans le dire, puis trouvez l’imposteur !`,theme:z.theme,oral:true}}
+ else if(g==="L’Imposteur"){let z=themedPick(r,'impostor'),w=z.value,ps=Object.values(r.players),imp=ps[Math.floor(Math.random()*ps.length)];r.secret={imp:imp.id,n:w[0],o:w[1]};r.impostorId=imp.id;r.normalWord=w[0];c={game:g,q:`Thème : ${z.theme} — Décris ton mot sans le dire, puis trouvez l’imposteur !`,theme:z.theme,oral:true}}
  else if(g==='Duel'){
    const pairing=makeDuelPairs(r);r.duelWinners={};
-   const duels=pairing.pairs.map((pair,i)=>{const z=pickDuelPrompt(r,String(r.gameRound)+':'+i);return{id:'d'+i,players:pair,theme:z.t,q:z.x}});
+   const duels=pairing.pairs.map((pair,i)=>{const z=pickDuelPrompt(r,String(r.gameRound)+':'+i);const difficulty=['simple','moyen','dur'][(r.gameRound+i)%3];return{id:'d'+i,players:pair,theme:z.t,q:z.x,difficulty,points:difficultyPoints(difficulty)}});
    c={game:g,q:'DUELS',duels,bye:pairing.bye,pairDuel:true,points:500}
  }
- else if(g==='Mot interdit'){let z=themedPick(r,'taboo'),m=z.value;c={game:g,q:`Thème ${z.theme} — Fais deviner « ${m.word} » sans dire « ${m.forbid} ».`,theme:z.theme,oral:true}}
+ else if(g==='Mot interdit'){let z=themedPick(r,'taboo'),m=z.value;c={game:g,q:`🎯 MOT À FAIRE DEVINER : ${m.word} — 🚫 MOT INTERDIT : ${m.forbid} — 📚 ORIGINE : ${z.theme}.`,theme:z.theme,oral:true,tabooWord:m.word,forbiddenWord:m.forbid,origin:z.theme}}
  else if(g==='Blind Test'){c=blindRound(r)}
  else if(g==='Qui est-ce ?'){
  const z=pickWhoMixed(r);
- c={game:g,q:z.q,a:z.a,c:z.c,theme:z.theme,whoRebus:!!z.whoRebus,whoPhoto:!!z.whoPhoto,image:z.image||null,points:500}
+ c={game:g,q:z.q,a:z.a,c:z.c,theme:z.theme,whoRebus:!!z.whoRebus,whoPhoto:!!z.whoPhoto,image:z.image||null,difficulty:z.difficulty||'dur',points:difficultyPoints(z.difficulty||'dur')}
 } else if(g==='Trouve l’intrus'){
  let available=Object.keys(MEGA_INTRUDER_BANK).filter(t=>(r.settings.themes||[]).includes(t));
  if(!available.length)available=Object.keys(MEGA_INTRUDER_BANK);
@@ -413,7 +458,7 @@ function next(r){
    if(r.gameIndex>=r.settings.games.length){io.to(r.code).emit('finished',view(r));return}
    limit=gameLimit(r)
  }
- r.gameRound++;r.round++;r.answers={};r.guesses={};r.oralDecisions={};r.bombAnswers={};r.impostorVotes={};r._advancing=false;
+ r.gameRound++;r.round++;r.answers={};r.answerOrder=[];r.guesses={};r.oralDecisions={};r.bombAnswers={};r.impostorVotes={};r._advancing=false;
  const g=r.settings.games[r.gameIndex],c=makeRound(r,g);r.current=c;
  io.to(r.code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:limit,gameIndex:r.gameIndex,current:c});
  if(g==="L’Imposteur")for(const p of Object.values(r.players))io.to(p.id).emit('secret',{word:p.id===r.secret.imp?r.secret.o:r.secret.n});
@@ -432,14 +477,14 @@ io.on('connection',(s)=>{
 
  socket.on('rerollWho',({code}={})=>{
  const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Qui est-ce ?')return;
- const z=pickWhoMixed(r);r.current={game:'Qui est-ce ?',q:z.q,a:z.a,c:z.c,theme:z.theme,whoRebus:!!z.whoRebus,whoPhoto:!!z.whoPhoto,image:z.image||null,points:500};r.answers={};
+ const z=pickWhoMixed(r);r.current={game:'Qui est-ce ?',q:z.q,a:z.a,c:z.c,theme:z.theme,whoRebus:!!z.whoRebus,whoPhoto:!!z.whoPhoto,image:z.image||null,difficulty:z.difficulty||'dur',points:difficultyPoints(z.difficulty||'dur')};r.answers={};
  io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:r.current});
 });
  socket.on('rerollImpostor',({code}={})=>{
    const r=rooms[code]; if(!r||r.host!==socket.id||!r.current||r.current.game!=="L’Imposteur")return;
    const z=themedPick(r,'impostor'),w=z.value,ps=Object.values(r.players);
    let imp=ps.find(p=>p.id===r.secret?.imp)||ps[Math.floor(Math.random()*ps.length)];
-   r.secret={imp:imp.id,n:w[0],o:w[1]};
+   r.secret={imp:imp.id,n:w[0],o:w[1]};r.impostorId=imp.id;r.normalWord=w[0];
    r.current={game:"L’Imposteur",q:`Thème : ${z.theme} — Nouveau mot distribué.`,theme:z.theme,oral:true};
    io.to(code).emit('round',{current:r.current,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,rerolled:true});
    for(const p of ps)io.to(p.id).emit('secret',{word:p.id===imp.id?w[1]:w[0],impostor:p.id===imp.id,rerolled:true});
@@ -474,6 +519,8 @@ io.on('connection',(s)=>{
    setTimeout(()=>{r.gameIndex++;r.gameRound=0;if(r.gameIndex>=r.settings.games.length)io.to(r.code).emit('finished',view(r));else next(r)},2200);
    return;
  }
+ r.answerOrder=r.answerOrder||[];
+ if(!r.answerOrder.includes(s.id))r.answerOrder.push(s.id);
  r.answers[s.id]=+x.value;
  if(r.current?.game==='Majorité'){
    r.answers[s.id]=+x.value;emit(r);
@@ -489,7 +536,8 @@ io.on('connection',(s)=>{
  }
  const scored=['Quiz Battle','Trouve l’intrus','Qui est-ce ?','Blind Test'].includes(r.current.game);
  const correct=scored && +x.value===r.current.c;
- const pts=correct?(r.current.points||500):0;
+ const rank=Math.max(1,r.answerOrder.indexOf(s.id)+1);
+ const pts=correct?speedPoints((r.current.points||500),rank):0;
  if(pts)r.players[s.id].score+=pts;
  if(scored)io.to(s.id).emit('answerFeedback',{correct,points:pts,correctAnswer:r.current.a?.[r.current.c]});
  emit(r);
@@ -542,10 +590,11 @@ s.on('duelWinner',x=>{
  let r=rooms[x.code];if(!r||r.host!==s.id||r.current?.game!=='Duel'||!r.current?.pairDuel)return;
  const d=(r.current.duels||[]).find(d=>d.id===x.duelId);if(!d||!d.players.includes(x.winnerId)||r.duelWinners?.[d.id])return;
  const loserId=d.players.find(id=>id!==x.winnerId);r.duelWinners=r.duelWinners||{};r.duelWinners[d.id]=x.winnerId;
- if(r.players[x.winnerId])r.players[x.winnerId].score+=500;
- if(r.players[loserId])r.players[loserId].score-=500;
+ const duelPts=d.points||difficultyPoints(d.difficulty||'moyen');
+ if(r.players[x.winnerId])r.players[x.winnerId].score+=duelPts;
+ if(r.players[loserId])r.players[loserId].score-=duelPts;
  emit(r);
- io.to(r.code).emit('duelPairResult',{duelId:d.id,winner:r.players[x.winnerId]?.name,loser:r.players[loserId]?.name});
+ io.to(r.code).emit('duelPairResult',{duelId:d.id,winner:r.players[x.winnerId]?.name,loser:r.players[loserId]?.name,points:duelPts,difficulty:d.difficulty});
  if((r.current.duels||[]).every(z=>r.duelWinners[z.id])){
    r._advancing=true;setTimeout(()=>next(r),1800);
  }
@@ -554,11 +603,11 @@ s.on('award',x=>{let r=rooms[x.code];if(r&&r.host===s.id&&r.players[x.id]){
    if(r.oralDecisions?.[x.id]!=null)return;
    r.oralDecisions=r.oralDecisions||{};r.oralDecisions[x.id]=+x.points>0?'ok':'no';
    r.players[x.id].score+=+x.points||0;emit(r);
-   if(r.current?.oral&&Object.keys(r.players).every(id=>r.oralDecisions[id]!=null)){
+   if(r.current?.oral&&r.current?.game!=="L’Imposteur"&&Object.keys(r.players).every(id=>r.oralDecisions[id]!=null)){
      r._advancing=true;io.to(r.code).emit('allAnswered');setTimeout(()=>next(r),900)
    }
  }});
- s.on('next',c=>{let r=rooms[c];if(r&&r.host===s.id)next(r)});
+ s.on('next',c=>{let r=rooms[c];if(!r||r.host!==s.id)return;r._advancing=false;next(r)});
  s.on('restartSame',c=>{let r=rooms[c];if(r&&r.host===s.id){r.round=0;r.gameIndex=0;r.gameRound=0;r.used=r.used||{};r.total=totalRounds(r);Object.values(r.players).forEach(p=>p.score=0);next(r)}});
  s.on('backToSetup',c=>{let r=rooms[c];if(r&&r.host===s.id){r.round=0;r.gameIndex=0;r.gameRound=0;r.state='lobby';io.to(c).emit('backToSetup');emit(r)}});
  
@@ -611,4 +660,5 @@ s.on('majorityNext',({code}={})=>{
 });
 s.on('disconnect',()=>{for(const c in rooms){let r=rooms[c];if(r.players[s.id]){delete r.players[s.id];if(!Object.keys(r.players).length)delete rooms[c];else{if(r.host===s.id)r.host=Object.keys(r.players)[0];emit(r)}}}})
 });
-server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.12 lancé'));
+server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.37 lancé'));
+const HARD_EXTRA={"Culture générale": [{"q": "Quel traité de 1648 est associé à la fin de la guerre de Trente Ans ?", "a": ["Westphalie", "Utrecht", "Versailles", "Tordesillas"], "c": 0, "difficulty": "dur"}, {"q": "Quel élément chimique porte le numéro atomique 74 ?", "a": ["Tungstène", "Osmium", "Iridium", "Hafnium"], "c": 0, "difficulty": "dur"}, {"q": "Quelle dynastie chinoise a précédé immédiatement les Ming ?", "a": ["Yuan", "Song", "Qing", "Tang"], "c": 0, "difficulty": "dur"}, {"q": "Quel philosophe a écrit Critique de la raison pure ?", "a": ["Kant", "Hegel", "Spinoza", "Leibniz"], "c": 0, "difficulty": "dur"}], "Football": [{"q": "Quel club a remporté la première Coupe d’Europe des clubs champions en 1956 ?", "a": ["Real Madrid", "Benfica", "Milan", "Reims"], "c": 0, "difficulty": "dur"}, {"q": "Quel gardien a remporté le Ballon d’Or 1963 ?", "a": ["Lev Yachine", "Dino Zoff", "Gordon Banks", "Sepp Maier"], "c": 0, "difficulty": "dur"}, {"q": "Quel pays a remporté l’Euro 1992 après avoir été repêché tardivement ?", "a": ["Danemark", "Suède", "Pays-Bas", "Allemagne"], "c": 0, "difficulty": "dur"}], "Anime & Manga": [{"q": "Dans Hunter × Hunter, quel type de Nen est associé à Kurapika lorsque ses yeux deviennent écarlates ?", "a": ["Spécialisation", "Matérialisation", "Renforcement", "Manipulation"], "c": 0, "difficulty": "dur"}, {"q": "Dans Fullmetal Alchemist, quel principe est présenté comme fondamental à l’alchimie au début de l’œuvre ?", "a": ["Échange équivalent", "Transmutation absolue", "Résonance vitale", "Cercle parfait"], "c": 0, "difficulty": "dur"}, {"q": "Dans Bleach, comment se nomme l’étape supérieure de libération d’un Zanpakutō ?", "a": ["Bankai", "Resurrección", "Shikai", "Vollständig"], "c": 0, "difficulty": "dur"}], "Mathématiques": [{"q": "Quelle est la dérivée de ln(x²+1) ?", "a": ["2x/(x²+1)", "1/(x²+1)", "2/(x²+1)", "ln(2x)"], "c": 0, "difficulty": "dur"}, {"q": "Combien vaut la somme des angles intérieurs d’un dodécagone ?", "a": ["1800°", "1620°", "1980°", "2160°"], "c": 0, "difficulty": "dur"}, {"q": "Si log₂(x)=7, combien vaut x ?", "a": ["128", "64", "256", "49"], "c": 0, "difficulty": "dur"}]};for(const [t,a] of Object.entries(HARD_EXTRA)){DB[t]=DB[t]||[];DB[t].push(...a)}

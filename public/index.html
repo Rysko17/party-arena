@@ -14,7 +14,7 @@
 #answerFlash.good .feedbackBox{outline:6px solid #35d07f}
 #answerFlash.bad .feedbackBox{outline:6px solid #ff4d5a}
 </style>
-</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.35 — ULTRA LÉGER</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
+</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.37 — STABLE TESTÉE</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
 <div id="home" class="card">
 <h2>Que veux-tu faire ?</h2>
 <p>Crée une nouvelle partie ou rejoins tes amis avec leur code.</p>
@@ -50,11 +50,23 @@ const s=io(),GL=['Quiz Battle','Tu me connais ?','Majorité','La Bombe',"L’Imp
 let gameRounds={'Quiz Battle':5};
 s.on('connect',()=>{const e=document.getElementById('socketStatus');if(e)e.textContent='🟢 Serveur connecté'});s.on('connect_error',()=>{const e=document.getElementById('socketStatus');if(e)e.textContent='🔴 Serveur non connecté — réessaie dans quelques secondes'});
 
+function playBlind(video,start,end){
+ const b=document.getElementById('blindPlay'),p=document.getElementById('blindPlayer');if(!p)return;
+ if(b)b.disabled=true;
+ p.innerHTML=`<iframe width="100%" height="110" src="https://www.youtube.com/embed/${video}?start=${start}&end=${end}&autoplay=1&controls=1&playsinline=1&rel=0" title="Blind test" frameborder="0" allow="autoplay; encrypted-media"></iframe>`;
+}
+
 s.on('impostorVoteOpen',d=>{
  const box=document.getElementById('answers');if(!box)return;
  box.innerHTML=`<div class="card"><h2>🗳️ VOTE CONTRE L’IMPOSTEUR</h2><p>Qui est l’imposteur ?</p>${d.players.filter(p=>p.id!==me).map(p=>`<button class="ans" onclick="voteImpostor('${p.id}',this)">🗳️ ${p.name}</button>`).join('')}<div id="voteProgress"></div></div>`;
 });
 function startImpostorVote(){s.emit('startImpostorVote',{code:room})}
+
+function playBlind(video,start,end){
+ const b=document.getElementById('blindPlay'),p=document.getElementById('blindPlayer');if(!p)return;
+ if(b)b.disabled=true;
+ p.innerHTML=`<iframe width="100%" height="110" src="https://www.youtube.com/embed/${video}?start=${start}&end=${end}&autoplay=1&controls=1&playsinline=1&rel=0" title="Blind test" frameborder="0" allow="autoplay; encrypted-media"></iframe>`;
+}
 
 function renderImpostorVote(){
  if(!state||state.current?.game!=='L’Imposteur')return;
@@ -193,13 +205,20 @@ if(x.current.game==='L’Imposteur'){
    else a.insertAdjacentHTML('beforeend','<div class="card waiting">⏳ Discussion en cours. L’hôte lancera le vote.</div>');
  },100);
 }
+if(x.current.blind){
+ img.classList.add('hide');
+ q.innerHTML=`🎧 <b>BLIND TEST</b> — ${x.current.theme} <span class="pill">🎯 ${(x.current.difficulty||'moyen').toUpperCase()} • ${x.current.points||500} pts</span>`;
+ answers.innerHTML=`<div class="card"><p>🔊 Clique pour lancer l’extrait de 10 secondes.</p><button id="blindPlay" onclick="playBlind('${x.current.video}',${x.current.start},${x.current.end})">▶️ LANCER L’EXTRAIT</button><div id="blindPlayer"></div></div>`+
+ x.current.a.map((a,i)=>`<div class="ans" onclick="answer(${i})">${a}</div>`).join('');
+ return;
+}
 if(x.current.game==='Duel'&&x.current.pairDuel){
  img.classList.add('hide');const ds=x.current.duels||[];
  const mine=ds.find(d=>d.players.includes(me));
  if(mine){
    const p1=state.players.find(p=>p.id===mine.players[0])?.name||'Joueur 1',p2=state.players.find(p=>p.id===mine.players[1])?.name||'Joueur 2';
    q.innerHTML=`⚔️ <b>${p1} VS ${p2}</b>`;
-   answers.innerHTML=`<div class="card"><small>${mine.theme||''}</small><h2>${mine.q}</h2><p>Répondez à l’oral. L’hôte choisit uniquement le gagnant.</p></div>`;
+   answers.innerHTML=`<div class="card"><small>${mine.theme||''} • difficulté ${mine.difficulty||'moyen'} • ${mine.points||500} pts</small><h2>${mine.q}</h2><p>Répondez à l’oral. L’hôte choisit uniquement le gagnant.</p></div>`;
  }else if(x.current.bye===me){
    q.textContent='⏭️ Tu es exempté de ce duel';answers.innerHTML='<div class="card">Nombre impair de joueurs : tu participeras à un autre affrontement à la prochaine manche.</div>';
  }else{q.textContent='⚔️ Duels en cours';answers.innerHTML='<div class="card">👀 Regarde les autres affrontements.</div>'}
@@ -209,6 +228,11 @@ if(x.current.game==='Duel'&&x.current.pairDuel){
  }
  return;
 }
+if(x.current.game==='L’Imposteur' && me===state?.host && x.current.phase!=='vote' && x.current.phase!=='impostorGuess'){
+ hc.classList.remove('hide');
+ award.innerHTML=`<div class="card"><h3>🕵️ Imposteur</h3><button onclick="startImpostorVote()">🗳️ LANCER LE VOTE</button><button onclick="s.emit('next',room)">⏭️ PASSER / JEU SUIVANT</button></div>`;
+}
+if(x.current.difficulty && !x.current.blind && !x.current.pairDuel) q.innerHTML += ` <small>• ${x.current.difficulty.toUpperCase()} • ${x.current.points||500} pts</small>`;
 if(x.current.answer && state && state.host===me) q.textContent += '  •  Réponse : '+x.current.answer;img.classList.toggle('hide',!x.current.image);if(x.current.image)img.src=x.current.image;if(x.current.game==='Tu me connais ?'&&x.current.phase==='choose'){if(me===x.current.target){q.textContent=x.current.q+' — choisis ta réponse secrètement';answers.innerHTML=x.current.a.map((a,i)=>`<div class="ans" onclick="secretChoice(${i})">${a}</div>`).join('')}else{q.textContent=x.current.targetName+' choisit sa réponse secrète…';answers.innerHTML='<div class="card">⏳ Attends que '+x.current.targetName+' ait choisi. Tu ne peux pas répondre avant.</div>'}}else{answers.innerHTML=x.current.a?x.current.a.map((a,i)=>`<div class="ans" onclick="answer(${i})">${a}</div>`).join(''):''}if(x.current.specialDuel){
  const allowed=[x.current.first,x.current.last].includes(me);
  const f=state?.players?.find(p=>p.id===x.current.first)?.name||'Premier';
@@ -216,7 +240,7 @@ if(x.current.answer && state && state.host===me) q.textContent += '  •  Répon
  q.textContent=`⚡ DUEL FINAL : ${f} 🆚 ${l} — ${x.current.q}`;
  if(!allowed)answers.innerHTML=`<div class="card">👀 Tu regardes le duel entre <b>${f}</b> et <b>${l}</b>.</div>`;
 }
-let h=state&&state.host===me;hc.classList.toggle('hide',!h);if(h)award.innerHTML=x.current.oral?state.players.map(p=>`<div style="margin:8px 0"><b>${p.name}</b> <button onclick="give('${p.id}')">✅ Valider +500</button> <button class="backBtn" onclick="refuse('${p.id}')">❌ Refuser</button></div>`).join(''):''});s.on('tmcGuess',x=>{q.textContent=x.q;if(me===x.target){answers.innerHTML='<div class="card">🤫 Ta réponse est enregistrée. Attends les réponses des autres.</div>'}else{answers.innerHTML=x.a.map((a,i)=>`<div class="ans" onclick="tmcGuess(${i})">${a}</div>`).join('')}});function tmcGuess(i){s.emit('tmcGuess',{code:room,value:i});answers.innerHTML='<div class="card">🔒 Réponse enregistrée.</div>'}s.on('guessResult',x=>{answers.innerHTML+=`<div class="card">${x.correct?'✅ Bonne réponse ! +500':'❌ Mauvaise réponse'}</div>`});
+let h=state&&state.host===me;hc.classList.toggle('hide',!h);if(h&&x.current.game!=='L’Imposteur')award.innerHTML=x.current.oral?state.players.map(p=>`<div style="margin:8px 0"><b>${p.name}</b> <button onclick="give('${p.id}')">✅ Valider +500</button> <button class="backBtn" onclick="refuse('${p.id}')">❌ Refuser</button></div>`).join(''):''});s.on('tmcGuess',x=>{q.textContent=x.q;if(me===x.target){answers.innerHTML='<div class="card">🤫 Ta réponse est enregistrée. Attends les réponses des autres.</div>'}else{answers.innerHTML=x.a.map((a,i)=>`<div class="ans" onclick="tmcGuess(${i})">${a}</div>`).join('')}});function tmcGuess(i){s.emit('tmcGuess',{code:room,value:i});answers.innerHTML='<div class="card">🔒 Réponse enregistrée.</div>'}s.on('guessResult',x=>{answers.innerHTML+=`<div class="card">${x.correct?'✅ Bonne réponse ! +500':'❌ Mauvaise réponse'}</div>`});
 s.on('secret',x=>{secret.classList.remove('hide');secret.innerHTML=`🤫 TON MOT SECRET : <h1>${x.word}</h1>Ne le montre pas.`});s.on('finished',r=>{play.classList.add('hide');final.classList.remove('hide');rank.innerHTML=[...r.players].sort((a,b)=>b.score-a.score).map((p,i)=>`<div class="score"><b>${i+1}. ${p.name}</b><b>${p.score} pts</b></div>`).join('')+`${r.host===me?'<div class="row" style="margin-top:18px"><button onclick="restartSame()">🔁 Recommencer</button><button onclick="backToSetup()">⚙️ Changer jeux / thèmes</button></div>':''}`});function restartSame(){final.classList.add('hide');s.emit('restartSame',room)}
 function backToSetup(){final.classList.add('hide');s.emit('backToSetup',room)}
 s.on('backToSetup',()=>{play.classList.add('hide');final.classList.add('hide');lobby.classList.remove('hide');render()});
