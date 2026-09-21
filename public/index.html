@@ -1,14 +1,6 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Party Arena V5</title><script src="/socket.io/socket.io.js">
-s.on('answerFeedback',d=>{
- const el=document.getElementById('answerFlash'); if(!el)return;
- el.className=d.correct?'good':'bad';
- el.querySelector('.feedbackBox').textContent=d.correct?'✅ BONNE RÉPONSE !':'❌ MAUVAISE RÉPONSE';
- el.style.display='flex';
- setTimeout(()=>{el.style.display='none'},1200);
-});
-
-</script><style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial;background:radial-gradient(circle at 50% 0,#241069,#060814 55%);color:#fff;min-height:100vh}.w{max-width:1200px;margin:auto;padding:24px}.logo{font-size:40px;font-weight:900;font-style:italic;color:#d88cff}.card{background:#10162bd9;border:1px solid #2c3e70;border-radius:18px;padding:20px;margin:14px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:11px}.pick{background:#0b1428;border:1px solid #31527f;border-radius:14px;padding:17px;text-align:center;cursor:pointer}.roundPick{margin-top:10px;width:100%;padding:8px}.pick.on{border:2px solid #c344ff;box-shadow:0 0 15px #8b22ff;background:#24164d}button{border:0;border-radius:11px;padding:13px 17px;background:linear-gradient(90deg,#7924ff,#d52cff);color:#fff;font-weight:800;cursor:pointer}input,select{background:#091126;color:#fff;border:1px solid #3a5077;border-radius:10px;padding:12px}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.hide{display:none}.code{font-size:50px;font-weight:900;letter-spacing:5px}.pill{background:#17213d;padding:9px 12px;border-radius:20px}.q{font-size:27px;font-weight:800;margin:18px 0}.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ans{padding:17px;background:#172544;border:1px solid #385b91;border-radius:13px;cursor:pointer}.img{width:100%;max-height:380px;object-fit:cover;border-radius:16px}.score{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #26314f}@media(max-width:650px){.answers{grid-template-columns:1fr}.w{padding:10px}}
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Party Arena V5</title><script src="/socket.io/socket.io.js"></script><style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial;background:radial-gradient(circle at 50% 0,#241069,#060814 55%);color:#fff;min-height:100vh}.w{max-width:1200px;margin:auto;padding:24px}.logo{font-size:40px;font-weight:900;font-style:italic;color:#d88cff}.card{background:#10162bd9;border:1px solid #2c3e70;border-radius:18px;padding:20px;margin:14px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:11px}.pick{background:#0b1428;border:1px solid #31527f;border-radius:14px;padding:17px;text-align:center;cursor:pointer}.roundPick{margin-top:10px;width:100%;padding:8px}.pick.on{border:2px solid #c344ff;box-shadow:0 0 15px #8b22ff;background:#24164d}button{border:0;border-radius:11px;padding:13px 17px;background:linear-gradient(90deg,#7924ff,#d52cff);color:#fff;font-weight:800;cursor:pointer}input,select{background:#091126;color:#fff;border:1px solid #3a5077;border-radius:10px;padding:12px}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.hide{display:none}.code{font-size:50px;font-weight:900;letter-spacing:5px}.pill{background:#17213d;padding:9px 12px;border-radius:20px}.q{font-size:27px;font-weight:800;margin:18px 0}.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ans{padding:17px;background:#172544;border:1px solid #385b91;border-radius:13px;cursor:pointer}.img{width:100%;max-height:380px;object-fit:cover;border-radius:16px}.score{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #26314f}.hud{position:sticky;top:0;z-index:20;background:#080d1eeF;border:1px solid #33456f;border-radius:14px;padding:10px 14px;margin-bottom:12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.feedback{font-size:22px;font-weight:900;padding:14px;border-radius:14px;margin:12px 0}.waiting{opacity:.9}
+@media(max-width:650px){.answers{grid-template-columns:1fr}.w{padding:10px}}
 .homeChoice{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
 .homeBig{padding:24px 18px;font-size:18px}
 .homePanel{margin-top:16px;padding-top:16px;border-top:1px solid #2c3e70}
@@ -22,7 +14,7 @@ s.on('answerFeedback',d=>{
 #answerFlash.good .feedbackBox{outline:6px solid #35d07f}
 #answerFlash.bad .feedbackBox{outline:6px solid #ff4d5a}
 </style>
-</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.24.1</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
+</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.26</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
 <div id="home" class="card">
 <h2>Que veux-tu faire ?</h2>
 <p>Crée une nouvelle partie ou rejoins tes amis avec leur code.</p>
@@ -40,7 +32,7 @@ s.on('answerFeedback',d=>{
 </div>
 </div>
 <div id="lobby" class="hide"><div class="card"><div class="row"><div><small>CODE DE LA SALLE</small><div id="code" class="code"></div></div><div id="players"></div></div></div><div id="setup" class="card hide"><h2>1. Choisir les jeux</h2><div id="games" class="grid"></div><h2>2. Choisir les thèmes</h2><div id="themes" class="grid"></div><div class="row" style="margin-top:18px"><button onclick="start()">▶ JOUER</button></div></div><div id="wait" class="card">En attente de l’hôte…</div></div>
-<div id="play" class="card hide"><div class="row"><b id="rl"></b><b id="gl"></b></div><small id="tl"></small><div id="secret" class="card hide"></div><div id="q" class="q"></div><img id="img" class="img hide"><div id="answers" class="answers"></div><div id="hc" class="hide"><h3>Points manuels</h3><div id="award"></div><br><button onclick="next()">Manche suivante ➜</button></div></div>
+<div id="play" class="card hide"><div class="row"><b id="rl"></b><b id="gl"></b></div><small id="tl"></small><div id="secret" class="card hide"></div><div id="liveHud" class="hud"><b id="myScore">Mon score : 0 pts</b><b id="answerCount">Réponses : 0/0</b></div><div id="roundFeedback"></div><div id="q" class="q"></div><img id="img" class="img hide"><div id="answers" class="answers"></div><div id="hc" class="hide"><h3>Points manuels</h3><div id="award"></div><br><button onclick="next()">Manche suivante ➜</button></div></div>
 <div id="final" class="card hide"><h1>🏆 Classement final</h1><div id="rank"></div></div></div><script>
 
 function changeImpostorWord(){
@@ -132,16 +124,26 @@ function openL(){
   });
 }
 function next(){s.emit('next',room)}function answer(i){s.emit('answer',{code:room,value:i});document.querySelectorAll('.ans').forEach(x=>x.style.pointerEvents='none')}function give(id){s.emit('award',{code:room,id,points:500})}function refuse(id){s.emit('award',{code:room,id,points:0})}function secretChoice(i){s.emit('secretChoice',{code:room,value:i});answers.innerHTML='<div class="card">✅ Réponse secrète enregistrée. Les autres peuvent maintenant deviner.</div>'}
-s.on('connect',()=>me=s.id);s.on('room',r=>{state=r;players.innerHTML=r.players.map(p=>`<span class="pill">${p.name} · ${p.score}</span> `).join('');let h=r.host===me;setup.classList.toggle('hide',!h);wait.classList.toggle('hide',h);if(h){cg=new Set(r.settings.games);ct=new Set(r.settings.themes);gameRounds={...(r.settings.gameRounds||{})};render()}});
-s.on('round',x=>{
+s.on('connect',()=>me=s.id);s.on('room',r=>{state=r;
+ const mine=r.players.find(p=>p.id===me),ms=document.getElementById('myScore');
+ if(ms)ms.textContent=`Mon score : ${mine?.score||0} pts`;
+ players.innerHTML=r.players.map(p=>`<span class="pill">${p.name} · ${p.score}</span> `).join('');let h=r.host===me;setup.classList.toggle('hide',!h);wait.classList.toggle('hide',h);if(h){cg=new Set(r.settings.games);ct=new Set(r.settings.themes);gameRounds={...(r.settings.gameRounds||{})};render()}});
+s.on('round',x=>{const ac=document.getElementById('answerCount');if(ac)ac.textContent='Réponses : 0/0';const rf=document.getElementById('roundFeedback');if(rf)rf.innerHTML='';
 const jb=[...document.querySelectorAll('button')].find(b=>b.textContent==='Lancement…');if(jb){jb.disabled=false;jb.textContent='▶ JOUER'};lobby.classList.add('hide');play.classList.remove('hide');secret.classList.add('hide');rl.textContent=`${x.current.game} — Manche ${x.gameRound}/${x.gameTotal}`;gl.textContent=x.current.game;tl.textContent=x.current.theme||'';q.innerHTML=(x.current.q||'')+(x.current.difficulty?` <span class="pill">🎯 ${x.current.difficulty.toUpperCase()} • ${x.current.points} pts</span>`:'');
-if(x.current.game==='Qui est-ce ?' && me===room.host){award.innerHTML=`<button onclick="s.emit('rerollWho',{code:room})">🔄 CHANGER L’IMAGE / QUESTION</button>`;}
-if(x.current.typedBomb){
+if(x.current.game==='Qui est-ce ?' && me===state?.host){award.innerHTML=`<button onclick="s.emit('rerollWho',{code:room})">🔄 CHANGER L’IMAGE / QUESTION</button>`;}
+if(x.current.typedBomb && me!==state?.host){
  answers.innerHTML=`<div class="card"><h2>💣 LA BOMBE — ${x.current.theme||''}</h2><p>${x.current.q}</p><input id="bombInput" type="text" autocomplete="off" maxlength="80" placeholder="ÉCRIS TA RÉPONSE ICI..." style="display:block;width:100%;box-sizing:border-box;padding:18px;margin:16px 0;font-size:20px;border:2px solid #fff;border-radius:14px;background:#fff;color:#111"><button id="bombSend" onclick="sendBomb()">📨 ENVOYER</button><div id="bombStatus"></div></div>`;
- award.innerHTML=me===room.host?'<div class="card"><h3>👑 Validation des réponses</h3><div id="bombReview">En attente...</div></div>':'';
+ award.innerHTML=me===state?.host?'<div class="card"><h3>👑 Validation des réponses</h3><div id="bombReview">En attente...</div></div>':'';
  return;
 }
-if(x.current.answer && state && state.host===me) q.textContent += '  •  Réponse : '+x.current.answer;img.classList.toggle('hide',!x.current.image);if(x.current.image)img.src=x.current.image;if(x.current.game==='Tu me connais ?'&&x.current.phase==='choose'){if(me===x.current.target){q.textContent=x.current.q+' — choisis ta réponse secrètement';answers.innerHTML=x.current.a.map((a,i)=>`<div class="ans" onclick="secretChoice(${i})">${a}</div>`).join('')}else{q.textContent=x.current.targetName+' choisit sa réponse secrète…';answers.innerHTML='<div class="card">⏳ Attends que '+x.current.targetName+' ait choisi. Tu ne peux pas répondre avant.</div>'}}else{answers.innerHTML=x.current.a?x.current.a.map((a,i)=>`<div class="ans" onclick="answer(${i})">${a}</div>`).join(''):''}let h=state&&state.host===me;hc.classList.toggle('hide',!h);if(h)award.innerHTML=x.current.oral?state.players.map(p=>`<div style="margin:8px 0"><b>${p.name}</b> <button onclick="give('${p.id}')">✅ Valider +500</button> <button class="backBtn" onclick="refuse('${p.id}')">❌ Refuser</button></div>`).join(''):''});s.on('tmcGuess',x=>{q.textContent=x.q;if(me===x.target){answers.innerHTML='<div class="card">🤫 Ta réponse est enregistrée. Attends les réponses des autres.</div>'}else{answers.innerHTML=x.a.map((a,i)=>`<div class="ans" onclick="tmcGuess(${i})">${a}</div>`).join('')}});function tmcGuess(i){s.emit('tmcGuess',{code:room,value:i});answers.innerHTML='<div class="card">🔒 Réponse enregistrée.</div>'}s.on('guessResult',x=>{answers.innerHTML+=`<div class="card">${x.correct?'✅ Bonne réponse ! +500':'❌ Mauvaise réponse'}</div>`});
+if(x.current.answer && state && state.host===me) q.textContent += '  •  Réponse : '+x.current.answer;img.classList.toggle('hide',!x.current.image);if(x.current.image)img.src=x.current.image;if(x.current.game==='Tu me connais ?'&&x.current.phase==='choose'){if(me===x.current.target){q.textContent=x.current.q+' — choisis ta réponse secrètement';answers.innerHTML=x.current.a.map((a,i)=>`<div class="ans" onclick="secretChoice(${i})">${a}</div>`).join('')}else{q.textContent=x.current.targetName+' choisit sa réponse secrète…';answers.innerHTML='<div class="card">⏳ Attends que '+x.current.targetName+' ait choisi. Tu ne peux pas répondre avant.</div>'}}else{answers.innerHTML=x.current.a?x.current.a.map((a,i)=>`<div class="ans" onclick="answer(${i})">${a}</div>`).join(''):''}if(x.current.specialDuel){
+ const allowed=[x.current.first,x.current.last].includes(me);
+ const f=state?.players?.find(p=>p.id===x.current.first)?.name||'Premier';
+ const l=state?.players?.find(p=>p.id===x.current.last)?.name||'Dernier';
+ q.textContent=`⚡ DUEL FINAL : ${f} 🆚 ${l} — ${x.current.q}`;
+ if(!allowed)answers.innerHTML=`<div class="card">👀 Tu regardes le duel entre <b>${f}</b> et <b>${l}</b>.</div>`;
+}
+let h=state&&state.host===me;hc.classList.toggle('hide',!h);if(h)award.innerHTML=x.current.oral?state.players.map(p=>`<div style="margin:8px 0"><b>${p.name}</b> <button onclick="give('${p.id}')">✅ Valider +500</button> <button class="backBtn" onclick="refuse('${p.id}')">❌ Refuser</button></div>`).join(''):''});s.on('tmcGuess',x=>{q.textContent=x.q;if(me===x.target){answers.innerHTML='<div class="card">🤫 Ta réponse est enregistrée. Attends les réponses des autres.</div>'}else{answers.innerHTML=x.a.map((a,i)=>`<div class="ans" onclick="tmcGuess(${i})">${a}</div>`).join('')}});function tmcGuess(i){s.emit('tmcGuess',{code:room,value:i});answers.innerHTML='<div class="card">🔒 Réponse enregistrée.</div>'}s.on('guessResult',x=>{answers.innerHTML+=`<div class="card">${x.correct?'✅ Bonne réponse ! +500':'❌ Mauvaise réponse'}</div>`});
 s.on('secret',x=>{secret.classList.remove('hide');secret.innerHTML=`🤫 TON MOT SECRET : <h1>${x.word}</h1>Ne le montre pas.`});s.on('finished',r=>{play.classList.add('hide');final.classList.remove('hide');rank.innerHTML=[...r.players].sort((a,b)=>b.score-a.score).map((p,i)=>`<div class="score"><b>${i+1}. ${p.name}</b><b>${p.score} pts</b></div>`).join('')+`${r.host===me?'<div class="row" style="margin-top:18px"><button onclick="restartSame()">🔁 Recommencer</button><button onclick="backToSetup()">⚙️ Changer jeux / thèmes</button></div>':''}`});function restartSame(){final.classList.add('hide');s.emit('restartSame',room)}
 function backToSetup(){final.classList.add('hide');s.emit('backToSetup',room)}
 s.on('backToSetup',()=>{play.classList.add('hide');final.classList.add('hide');lobby.classList.remove('hide');render()});
@@ -153,13 +155,13 @@ s.on('gameRanking',x=>{
  '<h2 style="margin-top:22px">⚡ Le dernier affronte le premier !</h2><p>Une seule question. Si le dernier gagne, il vole 500 points au premier. Si le premier gagne, aucun point ne bouge.</p>';
  document.body.appendChild(box);setTimeout(()=>box.remove(),2000);
 });
-s.on('duelResult',x=>{alert(x.stolen?`⚡ ${x.winner} gagne et vole ${x.stolen} points !`:`👑 ${x.winner} gagne : le classement reste inchangé.`)});
+s.on('duelResult',x=>{alert(x.tie?'⚖️ Égalité : aucun point volé.':x.stolen?`⚡ ${x.winner} gagne et vole ${x.stolen} points !`:`👑 ${x.winner} gagne : le classement reste inchangé.`)});
 
 
 function rerollImpostor(){if(confirm('Changer le mot pour tout le monde ?'))s.emit('rerollImpostor',{code:room})}
 function sendBomb(){
  const i=document.getElementById('bombInput');if(!i||!i.value.trim())return;
- s.emit('bombAnswer',{code:room.code,text:i.value.trim()});i.disabled=true;
+ s.emit('bombAnswer',{code:room,text:i.value.trim()});i.disabled=true;
  const b=i.nextElementSibling;if(b)b.disabled=true;
  document.getElementById('bombStatus').innerHTML='<p>⏳ Réponse envoyée. L’hôte doit la valider.</p>';
 }
@@ -168,14 +170,26 @@ s.on('bombAnswers',all=>{
  const mine=all[me],st=document.getElementById('bombStatus');
  if(st&&mine)st.innerHTML=`<p>${mine.status==='pending'?'⏳ En attente de validation':mine.status==='accepted'?'✅ +500 points':'❌ Réponse refusée'}</p>`;
  const rev=document.getElementById('bombReview');
- if(rev&&room&&me===room.host){
-  rev.innerHTML=Object.entries(room.players||{}).map(()=> '').join('');
-  rev.innerHTML=Object.values(room.players||{}).map(p=>{
+ if(rev&&room&&me===state?.host){
+  rev.innerHTML=(state?.players||[]).map(()=> '').join('');
+  rev.innerHTML=(state?.players||[]).map(p=>{
     const a=all[p.id]; if(!a)return `<div class="score"><b>${p.name}</b><span>⏳ pas encore répondu</span></div>`;
     if(a.status!=='pending')return `<div class="score"><b>${p.name}: ${a.text}</b><span>${a.status==='accepted'?'✅ validé':'❌ refusé'}</span></div>`;
     return `<div class="card"><b>${p.name}</b> : ${a.text}<br><button onclick="bombDecision('${p.id}',true)">✅ Valider +500</button> <button onclick="bombDecision('${p.id}',false)">❌ Refuser</button></div>`;
   }).join('');
  }
+});
+
+
+s.on('answerFeedback',d=>{
+ const el=document.getElementById('roundFeedback'); if(!el)return;
+ el.innerHTML=`<div class="feedback">${d.correct?'✅ BONNE RÉPONSE ! +'+(d.points||0)+' POINTS':'❌ MAUVAISE RÉPONSE'}${d.correctAnswer?`<br><small>Bonne réponse : ${d.correctAnswer}</small>`:''}</div>`;
+});
+s.on('answerProgress',d=>{
+ const el=document.getElementById('answerCount'); if(el)el.textContent=`Réponses : ${d.done}/${d.total}`;
+});
+s.on('roundReveal',d=>{
+ const el=document.getElementById('roundFeedback'); if(el&&d.answer)el.innerHTML+=`<div class="card">💡 Bonne réponse : <b>${d.answer}</b>${d.why?`<br>${d.why}`:''}</div>`;
 });
 
 render();s.on('allAnswered',()=>{answers.innerHTML='<div class="card">✅ Tout le monde a répondu !<br>Question suivante…</div>'});
@@ -208,6 +222,14 @@ s.on('bombAnswers',data=>{
    <button onclick="s.emit('bombDecision',{code:room,playerId:'${a.id}',accept:false})">❌ REFUSER</button>`:`<b>${status==='accepted'||status===true?'✅ Validé':'❌ Refusé'}</b>`}</div>`;
  }).join('');
  z.innerHTML=`<div class="card" style="max-width:900px;margin:12px auto"><h3>💣 Validation des réponses</h3>${rows}</div>`;
+});
+
+
+s.on('secret',x=>{
+ if(x?.rerolled && me===state?.host){
+   const z=document.getElementById('persistentHostControls');
+   if(z)z.insertAdjacentHTML('beforeend','<div class="card">✅ NOUVEAU MOT ENVOYÉ À TOUT LE MONDE</div>');
+ }
 });
 
 </script></body></html>

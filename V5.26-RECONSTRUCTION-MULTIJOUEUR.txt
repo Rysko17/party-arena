@@ -1,0 +1,11 @@
+V5.26 — reconstruction multijoueur
+- Chaque QCM attend tous les joueurs avant la manche suivante.
+- Feedback individuel bonne/mauvaise réponse + points.
+- Score personnel visible en permanence + compteur de réponses.
+- Révélation de la bonne réponse en fin de manche.
+- Tu me connais : nom de la personne directement dans la question + attente des autres.
+- Bombe : hôte modérateur; joueurs répondent; validation/refus serveur par joueur.
+- Duel Premier/Dernier : seuls les deux concernés répondent, les autres regardent; attente des deux; vol de 500 seulement si le dernier est correct et le premier faux.
+- Réinitialisation des réponses Bombe à chaque manche.
+- Correction du listener answerFeedback qui était placé dans une balise script externe et n'était pas exécuté.
+NOTE: la banque de questions doit encore être nettoyée séparément; cette version vise d'abord le moteur multijoueur.

@@ -155,16 +155,16 @@ const MEGA_INTRUDER_BANK={"Anime & Manga": [{"q": "Qui est l’intrus ? Trois co
 function makeRound(r,g){
  let c={game:g};
  if(g==='Quiz Battle'){let x=question(r);c={game:g,q:x.q,a:x.a,c:x.c,image:x.image||null,theme:x.theme,difficulty:x.difficulty||'simple',points:({simple:250,moyen:500,dur:1000}[x.difficulty]||250)}}
- else if(g==='Tu me connais ?'){let ps=Object.values(r.players),target=ps[(r.gameRound-1)%ps.length];r.secretChoice=null;r.guesses={};let pool=[];for(const t of r.settings.themes||[])for(const x of (TMC_THEME_BANK[t]||[]))pool.push({t,x});if(!pool.length)for(const [t,a] of Object.entries(TMC_THEME_BANK))for(const x of a)pool.push({t,x});let av=[...new Set(pool.map(o=>o.t))],tt=chooseTheme(r,'allGames',av),tp=pool.filter(o=>o.t===tt),z=unusedPick(r,'tmcTheme:'+tt,tp);c={game:g,phase:'choose',target:target.id,targetName:target.name,q:`${z.t} — ${z.x.q}`,a:z.x.a}}
+ else if(g==='Tu me connais ?'){let ps=Object.values(r.players),target=ps[(r.gameRound-1)%ps.length];r.secretChoice=null;r.guesses={};let pool=[];for(const t of r.settings.themes||[])for(const x of (TMC_THEME_BANK[t]||[]))pool.push({t,x});if(!pool.length)for(const [t,a] of Object.entries(TMC_THEME_BANK))for(const x of a)pool.push({t,x});let av=[...new Set(pool.map(o=>o.t))],tt=chooseTheme(r,'allGames',av),tp=pool.filter(o=>o.t===tt),z=unusedPick(r,'tmcTheme:'+tt,tp);c={game:g,phase:'choose',target:target.id,targetName:target.name,q:`🎯 Question sur ${target.name} — ${z.t} — ${z.x.q.replace(/\?$/,'')} ?`,a:z.x.a}}
  else if(g==='Majorité'){let mq=unusedPick(r,'majority',MAJORITY_BANK);c={game:g,q:mq.q,a:mq.a}}
  else if(g==='La Bombe'){let z=themedPick(r,'bomb');c={game:g,q:z.value,theme:z.theme,typedBomb:true,points:500}}
  else if(g==="L’Imposteur"){let z=themedPick(r,'impostor'),w=z.value,ps=Object.values(r.players),imp=ps[Math.floor(Math.random()*ps.length)];r.secret={imp:imp.id,n:w[0],o:w[1]};c={game:g,q:`Thème : ${z.theme} — Décris ton mot sans le dire, puis trouvez l’imposteur !`,theme:z.theme,oral:true}}
  else if(g==='Duel'){let pool=[];for(const t of r.settings.themes||[])for(const x of (DUEL_THEME_BANK[t]||[]))pool.push({t,x});if(!pool.length)for(const [t,a] of Object.entries(DUEL_THEME_BANK))for(const x of a)pool.push({t,x});let av=[...new Set(pool.map(o=>o.t))],tt=chooseTheme(r,'allGames',av),tp=pool.filter(o=>o.t===tt),z=unusedPick(r,'duelTheme:'+tt,tp);c={game:g,q:`Thème ${z.t} — ${z.x}`,oral:true}}
  else if(g==='Mot interdit'){let z=themedPick(r,'taboo'),m=z.value;c={game:g,q:`Thème ${z.theme} — Fais deviner « ${m.word} » sans dire « ${m.forbid} ».`,theme:z.theme,oral:true}}
  else if(g==='Qui est-ce ?'){
- let available=Object.keys(WHO_RELIABLE).filter(t=>(WHO_RELIABLE[t]||[]).length&&(r.settings.themes||[]).includes(t));
- if(!available.length)available=Object.keys(WHO_RELIABLE).filter(t=>(WHO_RELIABLE[t]||[]).length);
- let t=chooseTheme(r,'allGames',available),w=unusedPick(r,'whoReliable:'+t,WHO_RELIABLE[t]);
+ let available=Object.keys(WHO_BANK).filter(t=>(r.settings.themes||[]).includes(t)&&(WHO_BANK[t]||[]).some(w=>/^https?:\/\//.test(w[2]||'')));
+ if(!available.length)available=Object.keys(WHO_BANK).filter(t=>(WHO_BANK[t]||[]).some(w=>/^https?:\/\//.test(w[2]||'')));
+ let t=chooseTheme(r,'allGames',available),valid=(WHO_BANK[t]||[]).filter(w=>/^https?:\/\//.test(w[2]||'')),w=unusedPick(r,'whoReal:'+t,valid);
  c={game:g,q:`Thème ${t} — Qui est-ce ?`,a:w[1],c:w[1].indexOf(w[0]),image:w[2],theme:t,who:true,points:500}
 } else if(g==='Trouve l’intrus'){
  let available=Object.keys(MEGA_INTRUDER_BANK).filter(t=>(r.settings.themes||[]).includes(t));
@@ -194,7 +194,7 @@ function next(r){
    if(r.gameIndex>=r.settings.games.length){io.to(r.code).emit('finished',view(r));return}
    limit=gameLimit(r)
  }
- r.gameRound++;r.round++;r.answers={};r.guesses={};r.oralDecisions={};r._advancing=false;
+ r.gameRound++;r.round++;r.answers={};r.guesses={};r.oralDecisions={};r.bombAnswers={};r._advancing=false;
  const g=r.settings.games[r.gameIndex],c=makeRound(r,g);r.current=c;
  io.to(r.code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:limit,gameIndex:r.gameIndex,current:c});
  if(g==="L’Imposteur")for(const p of Object.values(r.players))io.to(p.id).emit('secret',{word:p.id===r.secret.imp?r.secret.o:r.secret.n});
@@ -213,14 +213,12 @@ io.on('connection',(s)=>{
 
  socket.on('rerollWho',({code}={})=>{
    const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Qui est-ce ?')return;
-   let available=Object.keys(WHO_RELIABLE).filter(t=>(WHO_RELIABLE[t]||[]).length&&(r.settings.themes||[]).includes(t));
-   if(!available.length)available=Object.keys(WHO_RELIABLE).filter(t=>(WHO_RELIABLE[t]||[]).length);
-   let t=chooseTheme(r,'allGames',available),w=unusedPick(r,'whoReliable:'+t,WHO_RELIABLE[t]);
+   let available=Object.keys(WHO_BANK).filter(t=>(r.settings.themes||[]).includes(t)&&(WHO_BANK[t]||[]).some(w=>/^https?:\/\//.test(w[2]||'')));
+   if(!available.length)available=Object.keys(WHO_BANK).filter(t=>(WHO_BANK[t]||[]).some(w=>/^https?:\/\//.test(w[2]||'')));
+   let t=chooseTheme(r,'allGames',available),valid=(WHO_BANK[t]||[]).filter(w=>/^https?:\/\//.test(w[2]||'')),w=unusedPick(r,'whoReal:'+t,valid);
    r.current={game:'Qui est-ce ?',q:`Thème ${t} — Qui est-ce ?`,a:w[1],c:w[1].indexOf(w[0]),image:w[2],theme:t,who:true,points:500};
    io.to(code).emit('round',{current:r.current,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex});
  });
-
- 
 
  socket.on('rerollImpostor',({code}={})=>{
    const r=rooms[code]; if(!r||r.host!==socket.id||!r.current||r.current.game!=="L’Imposteur")return;
@@ -229,35 +227,75 @@ io.on('connection',(s)=>{
    r.secret={imp:imp.id,n:w[0],o:w[1]};
    r.current={game:"L’Imposteur",q:`Thème : ${z.theme} — Nouveau mot distribué.`,theme:z.theme,oral:true};
    io.to(code).emit('round',{current:r.current,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,rerolled:true});
-   for(const p of ps)io.to(p.id).emit('secretWord',{word:p.id===imp.id?w[1]:w[0],impostor:p.id===imp.id});
+   for(const p of ps)io.to(p.id).emit('secret',{word:p.id===imp.id?w[1]:w[0],impostor:p.id===imp.id,rerolled:true});
  });
 
  s.on('create',({name},cb)=>{let c;do c=code();while(rooms[c]);let r=rooms[c]={code:c,host:s.id,players:{},settings:{games:['Quiz Battle'],themes:['Culture générale'],gameRounds:{'Quiz Battle':5}},round:0,total:5,state:'lobby'};r.players[s.id]={id:s.id,name:name||'Hôte',score:0};s.join(c);cb({ok:true,code:c});emit(r)});
  s.on('join',({code:c,name},cb)=>{c=(c||'').toUpperCase();let r=rooms[c];if(!r)return cb({ok:false});r.players[s.id]={id:s.id,name:name||'Joueur',score:0};s.join(c);cb({ok:true});emit(r)});
  s.on('settings',(x,cb)=>{let r=rooms[x.code];if(!r||r.host!==s.id)return cb&&cb({ok:false});r.settings=x.settings;r.total=totalRounds(r);emit(r);cb&&cb({ok:true})});
  s.on('start',(c,cb)=>{let r=rooms[c];if(!r||r.host!==s.id)return cb&&cb({ok:false});if(!r.settings.games?.length)return cb&&cb({ok:false});r.round=0;r.gameIndex=0;r.gameRound=0;r.used=r.used||{};r.total=totalRounds(r);Object.values(r.players).forEach(p=>p.score=0);cb&&cb({ok:true});next(r)});
- s.on('answer',x=>{let r=rooms[x.code];if(!r||r.answers?.[s.id]!=null)return;
+ s.on('answer',x=>{
+ let r=rooms[x.code];if(!r||!r.players[s.id]||r.answers?.[s.id]!=null)return;
+ r.answers=r.answers||{};
  if(r.current?.specialDuel){
    if(s.id!==r.duelFirst&&s.id!==r.duelLast)return;
-   r.answers=r.answers||{};r.answers[s.id]=x.value;
-   if(+x.value===r.current.c){
-     if(s.id===r.duelLast){let steal=Math.min(500,r.players[r.duelFirst].score);r.players[r.duelFirst].score-=steal;r.players[r.duelLast].score+=steal;io.to(r.code).emit('duelResult',{winner:r.players[s.id].name,stolen:steal})}
-     else io.to(r.code).emit('duelResult',{winner:r.players[s.id].name,stolen:0});
-     r.afterGameDuel=true;setTimeout(()=>{r.afterGameDuel=false;r.gameIndex++;r.gameRound=0;if(r.gameIndex>=r.settings.games.length)io.to(r.code).emit('finished',view(r));else next(r)},1800);emit(r);return;
-   }
+   r.answers[s.id]=+x.value;
+   const duelIds=[r.duelFirst,r.duelLast].filter(Boolean);
+   io.to(r.code).emit('answerProgress',{done:Object.keys(r.answers).length,total:duelIds.length});
+   if(!duelIds.every(id=>r.answers[id]!=null))return;
+   const firstCorrect=+r.answers[r.duelFirst]===r.current.c;
+   const lastCorrect=+r.answers[r.duelLast]===r.current.c;
+   io.to(r.duelFirst).emit('answerFeedback',{correct:firstCorrect,points:0,correctAnswer:r.current.a?.[r.current.c]});
+   io.to(r.duelLast).emit('answerFeedback',{correct:lastCorrect,points:lastCorrect&&!firstCorrect?500:0,correctAnswer:r.current.a?.[r.current.c]});
+   let winner=null,stolen=0;
+   if(lastCorrect&&!firstCorrect){
+      stolen=Math.min(500,r.players[r.duelFirst].score);
+      r.players[r.duelFirst].score-=stolen;r.players[r.duelLast].score+=stolen;winner=r.players[r.duelLast].name;
+   } else if(firstCorrect&&!lastCorrect){winner=r.players[r.duelFirst].name}
+   io.to(r.code).emit('roundReveal',{answer:r.current.a?.[r.current.c]||''});
+   io.to(r.code).emit('duelResult',{winner,stolen,tie:firstCorrect===lastCorrect});
+   emit(r);
+   r.afterGameDuel=false;
+   setTimeout(()=>{r.gameIndex++;r.gameRound=0;if(r.gameIndex>=r.settings.games.length)io.to(r.code).emit('finished',view(r));else next(r)},2200);
    return;
  }
- r.answers=r.answers||{};r.answers[s.id]=x.value;if((r.current.game==='Quiz Battle'||r.current.game==='Trouve l’intrus'||r.current.game==='Qui est-ce ?')&&+x.value===r.current.c)r.players[s.id].score+=(r.current.points||500);emit(r);scheduleNextIfAll(r)});
+ r.answers[s.id]=+x.value;
+ const scored=['Quiz Battle','Trouve l’intrus','Qui est-ce ?'].includes(r.current.game);
+ const correct=scored && +x.value===r.current.c;
+ const pts=correct?(r.current.points||500):0;
+ if(pts)r.players[s.id].score+=pts;
+ if(scored)io.to(s.id).emit('answerFeedback',{correct,points:pts,correctAnswer:r.current.a?.[r.current.c]});
+ emit(r);
+ const ids=Object.keys(r.players);
+ io.to(r.code).emit('answerProgress',{done:Object.keys(r.answers).length,total:ids.length});
+ if(ids.every(id=>r.answers[id]!=null)){
+   io.to(r.code).emit('roundReveal',{answer:r.current.a?.[r.current.c]||'',why:r.current.why||''});
+   r._advancing=true;setTimeout(()=>next(r),1800);
+ }
+});
  s.on('secretChoice',x=>{let r=rooms[x.code];if(!r||r.current.game!=='Tu me connais ?'||r.current.target!==s.id||r.current.phase!=='choose')return;r.secretChoice=+x.value;r.current.phase='guess';io.to(r.code).emit('tmcGuess',{q:r.current.q,a:r.current.a,target:r.current.target,targetName:r.current.targetName})});
- s.on('tmcGuess',x=>{let r=rooms[x.code];if(!r||r.current.game!=='Tu me connais ?'||r.current.phase!=='guess'||s.id===r.current.target||r.guesses[s.id]!=null)return;r.guesses[s.id]=+x.value;if(+x.value===r.secretChoice)r.players[s.id].score+=500;emit(r);io.to(s.id).emit('guessResult',{correct:+x.value===r.secretChoice});scheduleNextIfAll(r)});
+ s.on('tmcGuess',x=>{
+ let r=rooms[x.code];if(!r||r.current.game!=='Tu me connais ?'||r.current.phase!=='guess'||s.id===r.current.target||r.guesses[s.id]!=null)return;
+ r.guesses[s.id]=+x.value;const correct=+x.value===r.secretChoice;
+ if(correct)r.players[s.id].score+=500;
+ emit(r);io.to(s.id).emit('guessResult',{correct,points:correct?500:0});
+ const eligible=Object.keys(r.players).filter(id=>id!==r.current.target);
+ io.to(r.code).emit('answerProgress',{done:Object.keys(r.guesses).length,total:eligible.length});
+ if(eligible.length&&eligible.every(id=>r.guesses[id]!=null)){
+   io.to(r.code).emit('roundReveal',{answer:r.current.a?.[r.secretChoice]||''});
+   r._advancing=true;setTimeout(()=>next(r),1800);
+ }
+});
  
 s.on('bombAnswer',x=>{
  let r=rooms[x.code];if(!r||!r.current?.typedBomb||!r.players[s.id])return;
  r.bombAnswers=r.bombAnswers||{};
  if(r.bombAnswers[s.id])return;
  let txt=String(x.text||'').trim().slice(0,80);if(!txt)return;
- r.bombAnswers[s.id]={text:txt,status:'pending'};
+ r.bombAnswers[s.id]={id:s.id,name:r.players[s.id].name,text:txt,status:'pending'};
  io.to(r.code).emit('bombAnswers',r.bombAnswers);
+ const eligible=Object.keys(r.players).filter(id=>id!==r.host);
+ io.to(r.code).emit('answerProgress',{done:Object.keys(r.bombAnswers).filter(id=>eligible.includes(id)).length,total:eligible.length});
 });
 s.on('bombDecision',x=>{
  let r=rooms[x.code];if(!r||s.id!==r.host||!r.current?.typedBomb)return;
@@ -265,8 +303,9 @@ s.on('bombDecision',x=>{
  a.status=x.accept?'accepted':'refused';
  if(x.accept&&r.players[x.playerId])r.players[x.playerId].score+=(r.current.points||500);
  io.to(r.code).emit('bombAnswers',r.bombAnswers);emit(r);
- const ids=Object.keys(r.players);
- if(ids.every(id=>r.bombAnswers?.[id]&&r.bombAnswers[id].status!=='pending')){
+ const ids=Object.keys(r.players).filter(id=>id!==r.host);
+ io.to(r.code).emit('answerProgress',{done:ids.filter(id=>r.bombAnswers?.[id]&&r.bombAnswers[id].status!=='pending').length,total:ids.length});
+ if(ids.length&&ids.every(id=>r.bombAnswers?.[id]&&r.bombAnswers[id].status!=='pending')){
    io.to(r.code).emit('allAnswered');setTimeout(()=>next(r),900);
  }
 });

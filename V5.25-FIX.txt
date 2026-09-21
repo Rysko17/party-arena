@@ -1,0 +1,7 @@
+PARTY ARENA V5.25
+- IMPOSTEUR : le bouton hôte redistribue maintenant réellement le nouveau mot via le même événement que celui utilisé par l'écran joueur.
+- BOMBE : correction du code de salle, de la détection de l'hôte et ajout id/nom dans chaque réponse ; l'hôte peut VALIDER +500 ou REFUSER.
+- QUI EST-CE : suppression du tirage des cartes-indices SVG de V5.24. Retour aux vraies images disponibles dans la banque http(s), avec bouton image suivante.
+- Les images externes Qui est-ce peuvent encore dépendre de leur hébergeur : cette version ne prétend pas qu'elles sont toutes locales/garanties.
+- server.js : syntaxe OK.
+- JavaScript navigateur : syntaxe OK.
