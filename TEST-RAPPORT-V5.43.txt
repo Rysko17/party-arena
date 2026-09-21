@@ -1,0 +1,9 @@
+V5.43 — TESTS
+- Syntaxe serveur : OK.
+- Syntaxe client : OK.
+- Qui est-ce : 40 manches simulées avec 4 thèmes photo; 0 thème répété deux fois de suite; 0 rébus sur ces thèmes.
+- Qui est-ce : image affichée dans une zone fixe, object-fit: contain, centrée, responsive.
+- Blind Test Dessins animés : thème ajouté.
+- Banque cible Dessins animés : 120 titres/extraits différents, sans doublon.
+- Sources Dessins animés actuellement activées : 5 entrées. Les autres titres ne sont PAS activés tant qu'une source intégrable n'est pas vérifiée.
+IMPORTANT : YouTube peut retirer, géobloquer ou interdire l'intégration d'une vidéo. Le catalogue cible ne doit pas être confondu avec les sources effectivement vérifiées.
