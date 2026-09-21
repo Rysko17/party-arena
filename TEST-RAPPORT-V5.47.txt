@@ -1,0 +1,10 @@
+V5.47 — MULTI-TRACK / OST
+Catalogue multi-titres ajouté :
+- Anime & Manga : 211 cibles (plusieurs openings/endings/OST par anime)
+- Musique : 210 cibles (plusieurs morceaux par rappeur/chanteur)
+- Cinéma & Séries : 120 cibles (plusieurs thèmes/OST/chansons par œuvre)
+- Total nouveau catalogue : 541 entrées uniques.
+Exemples Anime : Naruto, Bleach, One Piece, AOT, Dragon Ball, JJK, Demon Slayer, MHA, HxH, Death Note, FMA, JoJo, Haikyuu, Black Clover, Tokyo Ghoul, Chainsaw Man, Fairy Tail, Solo Leveling, Frieren, etc.
+Les 160 segments actifs de V5.46 restent jouables avec l'anti-répétition persistant.
+IMPORTANT : les 541 nouvelles entrées sont un catalogue de sourcing, pas 541 nouveaux extraits audio activés. Elles ne sont pas activées sans URL/ID et timestamp vérifiés, afin de ne pas créer de faux lecteurs cassés.
+Syntaxe serveur/client : OK. Unicité des 541 entrées : OK.
