@@ -413,6 +413,8 @@ function speedPoints(base,rank){
  const mult=[1,0.85,0.70,0.60,0.50,0.45,0.40,0.35,0.30,0.25][Math.min(Math.max(rank-1,0),9)];
  return Math.max(100,Math.round(base*mult/50)*50);
 }
+
+const TABOO_CLEAN={"Football": [["Lionel Messi", "Argentine"], ["Cristiano Ronaldo", "Portugal"], ["Penalty", "Tir"], ["Gardien", "But"], ["Hors-jeu", "Arbitre"], ["Mbappé", "France"], ["Real Madrid", "Espagne"], ["Maradona", "Argentine"]], "Sport": [["Basketball", "Panier"], ["Tennis", "Raquette"], ["Formule 1", "Voiture"], ["Boxe", "Gants"], ["Judo", "Kimono"], ["Rugby", "Essai"], ["Natation", "Piscine"], ["Cyclisme", "Vélo"]], "Anime & Manga": [["Ichigo", "Bleach"], ["Naruto", "Ninja"], ["Luffy", "Pirate"], ["Goku", "Saiyan"], ["Gojo", "Jujutsu Kaisen"], ["Tanjiro", "Demon Slayer"], ["Levi", "Attack on Titan"], ["Zoro", "Sabre"]], "Cinéma & Séries": [["Titanic", "Bateau"], ["Harry Potter", "Sorcier"], ["Batman", "Gotham"], ["Breaking Bad", "Walter"], ["Stranger Things", "Hawkins"], ["Star Wars", "Jedi"], ["Jurassic Park", "Dinosaure"], ["Avengers", "Marvel"]], "Musique": [["Eminem", "Rap"], ["Rihanna", "Barbade"], ["Beyoncé", "Queen B"], ["Stromae", "Belgique"], ["Michael Jackson", "Moonwalk"], ["Drake", "Toronto"], ["The Weeknd", "Canada"], ["Piano", "Clavier"]], "Jeux vidéo": [["Mario", "Nintendo"], ["Minecraft", "Bloc"], ["Fortnite", "Battle Royale"], ["GTA", "Rockstar"], ["Zelda", "Link"], ["Sonic", "SEGA"], ["Kratos", "God of War"], ["Pokémon", "Pikachu"]], "Culture générale": [["Paris", "France"], ["Tour Eiffel", "Paris"], ["Einstein", "Relativité"], ["Jupiter", "Planète"], ["Égypte", "Pyramide"], ["Shakespeare", "Théâtre"], ["Napoléon", "Empereur"], ["Everest", "Montagne"]], "Mathématiques": [["Triangle", "Trois"], ["Cercle", "Rayon"], ["Pythagore", "Triangle"], ["Pi", "3,14"], ["Fraction", "Numérateur"], ["Carré", "Quatre"], ["Addition", "Plus"], ["Pourcentage", "Cent"]]};
 function makeRound(r,g){
  let c={game:g};
  if(g==='Quiz Battle'){let x=question(r);c={game:g,q:x.q,a:x.a,c:x.c,image:x.image||null,theme:x.theme,difficulty:x.difficulty||'simple',points:({simple:250,moyen:500,dur:1000}[x.difficulty]||250)}}
@@ -425,7 +427,7 @@ function makeRound(r,g){
    const duels=pairing.pairs.map((pair,i)=>{const z=pickDuelPrompt(r,String(r.gameRound)+':'+i);const difficulty=['simple','moyen','dur'][(r.gameRound+i)%3];return{id:'d'+i,players:pair,theme:z.t,q:z.x,difficulty,points:difficultyPoints(difficulty)}});
    c={game:g,q:'DUELS',duels,bye:pairing.bye,pairDuel:true,points:500}
  }
- else if(g==='Mot interdit'){let z=themedPick(r,'taboo'),m=z.value;c={game:g,q:`🎯 MOT À FAIRE DEVINER : ${m.word} — 🚫 MOT INTERDIT : ${m.forbid} — 📚 ORIGINE : ${z.theme}.`,theme:z.theme,oral:true,tabooWord:m.word,forbiddenWord:m.forbid,origin:z.theme}}
+ else if(g==='Mot interdit'){let themes=(r.settings.themes||[]).filter(t=>TABOO_CLEAN[t]?.length);if(!themes.length)themes=Object.keys(TABOO_CLEAN);const t=chooseTheme(r,'tabooTheme',themes),m=unusedPick(r,'tabooClean:'+t,TABOO_CLEAN[t]);c={game:g,q:`Fais deviner « ${m[0]} » sans prononcer « ${m[1]} ».`,theme:t,oral:true,tabooWord:m[0],forbiddenWord:m[1],origin:t,points:500}}
  else if(g==='Blind Test'){c=blindRound(r)}
  else if(g==='Qui est-ce ?'){
  const z=pickWhoMixed(r);
@@ -440,6 +442,17 @@ function makeRound(r,g){
  else c={game:g,q:['Imite une célébrité sans parler.','Fais deviner un film en 3 mots.','Donne 5 animaux en 10 secondes.','Fais une imitation choisie par les autres joueurs.','Cite 4 pays en moins de 10 secondes.'][Math.floor(Math.random()*5)],oral:true};
  return c;
 }
+
+function roundSeconds(c){if(!c)return 0;if(c.game==='Blind Test')return 20;if(['Quiz Battle','Qui est-ce ?','Duel','La Bombe','Mot interdit'].includes(c.game))return 10;return 0}
+function armRoundTimer(r){
+ if(r._roundTimer)clearTimeout(r._roundTimer);const sec=roundSeconds(r.current);if(!sec)return;
+ const token=(r._timerToken=(r._timerToken||0)+1);
+ r._roundTimer=setTimeout(()=>{if(!rooms[r.code]||token!==r._timerToken||r._advancing)return;const g=r.current?.game;
+  if(['Quiz Battle','Qui est-ce ?','Blind Test'].includes(g)){const ids=Object.keys(r.players);r.answers=r.answers||{};for(const id of ids)if(r.answers[id]==null)r.answers[id]=-999;io.to(r.code).emit('roundReveal',{answer:r.current.a?.[r.current.c]||'',why:r.current.why||'',timeout:true});r._advancing=true;setTimeout(()=>next(r),1800);return}
+  io.to(r.code).emit('timerExpired',{game:g});
+ },sec*1000);
+}
+
 function next(r){
  if(r.gameIndex==null)r.gameIndex=0;
  if(r.gameRound==null)r.gameRound=0;
@@ -461,6 +474,7 @@ function next(r){
  r.gameRound++;r.round++;r.answers={};r.answerOrder=[];r.guesses={};r.oralDecisions={};r.bombAnswers={};r.impostorVotes={};r._advancing=false;
  const g=r.settings.games[r.gameIndex],c=makeRound(r,g);r.current=c;
  io.to(r.code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:limit,gameIndex:r.gameIndex,current:c});
+ armRoundTimer(r);
  if(g==="L’Imposteur")for(const p of Object.values(r.players))io.to(p.id).emit('secret',{word:p.id===r.secret.imp?r.secret.o:r.secret.n});
  emit(r);
 }
@@ -543,7 +557,7 @@ io.on('connection',(s)=>{
  emit(r);
  const ids=Object.keys(r.players);
  io.to(r.code).emit('answerProgress',{done:Object.keys(r.answers).length,total:ids.length});
- if(ids.every(id=>r.answers[id]!=null)){
+ if(ids.every(id=>r.answers[id]!=null)){if(r._roundTimer)clearTimeout(r._roundTimer);
    io.to(r.code).emit('roundReveal',{answer:r.current.a?.[r.current.c]||'',why:r.current.why||''});
    r._advancing=true;setTimeout(()=>next(r),1800);
  }
@@ -660,5 +674,5 @@ s.on('majorityNext',({code}={})=>{
 });
 s.on('disconnect',()=>{for(const c in rooms){let r=rooms[c];if(r.players[s.id]){delete r.players[s.id];if(!Object.keys(r.players).length)delete rooms[c];else{if(r.host===s.id)r.host=Object.keys(r.players)[0];emit(r)}}}})
 });
-server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.37 lancé'));
+server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.38 lancé'));
 const HARD_EXTRA={"Culture générale": [{"q": "Quel traité de 1648 est associé à la fin de la guerre de Trente Ans ?", "a": ["Westphalie", "Utrecht", "Versailles", "Tordesillas"], "c": 0, "difficulty": "dur"}, {"q": "Quel élément chimique porte le numéro atomique 74 ?", "a": ["Tungstène", "Osmium", "Iridium", "Hafnium"], "c": 0, "difficulty": "dur"}, {"q": "Quelle dynastie chinoise a précédé immédiatement les Ming ?", "a": ["Yuan", "Song", "Qing", "Tang"], "c": 0, "difficulty": "dur"}, {"q": "Quel philosophe a écrit Critique de la raison pure ?", "a": ["Kant", "Hegel", "Spinoza", "Leibniz"], "c": 0, "difficulty": "dur"}], "Football": [{"q": "Quel club a remporté la première Coupe d’Europe des clubs champions en 1956 ?", "a": ["Real Madrid", "Benfica", "Milan", "Reims"], "c": 0, "difficulty": "dur"}, {"q": "Quel gardien a remporté le Ballon d’Or 1963 ?", "a": ["Lev Yachine", "Dino Zoff", "Gordon Banks", "Sepp Maier"], "c": 0, "difficulty": "dur"}, {"q": "Quel pays a remporté l’Euro 1992 après avoir été repêché tardivement ?", "a": ["Danemark", "Suède", "Pays-Bas", "Allemagne"], "c": 0, "difficulty": "dur"}], "Anime & Manga": [{"q": "Dans Hunter × Hunter, quel type de Nen est associé à Kurapika lorsque ses yeux deviennent écarlates ?", "a": ["Spécialisation", "Matérialisation", "Renforcement", "Manipulation"], "c": 0, "difficulty": "dur"}, {"q": "Dans Fullmetal Alchemist, quel principe est présenté comme fondamental à l’alchimie au début de l’œuvre ?", "a": ["Échange équivalent", "Transmutation absolue", "Résonance vitale", "Cercle parfait"], "c": 0, "difficulty": "dur"}, {"q": "Dans Bleach, comment se nomme l’étape supérieure de libération d’un Zanpakutō ?", "a": ["Bankai", "Resurrección", "Shikai", "Vollständig"], "c": 0, "difficulty": "dur"}], "Mathématiques": [{"q": "Quelle est la dérivée de ln(x²+1) ?", "a": ["2x/(x²+1)", "1/(x²+1)", "2/(x²+1)", "ln(2x)"], "c": 0, "difficulty": "dur"}, {"q": "Combien vaut la somme des angles intérieurs d’un dodécagone ?", "a": ["1800°", "1620°", "1980°", "2160°"], "c": 0, "difficulty": "dur"}, {"q": "Si log₂(x)=7, combien vaut x ?", "a": ["128", "64", "256", "49"], "c": 0, "difficulty": "dur"}]};for(const [t,a] of Object.entries(HARD_EXTRA)){DB[t]=DB[t]||[];DB[t].push(...a)}
