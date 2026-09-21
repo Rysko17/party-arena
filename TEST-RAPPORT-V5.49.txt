@@ -1,0 +1,5 @@
+V5.49 — TESTÉE
+Qui est-ce : faux choix filtrés par type/sexe; test aléatoire 60 manches sans mélange homme/femme. Image en object-fit contain, centrée, responsive. Catalogue visuel +80 cibles Anime, Dessins animés, Cinéma/Séries, Sport; les 116 photos existantes restent actives. Les nouvelles cibles ne sont activées qu'après validation d'une image.
+Blind Test : extrait réduit à 8 s, réponse 10 s; deuxième passage déplacé plus loin (+24 s). Politique HARD : éviter titre/réponse prononcés, intro trop évidente, privilégier instrumental/transition/couplet moins iconique/OST. 160 segments actifs conservés.
+Limite : garantir qu'aucun extrait ne prononce la réponse nécessite une validation auditive de chaque timestamp. Le code seul ne peut pas le certifier.
+Syntaxe serveur/client : OK. Test logique : OK.
