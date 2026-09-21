@@ -14,7 +14,7 @@
 #answerFlash.good .feedbackBox{outline:6px solid #35d07f}
 #answerFlash.bad .feedbackBox{outline:6px solid #ff4d5a}
 </style>
-</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.29</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
+</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.30</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
 <div id="home" class="card">
 <h2>Que veux-tu faire ?</h2>
 <p>Crée une nouvelle partie ou rejoins tes amis avec leur code.</p>
@@ -36,6 +36,19 @@
 <div id="final" class="card hide"><h1>🏆 Classement final</h1><div id="rank"></div></div></div><script>
 
 
+function changeImpostorWord(){
+ if(!room||me!==state?.host)return;
+ if(confirm("Changer le mot pour TOUS les joueurs ?")) s.emit('rerollImpostor',{code:room});
+}
+
+function whoImageFallback(img){
+ img.style.display='none';
+ const f=img.nextElementSibling;if(f){f.style.display='flex';f.textContent='⚠️ IMAGE LOCALE MANQUANTE'}
+}
+
+const s=io(),GL=['Quiz Battle','Tu me connais ?','Majorité','La Bombe',"L’Imposteur",'Duel','Mot interdit','Défi surprise','Trouve l’intrus','Qui est-ce ?'],TL=['Culture générale','Football','Sport','Cinéma & Séries','Anime & Manga','Musique','Jeux vidéo','Dessins animés','Internet & Réseaux','Mathématiques','Images'];let room,me,state,cg=new Set(['Quiz Battle']),ct=new Set(['Culture générale']);
+let gameRounds={'Quiz Battle':5};
+s.on('connect',()=>{const e=document.getElementById('socketStatus');if(e)e.textContent='🟢 Serveur connecté'});s.on('connect_error',()=>{const e=document.getElementById('socketStatus');if(e)e.textContent='🔴 Serveur non connecté — réessaie dans quelques secondes'});
 function renderImpostorVote(){
  if(!state||state.current?.game!=='L’Imposteur')return;
  const box=document.getElementById('answers');if(!box)return;
@@ -50,18 +63,7 @@ s.on('impostorGuessPrompt',()=>{
 function sendImpGuess(){const x=document.getElementById('impGuess');if(x?.value.trim())s.emit('impostorGuess',{code:room,word:x.value.trim()})}
 s.on('impostorGuessResult',d=>{const e=document.getElementById('roundFeedback');if(e)e.innerHTML=`<div class="feedback">${d.correct?'✅ '+d.name+' a trouvé le mot : +'+d.points+' points':'❌ '+d.name+' n’a pas trouvé le mot'}<br>Mot : <b>${d.word}</b></div>`});
 
-function changeImpostorWord(){
- if(!room||me!==state?.host)return;
- if(confirm("Changer le mot pour TOUS les joueurs ?")) s.emit('rerollImpostor',{code:room});
-}
 
-function whoImageFallback(img){
- img.style.display='none';
- const f=img.nextElementSibling;if(f){f.style.display='flex';f.textContent='⚠️ IMAGE LOCALE MANQUANTE'}
-}
-
-const s=io(),GL=['Quiz Battle','Tu me connais ?','Majorité','La Bombe',"L’Imposteur",'Duel','Mot interdit','Défi surprise','Trouve l’intrus','Qui est-ce ?'],TL=['Culture générale','Football','Sport','Cinéma & Séries','Anime & Manga','Musique','Jeux vidéo','Dessins animés','Internet & Réseaux','Mathématiques','Images'];let room,me,state,cg=new Set(['Quiz Battle']),ct=new Set(['Culture générale']);
-let gameRounds={'Quiz Battle':5};
 let settingsInitialized=false;
 function snapshotSettings(){
  const out={games:[],themes:[],rounds:{}};

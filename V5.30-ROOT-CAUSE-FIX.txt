@@ -1,0 +1,18 @@
+V5.30 — CORRECTION RACINE DU BLOCAGE CRÉATION DE SALLE
+
+Cause exacte trouvée :
+Le code du vote Imposteur ajouté en V5.28 contenait plusieurs `s.on(...)` AVANT la ligne
+`const s = io()`.
+
+Dans un navigateur cela déclenche immédiatement :
+ReferenceError: Cannot access 's' before initialization
+
+Le reste du JavaScript ne s'exécutait donc jamais, y compris la création/rejoindre une salle.
+
+V5.30 :
+- tous les listeners Socket.IO sont maintenant placés APRÈS l'initialisation de `s`;
+- ajout d'un indicateur "Serveur connecté" sur l'accueil;
+- conservation des corrections V5.28/V5.29;
+- vérification statique de l'ordre : const s=io() est avant le premier s.on;
+- server.js : node --check OK;
+- JavaScript navigateur : node --check OK.
