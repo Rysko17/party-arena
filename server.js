@@ -454,10 +454,16 @@ const BLIND_HARD_POLICY={"rules": ["8 secondes maximum", "éviter le début imm�
 function blindRound(r){
  let themes=(r.settings.themes||[]).filter(t=>BLIND_DOUBLE_BANK[t]?.length);
  if(!themes.length)themes=['Musique','Anime & Manga','Cinéma & Séries','Dessins animés'];
- const t=chooseTheme(r,'blindTheme',themes);
+ // Randomise the theme independently for every Blind round.
+ // Do not use a deterministic "starter" tied to gameRound.
+ let themePool=[...themes];
+ if(themes.length>1&&r.lastBlindTheme)themePool=themePool.filter(x=>x!==r.lastBlindTheme);
+ const t=themePool[Math.floor(Math.random()*themePool.length)];r.lastBlindTheme=t;
  let pool=BLIND_DOUBLE_BANK[t],seen=r.blindSeen||new Set(),fresh=pool.filter(x=>!seen.has(x.excerptId));
  if(!fresh.length)fresh=pool;
- const z=unusedPick(r,'blindPersistent:'+t,fresh);if(!r.blindSeen)r.blindSeen=new Set();r.blindSeen.add(z.excerptId);
+ // Fisher-Yates shuffle before selection: each new game/round gets a fresh order.
+ fresh=[...fresh];for(let i=fresh.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[fresh[i],fresh[j]]=[fresh[j],fresh[i]]}
+ const z=fresh[0];if(!r.blindSeen)r.blindSeen=new Set();r.blindSeen.add(z.excerptId);
  const sameGenre=z.genre?pool.filter(x=>x.genre===z.genre&&x.title!==z.title).map(x=>x.title):[];
  const playable=[...new Set([...sameGenre,...pool.filter(x=>x.title!==z.title).map(x=>x.title)])];
  const decoys=[...new Set([...blindDecoyPool(t,z.title),...playable,...(BLIND_DECOYS[t]||[])])].filter(x=>x!==z.title);
@@ -580,10 +586,19 @@ io.on('connection',(s)=>{
    for(const p of ps)io.to(p.id).emit('secret',{word:p.id===imp.id?w[1]:w[0],impostor:p.id===imp.id,rerolled:true});
  });
 
- s.on('create',({name},cb)=>{let c;do c=code();while(rooms[c]);let r=rooms[c]={code:c,host:s.id,players:{},settings:{games:['Quiz Battle'],themes:['Culture générale'],gameRounds:{'Quiz Battle':5}},round:0,total:5,state:'lobby'};r.players[s.id]={id:s.id,name:name||'Hôte',score:0};s.join(c);cb({ok:true,code:c});emit(r)});
+ s.on('create',({name,hostKey},cb)=>{let c;do c=code();while(rooms[c]);let r=rooms[c]={code:c,host:s.id,hostKey:String(hostKey||''),players:{},settings:{games:['Quiz Battle'],themes:['Culture générale'],gameRounds:{'Quiz Battle':5}},round:0,total:5,state:'lobby'};r.players[s.id]={id:s.id,name:name||'Hôte',score:0};s.join(c);cb({ok:true,code:c});emit(r)});
  s.on('join',({code:c,name},cb)=>{c=(c||'').toUpperCase();let r=rooms[c];if(!r)return cb({ok:false});r.players[s.id]={id:s.id,name:name||'Joueur',score:0};s.join(c);cb({ok:true});emit(r)});
- s.on('settings',(x,cb)=>{let r=rooms[x.code];if(!r||r.host!==s.id)return cb&&cb({ok:false});r.settings=x.settings;r.total=totalRounds(r);emit(r);cb&&cb({ok:true})});
- s.on('start',(c,cb)=>{let r=rooms[c];if(!r||r.host!==s.id)return cb&&cb({ok:false});if(!r.settings.games?.length)return cb&&cb({ok:false});r.round=0;r.gameIndex=0;r.gameRound=0;r.used=r.used||{};r.total=totalRounds(r);Object.values(r.players).forEach(p=>p.score=0);cb&&cb({ok:true});next(r)});
+ s.on('settings',(x,cb)=>{let r=rooms[x.code];if(!r)return cb&&cb({ok:false,reason:'ROOM_NOT_FOUND'});
+ if(r.host!==s.id && x.hostKey && r.hostKey && String(x.hostKey)===String(r.hostKey)){
+   const oldHost=r.host,oldPlayer=r.players[oldHost];if(oldPlayer){delete r.players[oldHost];r.players[s.id]={...oldPlayer,id:s.id}}else if(!r.players[s.id])r.players[s.id]={id:s.id,name:'Hôte',score:0};
+   r.host=s.id;s.join(r.code);
+ }
+ if(r.host!==s.id)return cb&&cb({ok:false,reason:'HOST_SESSION_LOST'});
+ if(!x.settings?.games?.length||!x.settings?.themes?.length)return cb&&cb({ok:false,reason:'INVALID_SETTINGS'});
+ r.settings=x.settings;r.total=totalRounds(r);emit(r);cb&&cb({ok:true})});
+ s.on('start',(payload,cb)=>{const c=typeof payload==='string'?payload:payload?.code,hostKey=typeof payload==='object'?payload?.hostKey:null;let r=rooms[c];
+ if(r&&r.host!==s.id&&hostKey&&r.hostKey&&String(hostKey)===String(r.hostKey)){const old=r.players[r.host];if(old){delete r.players[r.host];r.players[s.id]={...old,id:s.id}}r.host=s.id;s.join(c)}
+ if(!r||r.host!==s.id)return cb&&cb({ok:false,reason:'HOST_SESSION_LOST'});if(!r.settings.games?.length)return cb&&cb({ok:false,reason:'NO_GAMES'});r.round=0;r.gameIndex=0;r.gameRound=0;r.used=r.used||{};r.total=totalRounds(r);Object.values(r.players).forEach(p=>p.score=0);cb&&cb({ok:true});next(r)});
  s.on('answer',x=>{
  let r=rooms[x.code];if(!r||!r.players[s.id]||r.answers?.[s.id]!=null)return;
  r.answers=r.answers||{};
@@ -751,5 +766,5 @@ s.on('majorityNext',({code}={})=>{
 s.on('blindHistory',ids=>{const r=Object.values(rooms).find(x=>x.players.some(p=>p.id===s.id));if(!r)return;if(!r.blindSeen)r.blindSeen=new Set();for(const id of (Array.isArray(ids)?ids:[]).slice(-5000))r.blindSeen.add(String(id));});
 s.on('disconnect',()=>{for(const c in rooms){let r=rooms[c];if(r.players[s.id]){delete r.players[s.id];if(!Object.keys(r.players).length)delete rooms[c];else{if(r.host===s.id)r.host=Object.keys(r.players)[0];emit(r)}}}})
 });
-server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.50 lancé'));
+server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.52 lancé'));
 const HARD_EXTRA={"Culture générale": [{"q": "Quel traité de 1648 est associé à la fin de la guerre de Trente Ans ?", "a": ["Westphalie", "Utrecht", "Versailles", "Tordesillas"], "c": 0, "difficulty": "dur"}, {"q": "Quel élément chimique porte le numéro atomique 74 ?", "a": ["Tungstène", "Osmium", "Iridium", "Hafnium"], "c": 0, "difficulty": "dur"}, {"q": "Quelle dynastie chinoise a précédé immédiatement les Ming ?", "a": ["Yuan", "Song", "Qing", "Tang"], "c": 0, "difficulty": "dur"}, {"q": "Quel philosophe a écrit Critique de la raison pure ?", "a": ["Kant", "Hegel", "Spinoza", "Leibniz"], "c": 0, "difficulty": "dur"}], "Football": [{"q": "Quel club a remporté la première Coupe d’Europe des clubs champions en 1956 ?", "a": ["Real Madrid", "Benfica", "Milan", "Reims"], "c": 0, "difficulty": "dur"}, {"q": "Quel gardien a remporté le Ballon d’Or 1963 ?", "a": ["Lev Yachine", "Dino Zoff", "Gordon Banks", "Sepp Maier"], "c": 0, "difficulty": "dur"}, {"q": "Quel pays a remporté l’Euro 1992 après avoir été repêché tardivement ?", "a": ["Danemark", "Suède", "Pays-Bas", "Allemagne"], "c": 0, "difficulty": "dur"}], "Anime & Manga": [{"q": "Dans Hunter × Hunter, quel type de Nen est associé à Kurapika lorsque ses yeux deviennent écarlates ?", "a": ["Spécialisation", "Matérialisation", "Renforcement", "Manipulation"], "c": 0, "difficulty": "dur"}, {"q": "Dans Fullmetal Alchemist, quel principe est présenté comme fondamental à l’alchimie au début de l’œuvre ?", "a": ["Échange équivalent", "Transmutation absolue", "Résonance vitale", "Cercle parfait"], "c": 0, "difficulty": "dur"}, {"q": "Dans Bleach, comment se nomme l’étape supérieure de libération d’un Zanpakutō ?", "a": ["Bankai", "Resurrección", "Shikai", "Vollständig"], "c": 0, "difficulty": "dur"}], "Mathématiques": [{"q": "Quelle est la dérivée de ln(x²+1) ?", "a": ["2x/(x²+1)", "1/(x²+1)", "2/(x²+1)", "ln(2x)"], "c": 0, "difficulty": "dur"}, {"q": "Combien vaut la somme des angles intérieurs d’un dodécagone ?", "a": ["1800°", "1620°", "1980°", "2160°"], "c": 0, "difficulty": "dur"}, {"q": "Si log₂(x)=7, combien vaut x ?", "a": ["128", "64", "256", "49"], "c": 0, "difficulty": "dur"}]};for(const [t,a] of Object.entries(HARD_EXTRA)){DB[t]=DB[t]||[];DB[t].push(...a)}
