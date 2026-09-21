@@ -1,0 +1,6 @@
+PARTY ARENA V5.27
+- MAJORITÉ : après chaque question, affiche chaque choix avec les pseudos des joueurs qui l'ont choisi.
+- LA BOMBE : tous les joueurs, hôte compris, peuvent écrire une réponse. L'hôte peut ensuite valider/refuser chaque réponse.
+- DUEL : vrais affrontements par paires. Chaque paire a sa propre question. Les adversaires tournent à chaque manche. L'hôte ne choisit plus VALIDER/REFUSER : il clique uniquement sur le gagnant. Gagnant +500, perdant -500. Le duel affiché indique clairement les deux pseudos.
+- QUI EST-CE : anti-répétition renforcée par identité de réponse; le thème est séparé de la question.
+- TU ME CONNAIS : nom de la personne dans la question, thème séparé dans l'interface.

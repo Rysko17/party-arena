@@ -14,7 +14,7 @@
 #answerFlash.good .feedbackBox{outline:6px solid #35d07f}
 #answerFlash.bad .feedbackBox{outline:6px solid #ff4d5a}
 </style>
-</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.26</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
+</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.27</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
 <div id="home" class="card">
 <h2>Que veux-tu faire ?</h2>
 <p>Crée une nouvelle partie ou rejoins tes amis avec leur code.</p>
@@ -131,9 +131,26 @@ s.on('connect',()=>me=s.id);s.on('room',r=>{state=r;
 s.on('round',x=>{const ac=document.getElementById('answerCount');if(ac)ac.textContent='Réponses : 0/0';const rf=document.getElementById('roundFeedback');if(rf)rf.innerHTML='';
 const jb=[...document.querySelectorAll('button')].find(b=>b.textContent==='Lancement…');if(jb){jb.disabled=false;jb.textContent='▶ JOUER'};lobby.classList.add('hide');play.classList.remove('hide');secret.classList.add('hide');rl.textContent=`${x.current.game} — Manche ${x.gameRound}/${x.gameTotal}`;gl.textContent=x.current.game;tl.textContent=x.current.theme||'';q.innerHTML=(x.current.q||'')+(x.current.difficulty?` <span class="pill">🎯 ${x.current.difficulty.toUpperCase()} • ${x.current.points} pts</span>`:'');
 if(x.current.game==='Qui est-ce ?' && me===state?.host){award.innerHTML=`<button onclick="s.emit('rerollWho',{code:room})">🔄 CHANGER L’IMAGE / QUESTION</button>`;}
-if(x.current.typedBomb && me!==state?.host){
- answers.innerHTML=`<div class="card"><h2>💣 LA BOMBE — ${x.current.theme||''}</h2><p>${x.current.q}</p><input id="bombInput" type="text" autocomplete="off" maxlength="80" placeholder="ÉCRIS TA RÉPONSE ICI..." style="display:block;width:100%;box-sizing:border-box;padding:18px;margin:16px 0;font-size:20px;border:2px solid #fff;border-radius:14px;background:#fff;color:#111"><button id="bombSend" onclick="sendBomb()">📨 ENVOYER</button><div id="bombStatus"></div></div>`;
- award.innerHTML=me===state?.host?'<div class="card"><h3>👑 Validation des réponses</h3><div id="bombReview">En attente...</div></div>':'';
+if(x.current.typedBomb){
+ answers.innerHTML=`<div class="card"><h2>💣 LA BOMBE</h2><p>${x.current.q}</p><input id="bombInput" type="text" autocomplete="off" maxlength="80" placeholder="ÉCRIS TA RÉPONSE ICI..." style="display:block;width:100%;box-sizing:border-box;padding:18px;margin:16px 0;font-size:20px;border:2px solid #fff;border-radius:14px;background:#fff;color:#111"><button id="bombSend" onclick="sendBomb()">📨 ENVOYER</button><div id="bombStatus"></div></div>`;
+ hc.classList.toggle('hide',me!==state?.host);
+ if(me===state?.host)award.innerHTML='<div class="card"><h3>👑 Validation des réponses</h3><div id="bombReview">En attente des réponses...</div></div>';
+ return;
+}
+if(x.current.game==='Duel'&&x.current.pairDuel){
+ img.classList.add('hide');const ds=x.current.duels||[];
+ const mine=ds.find(d=>d.players.includes(me));
+ if(mine){
+   const p1=state.players.find(p=>p.id===mine.players[0])?.name||'Joueur 1',p2=state.players.find(p=>p.id===mine.players[1])?.name||'Joueur 2';
+   q.innerHTML=`⚔️ <b>${p1} VS ${p2}</b>`;
+   answers.innerHTML=`<div class="card"><small>${mine.theme||''}</small><h2>${mine.q}</h2><p>Répondez à l’oral. L’hôte choisit uniquement le gagnant.</p></div>`;
+ }else if(x.current.bye===me){
+   q.textContent='⏭️ Tu es exempté de ce duel';answers.innerHTML='<div class="card">Nombre impair de joueurs : tu participeras à un autre affrontement à la prochaine manche.</div>';
+ }else{q.textContent='⚔️ Duels en cours';answers.innerHTML='<div class="card">👀 Regarde les autres affrontements.</div>'}
+ if(me===state?.host){
+   hc.classList.remove('hide');
+   award.innerHTML=ds.map(d=>{const a=state.players.find(p=>p.id===d.players[0])?.name||'J1',b=state.players.find(p=>p.id===d.players[1])?.name||'J2';return `<div class="card"><b>${a} 🆚 ${b}</b><br><small>${d.theme||''}</small><p>${d.q}</p><button onclick="duelWinner('${d.id}','${d.players[0]}')">🏆 ${a} GAGNE</button> <button onclick="duelWinner('${d.id}','${d.players[1]}')">🏆 ${b} GAGNE</button></div>`}).join('');
+ }
  return;
 }
 if(x.current.answer && state && state.host===me) q.textContent += '  •  Réponse : '+x.current.answer;img.classList.toggle('hide',!x.current.image);if(x.current.image)img.src=x.current.image;if(x.current.game==='Tu me connais ?'&&x.current.phase==='choose'){if(me===x.current.target){q.textContent=x.current.q+' — choisis ta réponse secrètement';answers.innerHTML=x.current.a.map((a,i)=>`<div class="ans" onclick="secretChoice(${i})">${a}</div>`).join('')}else{q.textContent=x.current.targetName+' choisit sa réponse secrète…';answers.innerHTML='<div class="card">⏳ Attends que '+x.current.targetName+' ait choisi. Tu ne peux pas répondre avant.</div>'}}else{answers.innerHTML=x.current.a?x.current.a.map((a,i)=>`<div class="ans" onclick="answer(${i})">${a}</div>`).join(''):''}if(x.current.specialDuel){
@@ -166,6 +183,8 @@ function sendBomb(){
  document.getElementById('bombStatus').innerHTML='<p>⏳ Réponse envoyée. L’hôte doit la valider.</p>';
 }
 function bombDecision(id,accept){s.emit('bombDecision',{code:room,playerId:id,accept})}
+function duelWinner(duelId,winnerId){s.emit('duelWinner',{code:room,duelId,winnerId})}
+s.on('duelPairResult',x=>{const el=document.getElementById('roundFeedback');if(el)el.innerHTML+=`<div class="feedback">🏆 ${x.winner} gagne +500 pts<br>❌ ${x.loser} perd 500 pts</div>`});
 s.on('bombAnswers',all=>{
  const mine=all[me],st=document.getElementById('bombStatus');
  if(st&&mine)st.innerHTML=`<p>${mine.status==='pending'?'⏳ En attente de validation':mine.status==='accepted'?'✅ +500 points':'❌ Réponse refusée'}</p>`;
@@ -185,6 +204,12 @@ s.on('answerFeedback',d=>{
  const el=document.getElementById('roundFeedback'); if(!el)return;
  el.innerHTML=`<div class="feedback">${d.correct?'✅ BONNE RÉPONSE ! +'+(d.points||0)+' POINTS':'❌ MAUVAISE RÉPONSE'}${d.correctAnswer?`<br><small>Bonne réponse : ${d.correctAnswer}</small>`:''}</div>`;
 });
+
+s.on('majorityReveal',x=>{
+ const el=document.getElementById('roundFeedback');if(!el)return;
+ el.innerHTML='<div class="card"><h2>👥 Qui a choisi quoi ?</h2>'+x.choices.map(c=>`<div style="margin:12px 0"><b>${c.label}</b><br>${c.players.length?c.players.join(' • '):'<small>Personne</small>'}</div>`).join('')+'</div>';
+});
+
 s.on('answerProgress',d=>{
  const el=document.getElementById('answerCount'); if(el)el.textContent=`Réponses : ${d.done}/${d.total}`;
 });
