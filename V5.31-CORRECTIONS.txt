@@ -1,0 +1,7 @@
+PARTY ARENA V5.31
+- Lobby : rejoindre une salle ne réécrit plus les sélections locales de l’hôte. Les jeux/thèmes/manches restent cochés.
+- Réponses à choix : la réponse cliquée reste visuellement entourée en jaune et les autres choix deviennent atténués.
+- Majorité : après que tout le monde a répondu, les choix/pseudos restent affichés sans minuterie. Seul l’hôte a le bouton QUESTION SUIVANTE.
+- Imposteur : l’hôte lance maintenant un vote global. Tous les joueurs reçoivent le même écran de vote et ne peuvent pas voter pour eux-mêmes.
+- Si le vote désigne réellement l’imposteur, seul l’imposteur reçoit une zone de texte de dernière chance pour écrire le mot des autres. Mot exact = +500 points.
+- Syntaxe serveur et client vérifiée.

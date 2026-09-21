@@ -302,7 +302,8 @@ io.on('connection',(s)=>{
    if(ids.every(id=>r.answers[id]!=null)){
      const choices=(r.current.a||[]).map((label,i)=>({label,players:ids.filter(id=>+r.answers[id]===i).map(id=>r.players[id].name)}));
      io.to(r.code).emit('majorityReveal',{choices});
-     r._advancing=true;setTimeout(()=>next(r),3000);
+     r.current.phase='majorityReveal';r._advancing=false;
+     io.to(r.code).emit('majorityReadyNext',{host:r.host});
    }
    return;
  }
@@ -381,8 +382,14 @@ s.on('award',x=>{let r=rooms[x.code];if(r&&r.host===s.id&&r.players[x.id]){
  s.on('restartSame',c=>{let r=rooms[c];if(r&&r.host===s.id){r.round=0;r.gameIndex=0;r.gameRound=0;r.used=r.used||{};r.total=totalRounds(r);Object.values(r.players).forEach(p=>p.score=0);next(r)}});
  s.on('backToSetup',c=>{let r=rooms[c];if(r&&r.host===s.id){r.round=0;r.gameIndex=0;r.gameRound=0;r.state='lobby';io.to(c).emit('backToSetup');emit(r)}});
  
+
+s.on('startImpostorVote',({code}={})=>{
+ const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='L’Imposteur')return;
+ r.current.phase='vote';r.impostorVotes={};
+ io.to(code).emit('impostorVoteOpen',{players:Object.values(r.players).map(p=>({id:p.id,name:p.name}))});
+});
 s.on('impostorVote',x=>{
- const r=rooms[x.code];if(!r||r.current?.game!=='L’Imposteur'||!r.players[s.id]||!r.players[x.targetId])return;
+ const r=rooms[x.code];if(!r||r.current?.game!=='L’Imposteur'||r.current?.phase!=='vote'||!r.players[s.id]||!r.players[x.targetId]||x.targetId===s.id)return;
  r.impostorVotes=r.impostorVotes||{};r.impostorVotes[s.id]=x.targetId;
  const ids=Object.keys(r.players);io.to(r.code).emit('impostorVoteProgress',{done:Object.keys(r.impostorVotes).length,total:ids.length});
  if(!ids.every(id=>r.impostorVotes[id]))return;
@@ -406,6 +413,11 @@ s.on('impostorGuess',x=>{
  emit(r);r._advancing=true;setTimeout(()=>next(r),2800);
 });
 
+
+s.on('majorityNext',({code}={})=>{
+ const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Majorité'||r.current?.phase!=='majorityReveal')return;
+ r._advancing=true;next(r);
+});
 s.on('disconnect',()=>{for(const c in rooms){let r=rooms[c];if(r.players[s.id]){delete r.players[s.id];if(!Object.keys(r.players).length)delete rooms[c];else{if(r.host===s.id)r.host=Object.keys(r.players)[0];emit(r)}}}})
 });
 server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.12 lancé'));
