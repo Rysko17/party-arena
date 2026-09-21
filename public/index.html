@@ -14,7 +14,7 @@
 #answerFlash.good .feedbackBox{outline:6px solid #35d07f}
 #answerFlash.bad .feedbackBox{outline:6px solid #ff4d5a}
 </style>
-</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.39 — BLIND & MOT INTERDIT</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
+</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.40 — IMAGES / INTRUS / MOT INTERDIT</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
 <div id="home" class="card">
 <h2>Que veux-tu faire ?</h2>
 <p>Crée une nouvelle partie ou rejoins tes amis avec leur code.</p>
@@ -189,7 +189,7 @@ if(isHost){render();}});
 
 let roundTimerInt=null;
 function startRoundTimer(sec){clearInterval(roundTimerInt);let el=document.getElementById('roundTimer');if(!el){el=document.createElement('div');el.id='roundTimer';el.className='pill';el.style.cssText='font-size:22px;font-weight:900;margin:10px auto;display:block;width:max-content';(document.getElementById('play')||document.body).prepend(el)}if(!sec){el.style.display='none';return}el.style.display='block';let left=sec;el.textContent=`⏱️ ${left}s`;roundTimerInt=setInterval(()=>{left--;el.textContent=`⏱️ ${Math.max(0,left)}s`;if(left<=0)clearInterval(roundTimerInt)},1000)}
-function timerForGame(g){if(g==='Blind Test')return 20;if(g==='Mot interdit')return 20;if(['Quiz Battle','Qui est-ce ?','Duel','La Bombe'].includes(g))return 10;return 0}
+function timerForGame(g){if(g==='Blind Test')return 20;if(g==='Mot interdit'||g==='Trouve l’intrus')return 20;if(['Quiz Battle','Qui est-ce ?','Duel','La Bombe'].includes(g))return 10;return 0}
 
 s.on('round',x=>{startRoundTimer(timerForGame(x.current.game));const ac=document.getElementById('answerCount');if(ac)ac.textContent='Réponses : 0/0';const rf=document.getElementById('roundFeedback');if(rf)rf.innerHTML='';
 const jb=[...document.querySelectorAll('button')].find(b=>b.textContent==='Lancement…');if(jb){jb.disabled=false;jb.textContent='▶ JOUER'};lobby.classList.add('hide');play.classList.remove('hide');secret.classList.add('hide');rl.textContent=`${x.current.game} — Manche ${x.gameRound}/${x.gameTotal}`;gl.textContent=x.current.game;tl.textContent=x.current.theme||'';q.innerHTML=(x.current.q||'')+(x.current.difficulty?` <span class="pill">🎯 ${x.current.difficulty.toUpperCase()} • ${x.current.points} pts</span>`:'');
@@ -201,17 +201,18 @@ if(x.current.typedBomb){
  return;
 }
 if(x.current.game==='Mot interdit'){
- img.classList.add('hide');
- q.innerHTML=`🚫 <b>MOT INTERDIT</b> <span class="pill">20 SECONDES</span>`;
+ img.classList.add('hide');q.innerHTML=`🚫 <b>MOT INTERDIT</b> <span class="pill">20 SECONDES</span>`;
+ const bans=(x.current.forbiddenWords||[]).join(' • ');
  answers.innerHTML=`<div class="card tabooCard" style="text-align:center;max-width:760px;margin:18px auto;padding:28px">
- <div style="font-size:15px;opacity:.8;margin-bottom:12px">📚 ORIGINE : <b>${x.current.origin||x.current.theme||''}</b></div>
- <div style="font-size:16px">🎯 MOT À FAIRE DEVINER</div>
- <div style="font-size:38px;font-weight:1000;margin:10px 0 24px">${x.current.tabooWord||'MOT MANQUANT'}</div>
- <div style="font-size:16px">🚫 TU N'AS PAS LE DROIT DE DIRE</div>
- <div style="font-size:30px;font-weight:900;margin:10px 0 22px">${x.current.forbiddenWord||'MOT MANQUANT'}</div>
- <p>Fais deviner le premier mot sans prononcer le mot interdit. L’hôte valide ou refuse à la fin.</p></div>`;
+ <div>📚 ORIGINE : <b>${x.current.origin||x.current.theme||''}</b> • 🎯 ${(x.current.difficulty||'moyen').toUpperCase()} • ${x.current.points||500} pts</div>
+ <div style="margin-top:18px;font-size:16px">🎯 MOT / PERSONNAGE À FAIRE DEVINER</div>
+ <div style="font-size:38px;font-weight:1000;margin:10px 0 20px">${x.current.tabooWord||'MOT MANQUANT'}</div>
+ <div style="font-size:18px;font-weight:900">🗣️ TU DOIS LE FAIRE DEVINER EN EXACTEMENT 3 MOTS</div>
+ ${x.current.isPerson?`<div style="margin:16px 0;font-size:18px">🚫 INTERDIT DE DÉCRIRE SON PHYSIQUE, SES CHEVEUX, SON VISAGE OU SES VÊTEMENTS.</div>`:''}
+ <div style="margin:12px 0">🚫 MOTS / INDICES INTERDITS : <b>${bans}</b></div>
+ <p>L'hôte valide uniquement si exactement 3 mots ont été utilisés et qu'aucune règle interdite n'a été enfreinte.</p></div>`;
  hc.classList.toggle('hide',me!==state?.host);
- if(me===state?.host)award.innerHTML=state.players.map(p=>`<div style="margin:8px 0"><b>${p.name}</b> <button onclick="give('${p.id}')">✅ Valider +500</button> <button class="backBtn" onclick="refuse('${p.id}')">❌ Refuser</button></div>`).join('');
+ if(me===state?.host)award.innerHTML=state.players.map(p=>`<div style="margin:8px 0"><b>${p.name}</b> <button onclick="give('${p.id}')">✅ Valider</button> <button class="backBtn" onclick="refuse('${p.id}')">❌ Refuser</button></div>`).join('');
  return;
 }
 if(x.current.game==='L’Imposteur'){
