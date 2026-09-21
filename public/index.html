@@ -14,7 +14,7 @@
 #answerFlash.good .feedbackBox{outline:6px solid #35d07f}
 #answerFlash.bad .feedbackBox{outline:6px solid #ff4d5a}
 </style>
-</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.27</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
+</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.28</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
 <div id="home" class="card">
 <h2>Que veux-tu faire ?</h2>
 <p>Crée une nouvelle partie ou rejoins tes amis avec leur code.</p>
@@ -32,8 +32,23 @@
 </div>
 </div>
 <div id="lobby" class="hide"><div class="card"><div class="row"><div><small>CODE DE LA SALLE</small><div id="code" class="code"></div></div><div id="players"></div></div></div><div id="setup" class="card hide"><h2>1. Choisir les jeux</h2><div id="games" class="grid"></div><h2>2. Choisir les thèmes</h2><div id="themes" class="grid"></div><div class="row" style="margin-top:18px"><button onclick="start()">▶ JOUER</button></div></div><div id="wait" class="card">En attente de l’hôte…</div></div>
-<div id="play" class="card hide"><div class="row"><b id="rl"></b><b id="gl"></b></div><small id="tl"></small><div id="secret" class="card hide"></div><div id="liveHud" class="hud"><b id="myScore">Mon score : 0 pts</b><b id="answerCount">Réponses : 0/0</b></div><div id="roundFeedback"></div><div id="q" class="q"></div><img id="img" class="img hide"><div id="answers" class="answers"></div><div id="hc" class="hide"><h3>Points manuels</h3><div id="award"></div><br><button onclick="next()">Manche suivante ➜</button></div></div>
+<div id="play" class="card hide"><div class="row"><b id="rl"></b><b id="gl"></b></div><small id="tl"></small><div id="secret" class="card hide"></div><div id="liveHud" class="hud"><b id="myScore">Mon score : 0 pts</b><b id="answerCount">Réponses : 0/0</b><div id="liveRanking" style="width:100%"></div></div><div id="roundFeedback"></div><div id="q" class="q"></div><img id="img" class="img hide"><div id="answers" class="answers"></div><div id="hc" class="hide"><h3>Points manuels</h3><div id="award"></div><br><button onclick="next()">Manche suivante ➜</button></div></div>
 <div id="final" class="card hide"><h1>🏆 Classement final</h1><div id="rank"></div></div></div><script>
+
+
+function renderImpostorVote(){
+ if(!state||state.current?.game!=='L’Imposteur')return;
+ const box=document.getElementById('answers');if(!box)return;
+ box.innerHTML=`<div class="card"><h2>🗳️ Votez contre l’imposteur</h2><p>Choisis la personne que tu soupçonnes.</p>${state.players.filter(p=>p.id!==me).map(p=>`<button onclick="voteImpostor('${p.id}',this)">🗳️ ${p.name}</button>`).join('')}<div id="voteProgress"></div></div>`;
+}
+function voteImpostor(id,b){document.querySelectorAll('#answers button').forEach(x=>x.disabled=true);b.style.outline='4px solid #ffd54a';s.emit('impostorVote',{code:room,targetId:id})}
+s.on('impostorVoteProgress',d=>{const e=document.getElementById('voteProgress');if(e)e.textContent=`Votes : ${d.done}/${d.total}`});
+s.on('impostorVoteResult',d=>{const e=document.getElementById('roundFeedback');if(e)e.innerHTML=`<div class="feedback">${d.tie?'⚖️ Égalité : personne n’est éliminé.':d.caught?'🎯 '+d.accused+' était bien l’imposteur ! Il peut maintenant tenter de trouver le mot.':'❌ '+d.accused+' n’était pas l’imposteur.'}</div>`});
+s.on('impostorGuessPrompt',()=>{
+ const e=document.getElementById('answers');if(e)e.innerHTML=`<div class="card"><h2>🕵️ Tu as été démasqué !</h2><p>Écris le mot des autres pour tenter de gagner 500 points.</p><input id="impGuess" placeholder="Le mot des autres"><button onclick="sendImpGuess()">VALIDER</button></div>`;
+});
+function sendImpGuess(){const x=document.getElementById('impGuess');if(x?.value.trim())s.emit('impostorGuess',{code:room,word:x.value.trim()})}
+s.on('impostorGuessResult',d=>{const e=document.getElementById('roundFeedback');if(e)e.innerHTML=`<div class="feedback">${d.correct?'✅ '+d.name+' a trouvé le mot : +'+d.points+' points':'❌ '+d.name+' n’a pas trouvé le mot'}<br>Mot : <b>${d.word}</b></div>`});
 
 function changeImpostorWord(){
  if(!room||me!==state?.host)return;
@@ -127,6 +142,17 @@ function next(){s.emit('next',room)}function answer(i){s.emit('answer',{code:roo
 s.on('connect',()=>me=s.id);s.on('room',r=>{state=r;
  const mine=r.players.find(p=>p.id===me),ms=document.getElementById('myScore');
  if(ms)ms.textContent=`Mon score : ${mine?.score||0} pts`;
+ const lr=document.getElementById('liveRanking');
+ if(lr)lr.innerHTML=[...r.players].sort((a,b)=>b.score-a.score).map((p,i)=>`<span style="display:inline-block;margin:4px 8px;padding:6px 10px;border:1px solid #42557f;border-radius:10px">${i+1}. ${p.name} — <b>${p.score} pts</b></span>`).join('');
+ 
+ if(r.settings&&state?.host===me){
+   setTimeout(()=>{
+     document.querySelectorAll('[data-game]').forEach(x=>x.checked=(r.settings.games||[]).includes(x.dataset.game));
+     document.querySelectorAll('[data-theme]').forEach(x=>x.checked=(r.settings.themes||[]).includes(x.dataset.theme));
+     document.querySelectorAll('[data-rounds]').forEach(x=>{if(r.settings.gameRounds?.[x.dataset.rounds])x.value=r.settings.gameRounds[x.dataset.rounds]});
+   },0);
+ }
+
  players.innerHTML=r.players.map(p=>`<span class="pill">${p.name} · ${p.score}</span> `).join('');let h=r.host===me;setup.classList.toggle('hide',!h);wait.classList.toggle('hide',h);if(h){cg=new Set(r.settings.games);ct=new Set(r.settings.themes);gameRounds={...(r.settings.gameRounds||{})};render()}});
 s.on('round',x=>{const ac=document.getElementById('answerCount');if(ac)ac.textContent='Réponses : 0/0';const rf=document.getElementById('roundFeedback');if(rf)rf.innerHTML='';
 const jb=[...document.querySelectorAll('button')].find(b=>b.textContent==='Lancement…');if(jb){jb.disabled=false;jb.textContent='▶ JOUER'};lobby.classList.add('hide');play.classList.remove('hide');secret.classList.add('hide');rl.textContent=`${x.current.game} — Manche ${x.gameRound}/${x.gameTotal}`;gl.textContent=x.current.game;tl.textContent=x.current.theme||'';q.innerHTML=(x.current.q||'')+(x.current.difficulty?` <span class="pill">🎯 ${x.current.difficulty.toUpperCase()} • ${x.current.points} pts</span>`:'');
@@ -136,6 +162,9 @@ if(x.current.typedBomb){
  hc.classList.toggle('hide',me!==state?.host);
  if(me===state?.host)award.innerHTML='<div class="card"><h3>👑 Validation des réponses</h3><div id="bombReview">En attente des réponses...</div></div>';
  return;
+}
+if(x.current.game==='L’Imposteur'){
+ setTimeout(()=>{const a=document.getElementById('answers');if(a&&!document.getElementById('startVote'))a.insertAdjacentHTML('beforeend','<button id="startVote" onclick="renderImpostorVote()">🗳️ PASSER AU VOTE</button>')},100);
 }
 if(x.current.game==='Duel'&&x.current.pairDuel){
  img.classList.add('hide');const ds=x.current.duels||[];
@@ -207,7 +236,7 @@ s.on('answerFeedback',d=>{
 
 s.on('majorityReveal',x=>{
  const el=document.getElementById('roundFeedback');if(!el)return;
- el.innerHTML='<div class="card"><h2>👥 Qui a choisi quoi ?</h2>'+x.choices.map(c=>`<div style="margin:12px 0"><b>${c.label}</b><br>${c.players.length?c.players.join(' • '):'<small>Personne</small>'}</div>`).join('')+'</div>';
+ el.innerHTML='<div class="card" style="border:3px solid #ffd54a"><h2>👥 RÉSULTATS — QUI A CHOISI QUOI ?</h2>'+x.choices.map(c=>`<div style="margin:12px 0"><b>${c.label}</b><br>${c.players.length?c.players.join(' • '):'<small>Personne</small>'}</div>`).join('')+'</div>';
 });
 
 s.on('answerProgress',d=>{
@@ -215,6 +244,14 @@ s.on('answerProgress',d=>{
 });
 s.on('roundReveal',d=>{
  const el=document.getElementById('roundFeedback'); if(el&&d.answer)el.innerHTML+=`<div class="card">💡 Bonne réponse : <b>${d.answer}</b>${d.why?`<br>${d.why}`:''}</div>`;
+});
+
+
+document.addEventListener('click',e=>{
+ const b=e.target.closest('#answers button');if(!b)return;
+ const box=document.getElementById('answers');if(!box)return;
+ [...box.querySelectorAll('button')].forEach(x=>{x.style.outline='';x.style.boxShadow='';x.style.transform=''});
+ b.style.outline='4px solid #ffd54a';b.style.boxShadow='0 0 0 5px rgba(255,213,74,.22)';b.style.transform='scale(1.02)';
 });
 
 render();s.on('allAnswered',()=>{answers.innerHTML='<div class="card">✅ Tout le monde a répondu !<br>Question suivante…</div>'});
@@ -257,4 +294,15 @@ s.on('secret',x=>{
  }
 });
 
-</script></body></html>
+</script></body></html
+let settingsInitialized=false;
+function snapshotSettings(){
+ const out={games:[],themes:[],rounds:{}};
+ document.querySelectorAll('[data-game]:checked').forEach(x=>out.games.push(x.dataset.game));
+ document.querySelectorAll('[data-theme]:checked').forEach(x=>out.themes.push(x.dataset.theme));
+ document.querySelectorAll('[data-rounds]').forEach(x=>out.rounds[x.dataset.rounds]=x.value);
+ window.__partySettings=out;
+}
+document.addEventListener('change',e=>{if(e.target.matches('[data-game],[data-theme],[data-rounds]'))snapshotSettings()});
+
+>

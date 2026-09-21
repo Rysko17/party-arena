@@ -230,7 +230,7 @@ function next(r){
    if(r.gameIndex>=r.settings.games.length){io.to(r.code).emit('finished',view(r));return}
    limit=gameLimit(r)
  }
- r.gameRound++;r.round++;r.answers={};r.guesses={};r.oralDecisions={};r.bombAnswers={};r._advancing=false;
+ r.gameRound++;r.round++;r.answers={};r.guesses={};r.oralDecisions={};r.bombAnswers={};r.impostorVotes={};r._advancing=false;
  const g=r.settings.games[r.gameIndex],c=makeRound(r,g);r.current=c;
  io.to(r.code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:limit,gameIndex:r.gameIndex,current:c});
  if(g==="L’Imposteur")for(const p of Object.values(r.players))io.to(p.id).emit('secret',{word:p.id===r.secret.imp?r.secret.o:r.secret.n});
@@ -380,6 +380,32 @@ s.on('award',x=>{let r=rooms[x.code];if(r&&r.host===s.id&&r.players[x.id]){
  s.on('next',c=>{let r=rooms[c];if(r&&r.host===s.id)next(r)});
  s.on('restartSame',c=>{let r=rooms[c];if(r&&r.host===s.id){r.round=0;r.gameIndex=0;r.gameRound=0;r.used=r.used||{};r.total=totalRounds(r);Object.values(r.players).forEach(p=>p.score=0);next(r)}});
  s.on('backToSetup',c=>{let r=rooms[c];if(r&&r.host===s.id){r.round=0;r.gameIndex=0;r.gameRound=0;r.state='lobby';io.to(c).emit('backToSetup');emit(r)}});
- s.on('disconnect',()=>{for(const c in rooms){let r=rooms[c];if(r.players[s.id]){delete r.players[s.id];if(!Object.keys(r.players).length)delete rooms[c];else{if(r.host===s.id)r.host=Object.keys(r.players)[0];emit(r)}}}})
+ 
+s.on('impostorVote',x=>{
+ const r=rooms[x.code];if(!r||r.current?.game!=='L’Imposteur'||!r.players[s.id]||!r.players[x.targetId])return;
+ r.impostorVotes=r.impostorVotes||{};r.impostorVotes[s.id]=x.targetId;
+ const ids=Object.keys(r.players);io.to(r.code).emit('impostorVoteProgress',{done:Object.keys(r.impostorVotes).length,total:ids.length});
+ if(!ids.every(id=>r.impostorVotes[id]))return;
+ const counts={};Object.values(r.impostorVotes).forEach(id=>counts[id]=(counts[id]||0)+1);
+ const max=Math.max(...Object.values(counts)),tops=Object.keys(counts).filter(id=>counts[id]===max);
+ const accused=tops.length===1?tops[0]:null;
+ const caught=accused===r.impostorId;
+ io.to(r.code).emit('impostorVoteResult',{accused:accused?r.players[accused]?.name:null,tie:!accused,caught});
+ if(caught){
+   r.current.phase='impostorGuess';
+   io.to(r.impostorId).emit('impostorGuessPrompt',{choices:r.current.wordChoices||[]});
+ }else{
+   r._advancing=true;setTimeout(()=>next(r),2500);
+ }
+});
+s.on('impostorGuess',x=>{
+ const r=rooms[x.code];if(!r||r.current?.game!=='L’Imposteur'||r.current?.phase!=='impostorGuess'||s.id!==r.impostorId)return;
+ const guess=String(x.word||'').trim().toLowerCase(),word=String(r.normalWord||'').trim().toLowerCase(),correct=guess===word;
+ if(correct)r.players[s.id].score+=500;
+ io.to(r.code).emit('impostorGuessResult',{name:r.players[s.id].name,correct,word:r.normalWord,points:correct?500:0});
+ emit(r);r._advancing=true;setTimeout(()=>next(r),2800);
+});
+
+s.on('disconnect',()=>{for(const c in rooms){let r=rooms[c];if(r.players[s.id]){delete r.players[s.id];if(!Object.keys(r.players).length)delete rooms[c];else{if(r.host===s.id)r.host=Object.keys(r.players)[0];emit(r)}}}})
 });
 server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.12 lancé'));

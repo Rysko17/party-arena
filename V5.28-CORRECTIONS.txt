@@ -1,0 +1,7 @@
+PARTY ARENA V5.28
+- Majorité : résultats 'qui a choisi quoi' diffusés à tous.
+- Tous les jeux à choix : la réponse sélectionnée est entourée en jaune sur l'appareil du joueur.
+- Lobby : les paramètres sont conservés quand un nouveau joueur rejoint; settings inclus dans l'état de salle.
+- Classement permanent : classement + scores visibles et actualisés avec chaque mise à jour serveur.
+- Bombe : champ de réponse affiché pour tous les joueurs, hôte compris; Bombe retirée des jeux oraux.
+- Imposteur : vote de tous les joueurs contre un suspect. Si l'imposteur est démasqué, lui seul obtient un champ pour tenter le mot des autres; +500 s'il le trouve.
