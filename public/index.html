@@ -14,7 +14,7 @@
 #answerFlash.good .feedbackBox{outline:6px solid #35d07f}
 #answerFlash.bad .feedbackBox{outline:6px solid #ff4d5a}
 </style>
-</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.28</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
+</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.28.1</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
 <div id="home" class="card">
 <h2>Que veux-tu faire ?</h2>
 <p>Crée une nouvelle partie ou rejoins tes amis avec leur code.</p>
@@ -62,6 +62,18 @@ function whoImageFallback(img){
 
 const s=io(),GL=['Quiz Battle','Tu me connais ?','Majorité','La Bombe',"L’Imposteur",'Duel','Mot interdit','Défi surprise','Trouve l’intrus','Qui est-ce ?'],TL=['Culture générale','Football','Sport','Cinéma & Séries','Anime & Manga','Musique','Jeux vidéo','Dessins animés','Internet & Réseaux','Mathématiques','Images'];let room,me,state,cg=new Set(['Quiz Battle']),ct=new Set(['Culture générale']);
 let gameRounds={'Quiz Battle':5};
+let settingsInitialized=false;
+function snapshotSettings(){
+ const out={games:[],themes:[],rounds:{}};
+ document.querySelectorAll('[data-game]:checked').forEach(x=>out.games.push(x.dataset.game));
+ document.querySelectorAll('[data-theme]:checked').forEach(x=>out.themes.push(x.dataset.theme));
+ document.querySelectorAll('[data-rounds]').forEach(x=>out.rounds[x.dataset.rounds]=x.value);
+ window.__partySettings=out;
+}
+document.addEventListener('change',e=>{if(e.target.matches('[data-game],[data-theme],[data-rounds]'))snapshotSettings()});
+
+
+window.addEventListener('error',e=>{const el=document.getElementById('msg');if(el)el.textContent='Erreur interface : '+e.message;});
 function render(){
   games.innerHTML=GL.map((x,i)=>`<div class="pick ${cg.has(x)?'on':''}" data-kind="game" data-i="${i}">
     🎮 <b>${x}</b>
@@ -295,14 +307,4 @@ s.on('secret',x=>{
 });
 
 </script></body></html
-let settingsInitialized=false;
-function snapshotSettings(){
- const out={games:[],themes:[],rounds:{}};
- document.querySelectorAll('[data-game]:checked').forEach(x=>out.games.push(x.dataset.game));
- document.querySelectorAll('[data-theme]:checked').forEach(x=>out.themes.push(x.dataset.theme));
- document.querySelectorAll('[data-rounds]').forEach(x=>out.rounds[x.dataset.rounds]=x.value);
- window.__partySettings=out;
-}
-document.addEventListener('change',e=>{if(e.target.matches('[data-game],[data-theme],[data-rounds]'))snapshotSettings()});
-
 >

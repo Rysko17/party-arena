@@ -1,0 +1,7 @@
+PARTY ARENA V5.28.1
+HOTFIX création/rejoindre :
+- réorganise le bloc de persistance des paramètres V5.28 pour éviter qu'il perturbe l'initialisation de l'interface ;
+- ajoute un message d'erreur visible si le navigateur rencontre une erreur JavaScript ;
+- server.js : node --check OK ;
+- JavaScript navigateur : node --check OK.
+Note : le test serveur complet n'a pas été exécuté dans l'environnement de génération car les dépendances npm (express/socket.io) n'y sont pas installées. Render les installe via package.json.
