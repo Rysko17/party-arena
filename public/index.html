@@ -19,7 +19,7 @@
 #gameImg:not(.hide){display:block!important;width:min(100%,760px)!important;height:390px!important;object-fit:contain!important;object-position:center center!important;margin:14px auto!important;border-radius:18px;background:rgba(0,0,0,.18);padding:8px;box-sizing:border-box}
 @media(max-width:700px){#gameImg:not(.hide){height:300px!important}}
 </style>
-</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.43 — WHO ROTATION / CARTOONS</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
+</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.44 — HARD MODE</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
 <div id="home" class="card">
 <h2>Que veux-tu faire ?</h2>
 <p>Crée une nouvelle partie ou rejoins tes amis avec leur code.</p>
@@ -194,7 +194,7 @@ if(isHost){render();}});
 
 let roundTimerInt=null;
 function startRoundTimer(sec){clearInterval(roundTimerInt);let el=document.getElementById('roundTimer');if(!el){el=document.createElement('div');el.id='roundTimer';el.className='pill';el.style.cssText='font-size:22px;font-weight:900;margin:10px auto;display:block;width:max-content';(document.getElementById('play')||document.body).prepend(el)}if(!sec){el.style.display='none';return}el.style.display='block';let left=sec;el.textContent=`⏱️ ${left}s`;roundTimerInt=setInterval(()=>{left--;el.textContent=`⏱️ ${Math.max(0,left)}s`;if(left<=0)clearInterval(roundTimerInt)},1000)}
-function timerForGame(g){if(g==='Blind Test')return 20;if(g==='Mot interdit')return 30;if(g==='Trouve l’intrus')return 20;if(['Quiz Battle','Qui est-ce ?','Duel','La Bombe'].includes(g))return 10;return 0}
+function timerForGame(g){if(g==='Blind Test')return 12;if(g==='Mot interdit')return 30;if(g==='Trouve l’intrus')return 20;if(['Quiz Battle','Qui est-ce ?','Duel','La Bombe'].includes(g))return 10;return 0}
 
 s.on('round',x=>{startRoundTimer(timerForGame(x.current.game));const ac=document.getElementById('answerCount');if(ac)ac.textContent='Réponses : 0/0';const rf=document.getElementById('roundFeedback');if(rf)rf.innerHTML='';
 const jb=[...document.querySelectorAll('button')].find(b=>b.textContent==='Lancement…');if(jb){jb.disabled=false;jb.textContent='▶ JOUER'};lobby.classList.add('hide');play.classList.remove('hide');secret.classList.add('hide');rl.textContent=`${x.current.game} — Manche ${x.gameRound}/${x.gameTotal}`;gl.textContent=x.current.game;tl.textContent=x.current.theme||'';q.innerHTML=(x.current.q||'')+(x.current.difficulty?` <span class="pill">🎯 ${x.current.difficulty.toUpperCase()} • ${x.current.points} pts</span>`:'');
@@ -230,7 +230,7 @@ if(x.current.game==='L’Imposteur'){
 if(x.current.blind){
  img.classList.add('hide');
  q.innerHTML=`🎧 <b>BLIND TEST</b><br><span class="pill">${x.current.theme}</span> <span class="pill">🎯 ${(x.current.difficulty||'moyen').toUpperCase()} • ${x.current.points||500} pts</span>`;
- answers.innerHTML=`<div class="card" style="max-width:760px;margin:16px auto;text-align:center;padding:22px"><div style="font-size:34px">🎵</div><h3>Écoute l'extrait</h3><p>10 secondes d'audio • 20 secondes pour répondre</p><button id="blindPlay" style="max-width:360px" onclick="playBlind('${x.current.video}',${x.current.start},${x.current.end})">▶️ LANCER L'EXTRAIT</button><div id="blindPlayer" style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none"></div></div><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:900px;margin:18px auto">`+
+ answers.innerHTML=`<div class="card" style="max-width:760px;margin:16px auto;text-align:center;padding:22px"><div style="font-size:34px">🎵</div><h3>Écoute l'extrait</h3><p>10 secondes d'audio • 12 secondes pour répondre</p><button id="blindPlay" style="max-width:360px" onclick="playBlind('${x.current.video}',${x.current.start},${x.current.end})">▶️ LANCER L'EXTRAIT</button><div id="blindPlayer" style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none"></div></div><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:900px;margin:18px auto">`+
  x.current.a.map((a,i)=>`<div class="ans" style="margin:0;min-height:68px;display:flex;align-items:center;justify-content:center;text-align:center" onclick="answer(${i})">${a}</div>`).join('')+`</div>`;
  return;
 }
