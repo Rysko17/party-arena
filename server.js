@@ -186,6 +186,188 @@ function pickWhoNoRepeat(r){
  r.usedWhoNames.push(String(z.w[0]).toLowerCase());
  return z;
 }
+
+const TMC_CLEAN=[
+ {q:"Quel type de vacances {name} préfère ?",a:["Plage","Montagne","Grande ville","Campagne"]},
+ {q:"Quel repas {name} choisirait en premier ?",a:["Pizza","Sushi","Burger","Tacos"]},
+ {q:"Quelle soirée {name} préfère ?",a:["Soirée maison","Restaurant","Boîte de nuit","Cinéma"]},
+ {q:"Quel super-pouvoir {name} choisirait ?",a:["Voler","Téléportation","Invisibilité","Lire les pensées"]},
+ {q:"Quel animal {name} préfère parmi ceux-ci ?",a:["Chien","Chat","Lion","Dauphin"]},
+ {q:"Si {name} gagnait 1 million d’euros, que ferait-il/elle d’abord ?",a:["Voyager","Acheter une maison","Investir","Faire plaisir aux proches"]},
+ {q:"Quelle saison {name} préfère ?",a:["Printemps","Été","Automne","Hiver"]},
+ {q:"Quel genre de film {name} choisirait ?",a:["Comédie","Horreur","Action","Science-fiction"]},
+ {q:"Quel moment de la journée {name} préfère ?",a:["Matin","Après-midi","Soir","Nuit"]},
+ {q:"Quelle boisson {name} choisirait ?",a:["Eau","Soda","Jus","Café"]},
+ {q:"Quel cadeau ferait le plus plaisir à {name} ?",a:["Voyage","Vêtement","Objet high-tech","Argent"]},
+ {q:"Quel moyen de transport {name} préfère pour un long trajet ?",a:["Voiture","Train","Avion","Bus"]},
+ {q:"Quel environnement {name} choisirait pour vivre ?",a:["Centre-ville","Banlieue calme","Bord de mer","Montagne"]},
+ {q:"Quel jour de repos idéal pour {name} ?",a:["Dormir","Sortir","Jouer/regarder des séries","Voir ses proches"]},
+ {q:"Quel type de musique {name} mettrait pour une soirée ?",a:["Rap","Afro","Pop","Électro"]},
+ {q:"Quel défaut {name} supporte le moins ?",a:["Mensonge","Retard","Égoïsme","Jalousie"]},
+ {q:"Quelle qualité {name} apprécie le plus chez quelqu’un ?",a:["Humour","Loyauté","Ambition","Gentillesse"]},
+ {q:"Quel réseau/app {name} ouvrirait en premier ?",a:["TikTok","Instagram","YouTube","Snapchat"]},
+ {q:"Quel petit plaisir {name} choisirait ?",a:["Manger","Dormir","Shopping","Jouer"]},
+ {q:"Quel plan de week-end {name} choisirait ?",a:["Voyage","Repos maison","Sortie entre amis","Activité sportive"]}
+];
+
+const SURPRISE_CLEAN={
+'Football':["Mime une célébration de but célèbre.","Cite 5 clubs européens en 10 secondes.","Fais deviner un footballeur sans dire son nom.","Cite 4 pays ayant gagné la Coupe du monde."],
+'Sport':["Mime un sport et fais-le deviner.","Cite 5 sports olympiques en 10 secondes.","Fais deviner un athlète célèbre avec 3 indices.","Cite 4 sports qui se jouent avec une balle ou un ballon."],
+'Cinéma & Séries':["Mime un film célèbre.","Fais deviner une série avec 3 indices.","Cite 5 films en 10 secondes.","Imite un personnage de film ou série sans dire son nom."],
+'Anime & Manga':["Mime un personnage d’anime.","Fais deviner un anime avec 3 indices.","Cite 5 héros d’anime en 10 secondes.","Imite une attaque ou pose iconique sans dire son nom."],
+'Musique':["Fredonne un morceau sans paroles et fais-le deviner.","Fais deviner un artiste avec 3 indices.","Cite 5 rappeurs ou chanteurs en 10 secondes.","Imite la façon de chanter d’un artiste sans dire son nom."],
+'Jeux vidéo':["Mime un jeu vidéo.","Fais deviner un personnage de jeu avec 3 indices.","Cite 5 jeux vidéo en 10 secondes.","Décris un jeu sans dire son titre."],
+'Dessins animés':["Mime un personnage de dessin animé.","Fais deviner un dessin animé avec 3 indices.","Cite 5 personnages en 10 secondes.","Imite la voix d’un personnage sans dire son nom."],
+'Internet & Réseaux':["Fais deviner une application avec 3 indices.","Cite 5 créateurs de contenu en 10 secondes.","Mime une tendance internet connue.","Décris un réseau social sans dire son nom."],
+'Culture générale':["Cite 5 capitales en 10 secondes.","Fais deviner un pays avec 3 indices.","Cite 5 animaux commençant par des lettres différentes.","Fais deviner une personnalité célèbre avec 3 indices."],
+'Mathématiques':["Donne 5 multiples de 7 en moins de 10 secondes.","Fais calculer 25 × 4 sans dire le résultat.","Cite 4 formes géométriques.","Trouve mentalement le double de 125."],
+'Images':["Fais deviner un objet uniquement en le décrivant.","Mime un animal et fais-le deviner.","Décris un monument célèbre sans donner son nom.","Fais deviner une couleur sans la nommer."]
+};
+
+const WHO_PHOTOS=[{"answer": "Lionel Messi", "theme": "Football", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Lionel%20Messi%20WC2022.jpg?width=700"}, {"answer": "Cristiano Ronaldo", "theme": "Football", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Cristiano%20Ronaldo%2C%202023.jpg?width=700"}, {"answer": "Neymar", "theme": "Football", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Neymar%202018.jpg?width=700"}, {"answer": "Kylian Mbappé", "theme": "Football", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Kylian%20Mbapp%C3%A9%202019.jpg?width=700"}, {"answer": "Zinedine Zidane", "theme": "Football", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Zinedine%20Zidane%20by%20Tasnim%2003.jpg?width=700"}, {"answer": "Ronaldinho", "theme": "Football", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Ronaldinho%20in%202019.jpg?width=700"}, {"answer": "Erling Haaland", "theme": "Football", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Erling%20Haaland%202023.jpg?width=700"}, {"answer": "Michael Jordan", "theme": "Sport", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Michael%20Jordan%20in%202014.jpg?width=700"}, {"answer": "LeBron James", "theme": "Sport", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/LeBron%20James%20%2851959977144%29%20%28cropped2%29.jpg?width=700"}, {"answer": "Stephen Curry", "theme": "Sport", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Stephen%20Curry%202.jpg?width=700"}, {"answer": "Rafael Nadal", "theme": "Sport", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Rafael%20Nadal%20US%20Open%202022%20cropped.jpg?width=700"}, {"answer": "Novak Djokovic", "theme": "Sport", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Novak%20Djokovic%20Wimbledon%202022.jpg?width=700"}, {"answer": "Lewis Hamilton", "theme": "Sport", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Lewis%20Hamilton%2C%20British%20GP%202022%20%2852382788875%29%20%28cropped%29.jpg?width=700"}, {"answer": "Usain Bolt", "theme": "Sport", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Usain%20Bolt%20after%204%20%C3%97%20100%20m%20Rio%202016.jpg?width=700"}, {"answer": "Eminem", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Eminem%202021%20Color%20Corrected.jpg?width=700"}, {"answer": "Rihanna", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Rihanna%20Fenty%202018.png?width=700"}, {"answer": "Beyoncé", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Beyonce%20-%20The%20Lion%20King%20European%20Premiere%202019.png?width=700"}, {"answer": "Drake", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Drake%20July%202016.jpg?width=700"}, {"answer": "The Weeknd", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/The%20Weeknd%20Cannes%202023.png?width=700"}, {"answer": "Snoop Dogg", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Snoop%20Dogg%202019%20by%20Glenn%20Francis.jpg?width=700"}, {"answer": "Stromae", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Stromae%202011%20cropped.jpg?width=700"}, {"answer": "Bruno Mars", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Bruno%20Mars%2024K%20Magic%20World%20Tour%202018.jpg?width=700"}, {"answer": "Tour Eiffel", "theme": "Culture générale", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Eiffel%20Tower%20from%20the%20Champ%20de%20Mars%2C%20Paris%205%20August%202014.jpg?width=700"}, {"answer": "Statue de la Liberté", "theme": "Culture générale", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Statue%20of%20Liberty%207.jpg?width=700"}, {"answer": "Big Ben", "theme": "Culture générale", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Elizabeth%20Tower%2C%20June%202022.jpg?width=700"}, {"answer": "Colisée", "theme": "Culture générale", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Colosseum%20in%20Rome%2C%20Italy%20-%20April%202007.jpg?width=700"}, {"answer": "Taj Mahal", "theme": "Culture générale", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Taj%20Mahal%2C%20Agra%2C%20India%20edit3.jpg?width=700"}, {"answer": "Mont Fuji", "theme": "Culture générale", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Mt.%20Fuji%20from%20Mt.%20Hachijo-Fuji%2001.jpg?width=700"}];
+const WHO_REBUS=[
+ {q:"🗼 + 🇫🇷",a:["Tour Eiffel","Big Ben","Colisée","Statue de la Liberté"],c:0,theme:"Culture générale"},
+ {q:"👑 + 🦁",a:["Le Roi Lion","Aladdin","Shrek","Cars"],c:0,theme:"Cinéma & Séries"},
+ {q:"🕷️ + 👨",a:["Spider-Man","Batman","Superman","Iron Man"],c:0,theme:"Cinéma & Séries"},
+ {q:"🦇 + 👨",a:["Batman","Hulk","Thor","Flash"],c:0,theme:"Cinéma & Séries"},
+ {q:"⚡ + 🧙‍♂️ + 👓",a:["Harry Potter","Gandalf","Doctor Strange","Merlin"],c:0,theme:"Cinéma & Séries"},
+ {q:"🐉 + ⚽ + Z",a:["Dragon Ball Z","Pokémon","Naruto","Bleach"],c:0,theme:"Anime & Manga"},
+ {q:"🍥 + 🥷",a:["Naruto","Luffy","Goku","Ichigo"],c:0,theme:"Anime & Manga"},
+ {q:"☠️ + 🏴‍☠️ + 👒",a:["One Piece","Bleach","Demon Slayer","Jujutsu Kaisen"],c:0,theme:"Anime & Manga"},
+ {q:"⚔️ + 👹 + 🌊",a:["Demon Slayer","Haikyuu","Death Note","Dr. Stone"],c:0,theme:"Anime & Manga"},
+ {q:"📓 + ☠️",a:["Death Note","One Punch Man","Blue Lock","Fairy Tail"],c:0,theme:"Anime & Manga"},
+ {q:"🔵 + 🔒 + ⚽",a:["Blue Lock","Captain Tsubasa","Haikyuu","Kuroko"],c:0,theme:"Anime & Manga"},
+ {q:"🍄 + 👨‍🔧 + ⭐",a:["Mario","Sonic","Link","Kratos"],c:0,theme:"Jeux vidéo"},
+ {q:"🦔 + 💨 + 🔵",a:["Sonic","Mario","Pikachu","Kirby"],c:0,theme:"Jeux vidéo"},
+ {q:"⚔️ + 🛡️ + 🧝",a:["The Legend of Zelda","Minecraft","Fortnite","GTA"],c:0,theme:"Jeux vidéo"},
+ {q:"⛏️ + 🧱 + 💎",a:["Minecraft","Roblox","FIFA","Call of Duty"],c:0,theme:"Jeux vidéo"},
+ {q:"⚽ + 🇦🇷 + 10",a:["Lionel Messi","Cristiano Ronaldo","Neymar","Mbappé"],c:0,theme:"Football"},
+ {q:"⚽ + 🇵🇹 + 7",a:["Cristiano Ronaldo","Messi","Zidane","Haaland"],c:0,theme:"Football"},
+ {q:"⚽ + 🇫🇷 + 🐢",a:["Kylian Mbappé","Griezmann","Benzema","Giroud"],c:0,theme:"Football"},
+ {q:"🏀 + 23 + 🐐",a:["Michael Jordan","Stephen Curry","LeBron James","Kobe Bryant"],c:0,theme:"Sport"},
+ {q:"🎾 + 🇪🇸 + 💪",a:["Rafael Nadal","Federer","Djokovic","Alcaraz"],c:0,theme:"Sport"},
+ {q:"🏎️ + 🇬🇧 + 44",a:["Lewis Hamilton","Max Verstappen","Charles Leclerc","Fernando Alonso"],c:0,theme:"Sport"},
+ {q:"👻 + 🚫",a:["Ghostbusters","Titanic","Avatar","Rocky"],c:0,theme:"Cinéma & Séries"},
+ {q:"🚢 + 🧊 + ❤️",a:["Titanic","Jaws","Cars","Rocky"],c:0,theme:"Cinéma & Séries"},
+ {q:"🦈 + 🌊",a:["Les Dents de la mer","Avatar","Matrix","Gladiator"],c:0,theme:"Cinéma & Séries"},
+ {q:"🤖 + 🚗",a:["Transformers","Terminator","Rocky","Joker"],c:0,theme:"Cinéma & Séries"},
+ {q:"👸 + ❄️",a:["La Reine des neiges","Vaiana","Raiponce","Mulan"],c:0,theme:"Dessins animés"},
+ {q:"🐀 + 👨‍🍳",a:["Ratatouille","Cars","Toy Story","Coco"],c:0,theme:"Dessins animés"},
+ {q:"🤠 + 🧸 + 🚀",a:["Toy Story","Cars","Shrek","Encanto"],c:0,theme:"Dessins animés"},
+ {q:"🟢 + 👹 + 👸",a:["Shrek","Monstres & Cie","Coco","Là-haut"],c:0,theme:"Dessins animés"},
+ {q:"📱 + 🎵 + ⏱️",a:["TikTok","Instagram","YouTube","Discord"],c:0,theme:"Internet & Réseaux"},
+ {q:"📸 + ❤️ + 📱",a:["Instagram","TikTok","Discord","Twitch"],c:0,theme:"Internet & Réseaux"},
+ {q:"▶️ + 📺 + 🌐",a:["YouTube","Snapchat","Reddit","WhatsApp"],c:0,theme:"Internet & Réseaux"},
+ {q:"🎮 + 🟣 + 📺",a:["Twitch","Spotify","Netflix","Discord"],c:0,theme:"Internet & Réseaux"},
+ {q:"🎤 + 👑 + POP",a:["Michael Jackson","Drake","Eminem","The Weeknd"],c:0,theme:"Musique"},
+ {q:"🎤 + 🇨🇦 + 🌙",a:["The Weeknd","Snoop Dogg","Stromae","Bad Bunny"],c:0,theme:"Musique"},
+ {q:"🎧 + 🟢 + 🎵",a:["Spotify","Netflix","TikTok","Deezer"],c:0,theme:"Musique"},
+ {q:"π + 🔢",a:["Pi","Pythagore","Einstein","Newton"],c:0,theme:"Mathématiques"},
+ {q:"3️⃣ + 📐 + 🔺",a:["Triangle","Carré","Cercle","Rectangle"],c:0,theme:"Mathématiques"},
+ {q:"4️⃣ + 📐 + ◻️",a:["Carré","Triangle","Cercle","Pentagone"],c:0,theme:"Mathématiques"}
+,
+{q:"🇫🇷 + ⚽ + 10",a:["Kylian Mbappé", "Zinedine Zidane", "Antoine Griezmann", "Karim Benzema"],c:0,theme:"Football"},
+{q:"🇧🇷 + ⚽ + 😄",a:["Ronaldinho", "Ronaldo", "Neymar", "Pelé"],c:0,theme:"Football"},
+{q:"🇳🇴 + ⚽ + 🤖",a:["Erling Haaland", "Ødegaard", "Salah", "Kane"],c:0,theme:"Football"},
+{q:"🇪🇸 + 🎾 + 🏆",a:["Rafael Nadal", "Carlos Alcaraz", "Federer", "Djokovic"],c:0,theme:"Sport"},
+{q:"🇯🇲 + ⚡ + 🏃",a:["Usain Bolt", "Mo Farah", "Carl Lewis", "Tyson Gay"],c:0,theme:"Sport"},
+{q:"🥊 + 🦋 + 🐝",a:["Muhammad Ali", "Mike Tyson", "Floyd Mayweather", "Tyson Fury"],c:0,theme:"Sport"},
+{q:"🧙 + 💍 + 🌋",a:["Le Seigneur des anneaux", "Harry Potter", "Narnia", "Dune"],c:0,theme:"Cinéma & Séries"},
+{q:"🦖 + 🏝️",a:["Jurassic Park", "King Kong", "Jumanji", "Godzilla"],c:0,theme:"Cinéma & Séries"},
+{q:"💊 + 🕶️ + 💻",a:["Matrix", "Blade Runner", "Terminator", "Tron"],c:0,theme:"Cinéma & Séries"},
+{q:"🤡 + 🃏 + 🟣",a:["Joker", "Batman", "Deadpool", "Venom"],c:0,theme:"Cinéma & Séries"},
+{q:"👽 + 🌳 + 🔵",a:["Avatar", "Alien", "Dune", "Star Wars"],c:0,theme:"Cinéma & Séries"},
+{q:"🏹 + 🔥 + 🐦",a:["Hunger Games", "Divergente", "Twilight", "Maze Runner"],c:0,theme:"Cinéma & Séries"},
+{q:"👊 + 🧑‍🦲",a:["One Punch Man", "Mob Psycho 100", "Dragon Ball", "Bleach"],c:0,theme:"Anime & Manga"},
+{q:"🧪 + 🪨 + 10B",a:["Dr. Stone", "Steins;Gate", "Code Geass", "Monster"],c:0,theme:"Anime & Manga"},
+{q:"🏐 + 🧡 + 🏫",a:["Haikyuu!!", "Blue Lock", "Kuroko", "Slam Dunk"],c:0,theme:"Anime & Manga"},
+{q:"🪚 + 👨",a:["Chainsaw Man", "Demon Slayer", "Jujutsu Kaisen", "Tokyo Ghoul"],c:0,theme:"Anime & Manga"},
+{q:"👻 + 🔫 + 🍓",a:["Bleach", "Naruto", "One Piece", "Fairy Tail"],c:0,theme:"Anime & Manga"},
+{q:"🧱 + 🗡️ + 👹",a:["Attack on Titan", "Berserk", "Vinland Saga", "Kaiju No. 8"],c:0,theme:"Anime & Manga"},
+{q:"⚡ + 🐭 + 🔴⚪",a:["Pokémon", "Digimon", "Yu-Gi-Oh!", "Beyblade"],c:0,theme:"Anime & Manga"},
+{q:"🎴 + 👹 + 🌊",a:["Demon Slayer", "Bleach", "Naruto", "One Piece"],c:0,theme:"Anime & Manga"},
+{q:"🔫 + 🚗 + ⭐⭐⭐⭐⭐",a:["GTA", "Fortnite", "Call of Duty", "Need for Speed"],c:0,theme:"Jeux vidéo"},
+{q:"🪂 + 🔫 + 🏗️",a:["Fortnite", "PUBG", "Apex Legends", "Valorant"],c:0,theme:"Jeux vidéo"},
+{q:"🔫 + 🪖 + 💥",a:["Call of Duty", "Battlefield", "Counter-Strike", "Valorant"],c:0,theme:"Jeux vidéo"},
+{q:"⚽ + 🎮 + EA",a:["EA Sports FC", "eFootball", "Rocket League", "Football Manager"],c:0,theme:"Jeux vidéo"},
+{q:"🚗 + ⚽",a:["Rocket League", "Forza", "Mario Kart", "Gran Turismo"],c:0,theme:"Jeux vidéo"},
+{q:"🔴 + 🔵 + 👨‍🔧",a:["Mario", "Sonic", "Link", "Kirby"],c:0,theme:"Jeux vidéo"},
+{q:"🟡 + 👻 + 🍒",a:["Pac-Man", "Kirby", "Pikachu", "Sonic"],c:0,theme:"Jeux vidéo"},
+{q:"🗡️ + 🔥 + Ω",a:["God of War", "Elden Ring", "Dark Souls", "Skyrim"],c:0,theme:"Jeux vidéo"},
+{q:"👑 + 🟣 + ☔",a:["Prince", "Drake", "Usher", "Bruno Mars"],c:0,theme:"Musique"},
+{q:"🐝 + 👑 + 🎤",a:["Beyoncé", "Rihanna", "Alicia Keys", "SZA"],c:0,theme:"Musique"},
+{q:"🌙 + ⭐ + 🇨🇦",a:["The Weeknd", "Drake", "Justin Bieber", "Shawn Mendes"],c:0,theme:"Musique"},
+{q:"🐰 + 🇵🇷 + 🎤",a:["Bad Bunny", "J Balvin", "Ozuna", "Daddy Yankee"],c:0,theme:"Musique"},
+{q:"🐶 + 🎤 + 🌿",a:["Snoop Dogg", "Dr. Dre", "50 Cent", "Ice Cube"],c:0,theme:"Musique"},
+{q:"🧊 + 🧊 + 👶",a:["Ice Cube", "Vanilla Ice", "Ice-T", "50 Cent"],c:0,theme:"Musique"},
+{q:"👻 + 💬",a:["Snapchat", "WhatsApp", "Telegram", "Discord"],c:0,theme:"Internet & Réseaux"},
+{q:"💬 + 🎮 + 🟣",a:["Discord", "Twitch", "Reddit", "Messenger"],c:0,theme:"Internet & Réseaux"},
+{q:"🟢 + 📞 + 💬",a:["WhatsApp", "Spotify", "Telegram", "WeChat"],c:0,theme:"Internet & Réseaux"},
+{q:"N + ❤️ + 📺",a:["Netflix", "YouTube", "Prime Video", "Disney+"],c:0,theme:"Internet & Réseaux"},
+{q:"🐭 + 🏰",a:["Disney", "Pixar", "DreamWorks", "Nickelodeon"],c:0,theme:"Dessins animés"},
+{q:"🧽 + 🌊 + 🍍",a:["Bob l’éponge", "Patrick", "Nemo", "Popeye"],c:0,theme:"Dessins animés"},
+{q:"🐱 + 🐭 + 💥",a:["Tom et Jerry", "Titi et Grosminet", "Scooby-Doo", "Garfield"],c:0,theme:"Dessins animés"},
+{q:"🐕 + 👻 + 🚐",a:["Scooby-Doo", "Tom et Jerry", "Snoopy", "Bluey"],c:0,theme:"Dessins animés"}
+];
+function pickWhoMixed(r){
+ const themes=r.settings.themes||[];
+ let photos=WHO_PHOTOS.filter(x=>themes.includes(x.theme)),rebus=WHO_REBUS.filter(x=>themes.includes(x.theme));
+ if(!photos.length&&!rebus.length){photos=WHO_PHOTOS;rebus=WHO_REBUS}
+ if(photos.length && (Math.random()<0.75 || !rebus.length)){
+   const z=unusedPick(r,'whoPhoto',photos);
+   const pool=[...new Set([...WHO_PHOTOS.filter(x=>x.theme===z.theme).map(x=>x.answer),...WHO_REBUS.filter(x=>x.theme===z.theme).flatMap(x=>x.a)])].filter(x=>x!==z.answer);
+   const wrong=pool.sort(()=>Math.random()-.5).slice(0,3);
+   if(wrong.length===3){const a=[z.answer,...wrong].sort(()=>Math.random()-.5);return {q:'Qui est-ce ?',a,c:a.indexOf(z.answer),theme:z.theme,image:z.image,whoPhoto:true}}
+ }
+ const z=unusedPick(r,'whoRebus',rebus.length?rebus:WHO_REBUS);return {...z,whoRebus:true};
+}
+
+const BLIND_TEST_BANK={
+'Anime & Manga':[
+ {title:'Attack on Titan — Guren no Yumiya',video:'8OkpRK2_gVs',start:18},
+ {title:'Naruto Shippuden — Blue Bird',video:'aJRu5ltxXjc',start:12},
+ {title:'Tokyo Ghoul — Unravel',video:'7aMOurgDB-o',start:18},
+ {title:'Demon Slayer — Gurenge',video:'pmanD_s7G3U',start:15},
+ {title:'Jujutsu Kaisen — Kaikai Kitan',video:'1tk1pqwrOys',start:15},
+ {title:'Death Note — The World',video:'8QE9cmfxx4s',start:15},
+ {title:'One Punch Man — THE HERO!!',video:'QImBolnTVH8',start:16},
+ {title:'My Hero Academia — The Day',video:'yu0HjPzFYnY',start:14},
+ {title:'Chainsaw Man — KICK BACK',video:'dFlDRhvM4L0',start:15},
+ {title:'Spy x Family — Mixed Nuts',video:'U_rWZK_8vUY',start:14}
+],
+'Cinéma & Séries':[
+ {title:'Pirates des Caraïbes — He’s a Pirate',video:'BuYf0taXoNw',start:18},
+ {title:'Interstellar — thème',video:'UDVtMYqUAyw',start:22},
+ {title:'Game of Thrones — Main Title',video:'s7L2PVdrb_8',start:12},
+ {title:'The Walking Dead — Main Title',video:'v5ISBJc1wFk',start:5},
+ {title:'Rocky — Gonna Fly Now',video:'ioE_O7Lm0I4',start:20},
+ {title:'Mission Impossible — Theme',video:'XAYhNHhxN0A',start:12},
+ {title:'Star Wars — Main Theme',video:'_D0ZQPqeJkk',start:8},
+ {title:'Harry Potter — Hedwig’s Theme',video:'wtHra9tFISY',start:12},
+ {title:'The Avengers — Theme',video:'FOabQZHT4qY',start:20},
+ {title:'Stranger Things — Theme',video:'-RcPZdihrp4',start:8}
+],
+'Musique':[
+ {title:'Michael Jackson — Billie Jean',video:'Zi_XLOBDo_Y',start:28},
+ {title:'The Weeknd — Blinding Lights',video:'4NRXx6U8ABQ',start:18},
+ {title:'Eminem — Lose Yourself',video:'_Yhyp-_hX2s',start:18},
+ {title:'Drake — God’s Plan',video:'xpVfcZ0ZcFM',start:20},
+ {title:'Dua Lipa — Levitating',video:'TUVcZfQe-Kw',start:20},
+ {title:'SZA — Kill Bill',video:'MSRcC626prw',start:18},
+ {title:'Bruno Mars — Locked Out of Heaven',video:'e-fA-gBCkj0',start:18},
+ {title:'50 Cent — In Da Club',video:'5qm8PH4xAss',start:20},
+ {title:'Rihanna — Diamonds',video:'lWA2pjMjpBs',start:22},
+ {title:'Stromae — Alors on danse',video:'VHoT4N43jK8',start:18}
+]
+};
+function blindRound(r){
+ let themes=(r.settings.themes||[]).filter(t=>BLIND_TEST_BANK[t]?.length);
+ if(!themes.length)themes=['Musique','Anime & Manga','Cinéma & Séries'];
+ const t=chooseTheme(r,'blindTheme',themes),pool=BLIND_TEST_BANK[t],z=unusedPick(r,'blind:'+t,pool);
+ const wrong=pool.filter(x=>x.title!==z.title).sort(()=>Math.random()-.5).slice(0,3).map(x=>x.title);
+ const a=[z.title,...wrong].sort(()=>Math.random()-.5);
+ return {game:'Blind Test',q:'🎧 BLIND TEST — écoute les 10 secondes',a,c:a.indexOf(z.title),theme:t,blind:true,video:z.video,start:z.start,end:z.start+10,points:500};
+}
 function makeRound(r,g){
  let c={game:g};
  if(g==='Quiz Battle'){let x=question(r);c={game:g,q:x.q,a:x.a,c:x.c,image:x.image||null,theme:x.theme,difficulty:x.difficulty||'simple',points:({simple:250,moyen:500,dur:1000}[x.difficulty]||250)}}
@@ -199,9 +381,10 @@ function makeRound(r,g){
    c={game:g,q:'DUELS',duels,bye:pairing.bye,pairDuel:true,points:500}
  }
  else if(g==='Mot interdit'){let z=themedPick(r,'taboo'),m=z.value;c={game:g,q:`Thème ${z.theme} — Fais deviner « ${m.word} » sans dire « ${m.forbid} ».`,theme:z.theme,oral:true}}
+ else if(g==='Blind Test'){c=blindRound(r)}
  else if(g==='Qui est-ce ?'){
- const z=pickWhoNoRepeat(r),t=z.t,w=z.w;
- c={game:g,q:'Qui est-ce ?',a:w[1],c:w[1].indexOf(w[0]),image:w[2],theme:t,who:true,points:500}
+ const z=pickWhoMixed(r);
+ c={game:g,q:z.q,a:z.a,c:z.c,theme:z.theme,whoRebus:!!z.whoRebus,whoPhoto:!!z.whoPhoto,image:z.image||null,points:500}
 } else if(g==='Trouve l’intrus'){
  let available=Object.keys(MEGA_INTRUDER_BANK).filter(t=>(r.settings.themes||[]).includes(t));
  if(!available.length)available=Object.keys(MEGA_INTRUDER_BANK);
@@ -248,13 +431,10 @@ io.on('connection',(s)=>{
 
 
  socket.on('rerollWho',({code}={})=>{
-   const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Qui est-ce ?')return;
-   const z=pickWhoNoRepeat(r),t=z.t,w=z.w;
-   r.current={game:'Qui est-ce ?',q:'Qui est-ce ?',a:w[1],c:w[1].indexOf(w[0]),image:w[2],theme:t,who:true,points:500};
-   r.answers={};
-   io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:r.current});
- });
-
+ const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Qui est-ce ?')return;
+ const z=pickWhoMixed(r);r.current={game:'Qui est-ce ?',q:z.q,a:z.a,c:z.c,theme:z.theme,whoRebus:!!z.whoRebus,whoPhoto:!!z.whoPhoto,image:z.image||null,points:500};r.answers={};
+ io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:r.current});
+});
  socket.on('rerollImpostor',({code}={})=>{
    const r=rooms[code]; if(!r||r.host!==socket.id||!r.current||r.current.game!=="L’Imposteur")return;
    const z=themedPick(r,'impostor'),w=z.value,ps=Object.values(r.players);
@@ -307,7 +487,7 @@ io.on('connection',(s)=>{
    }
    return;
  }
- const scored=['Quiz Battle','Trouve l’intrus','Qui est-ce ?'].includes(r.current.game);
+ const scored=['Quiz Battle','Trouve l’intrus','Qui est-ce ?','Blind Test'].includes(r.current.game);
  const correct=scored && +x.value===r.current.c;
  const pts=correct?(r.current.points||500):0;
  if(pts)r.players[s.id].score+=pts;
@@ -397,12 +577,23 @@ s.on('impostorVote',x=>{
  const max=Math.max(...Object.values(counts)),tops=Object.keys(counts).filter(id=>counts[id]===max);
  const accused=tops.length===1?tops[0]:null;
  const caught=accused===r.impostorId;
- io.to(r.code).emit('impostorVoteResult',{accused:accused?r.players[accused]?.name:null,tie:!accused,caught});
+ // Automatic scoring: non-impostors +500 if they personally voted for the real impostor, otherwise -500.
+ // If the group catches the impostor, impostor loses 500 now and can recover those 500 by guessing the common word.
+ for(const id of ids){
+   if(id===r.impostorId)continue;
+   if(r.impostorVotes[id]===r.impostorId)r.players[id].score+=500;
+   else r.players[id].score-=500;
+ }
+ if(caught)r.players[r.impostorId].score-=500;
+ else r.players[r.impostorId].score+=500;
+ emit(r);
+ io.to(r.code).emit('impostorVoteResult',{accused:accused?r.players[accused]?.name:null,tie:!accused,caught,
+   scoring:caught?'Ceux qui ont voté contre le vrai imposteur gagnent 500 points. Les autres perdent 500. L’imposteur perd 500 mais peut les récupérer.':'Les joueurs qui se sont trompés perdent 500 points. L’imposteur gagne 500 points.'});
  if(caught){
    r.current.phase='impostorGuess';
-   io.to(r.impostorId).emit('impostorGuessPrompt',{choices:r.current.wordChoices||[]});
+   io.to(r.impostorId).emit('impostorGuessPrompt',{});
  }else{
-   r._advancing=true;setTimeout(()=>next(r),2500);
+   r._advancing=true;setTimeout(()=>next(r),3000);
  }
 });
 s.on('impostorGuess',x=>{

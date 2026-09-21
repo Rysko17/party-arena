@@ -14,7 +14,7 @@
 #answerFlash.good .feedbackBox{outline:6px solid #35d07f}
 #answerFlash.bad .feedbackBox{outline:6px solid #ff4d5a}
 </style>
-</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.31</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
+</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.35 — ULTRA LÉGER</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
 <div id="home" class="card">
 <h2>Que veux-tu faire ?</h2>
 <p>Crée une nouvelle partie ou rejoins tes amis avec leur code.</p>
@@ -46,7 +46,7 @@ function whoImageFallback(img){
  const f=img.nextElementSibling;if(f){f.style.display='flex';f.textContent='⚠️ IMAGE LOCALE MANQUANTE'}
 }
 
-const s=io(),GL=['Quiz Battle','Tu me connais ?','Majorité','La Bombe',"L’Imposteur",'Duel','Mot interdit','Défi surprise','Trouve l’intrus','Qui est-ce ?'],TL=['Culture générale','Football','Sport','Cinéma & Séries','Anime & Manga','Musique','Jeux vidéo','Dessins animés','Internet & Réseaux','Mathématiques','Images'];let room,me,state,cg=new Set(['Quiz Battle']),ct=new Set(['Culture générale']);
+const s=io(),GL=['Quiz Battle','Tu me connais ?','Majorité','La Bombe',"L’Imposteur",'Duel','Mot interdit','Défi surprise','Trouve l’intrus','Qui est-ce ?','Blind Test'],TL=['Culture générale','Football','Sport','Cinéma & Séries','Anime & Manga','Musique','Jeux vidéo','Dessins animés','Internet & Réseaux','Mathématiques','Images'];let room,me,state,cg=new Set(['Quiz Battle']),ct=new Set(['Culture générale']);
 let gameRounds={'Quiz Battle':5};
 s.on('connect',()=>{const e=document.getElementById('socketStatus');if(e)e.textContent='🟢 Serveur connecté'});s.on('connect_error',()=>{const e=document.getElementById('socketStatus');if(e)e.textContent='🔴 Serveur non connecté — réessaie dans quelques secondes'});
 
@@ -63,7 +63,7 @@ function renderImpostorVote(){
 }
 function voteImpostor(id,b){document.querySelectorAll('#answers button').forEach(x=>x.disabled=true);b.style.outline='4px solid #ffd54a';s.emit('impostorVote',{code:room,targetId:id})}
 s.on('impostorVoteProgress',d=>{const e=document.getElementById('voteProgress');if(e)e.textContent=`Votes : ${d.done}/${d.total}`});
-s.on('impostorVoteResult',d=>{const e=document.getElementById('roundFeedback');if(e)e.innerHTML=`<div class="feedback">${d.tie?'⚖️ Égalité : personne n’est éliminé.':d.caught?'🎯 '+d.accused+' était bien l’imposteur ! Il peut maintenant tenter de trouver le mot.':'❌ '+d.accused+' n’était pas l’imposteur.'}</div>`});
+s.on('impostorVoteResult',d=>{const e=document.getElementById('roundFeedback');if(e)e.innerHTML=`<div class="feedback">${d.tie?'⚖️ Égalité : personne n’est éliminé.':d.caught?'🎯 '+d.accused+' était bien l’imposteur ! Il perd 500 points et peut maintenant tenter de les récupérer en trouvant le mot.':'❌ '+d.accused+' n’était pas l’imposteur.'}<br><small>${d.scoring||''}</small></div>`});
 s.on('impostorGuessPrompt',()=>{
  const e=document.getElementById('answers');if(e)e.innerHTML=`<div class="card" style="border:3px solid #ffd54a"><h2>🕵️ TU ES DÉMASQUÉ !</h2><p>Dernière chance : écris exactement le mot des autres pour tenter de gagner <b>500 points</b>.</p><input id="impGuess" autocomplete="off" maxlength="80" placeholder="Écris le mot des autres..." style="display:block;width:100%;box-sizing:border-box;padding:18px;margin:16px 0;font-size:20px"><button onclick="sendImpGuess()">🎯 TENTER LE MOT</button></div>`;
 });
@@ -181,6 +181,10 @@ if(x.current.typedBomb){
  hc.classList.toggle('hide',me!==state?.host);
  if(me===state?.host)award.innerHTML='<div class="card"><h3>👑 Validation des réponses</h3><div id="bombReview">En attente des réponses...</div></div>';
  return;
+}
+if(x.current.game==='Mot interdit'){
+ q.innerHTML='🚫 MOT INTERDIT';
+ answers.innerHTML=`<div class="card"><h2>${x.current.q||''}</h2><p><b>Règle :</b> fais deviner le mot à ton équipe sans prononcer le mot interdit affiché. Si tu prononces le mot interdit, la manche est ratée. L’hôte attribue le résultat.</p></div>`;
 }
 if(x.current.game==='L’Imposteur'){
  setTimeout(()=>{
