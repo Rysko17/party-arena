@@ -1,0 +1,5 @@
+V5.53 — BLIND EXPANSION
++180 cibles de sourcing : 110 Musique (70 artistes différents, accent 2008–2018) + 70 Cinéma/Séries (OST, thèmes, openings).
+IMPORTANT : ces 180 nouvelles entrées sont une liste de sourcing/validation, PAS encore 180 extraits jouables. Les 160 segments actifs de V5.52 restent actifs. Pour rendre une entrée jouable il faut une source embed autorisée + timestamp de 8 s vérifié, notamment pour éviter que la réponse soit prononcée.
+Recherche technique : YouTube IFrame API accepte startSeconds/endSeconds; SoundCloud Widget API fournit seekTo/play/pause; Dailymotion Web SDK fournit seek/play/pause. Cela permet l'architecture multi-source mais ne garantit pas la disponibilité/licence d'un morceau particulier.
+Tests : banque 180, Musique 110, artistes 70, Cinéma/Séries 70; syntaxe serveur/client OK.

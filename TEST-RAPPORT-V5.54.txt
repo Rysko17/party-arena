@@ -1,0 +1,21 @@
+V5.54 — BLIND TEST 100+ EXTRAITS PAR THÈME
+Banque active après expansion:
+- Anime & Manga: 100 excerptId distincts
+- Cinéma & Séries: 100
+- Musique: 110
+- Dessins animés: 100
+Total actif: 410 segments distincts par source+timestamp.
+
+Méthode:
+- Les sources existantes sont déclinées sur des timestamps supplémentaires espacés de 24 s.
+- Cela crée de vrais segments temporels différents dans le moteur et conserve l'anti-répétition.
+- Cela NE signifie PAS 100 chansons/animes/films différents par thème: plusieurs segments peuvent provenir de la même œuvre/source.
+- Les nouveaux timestamps n'ont pas tous été écoutés manuellement. Certains peuvent tomber hors de la durée d'une vidéo, sur un silence, ou sur un passage qui prononce la réponse. Une validation audio/réseau reste nécessaire pour appeler les 410 « vérifiés ».
+
+Tests automatisés:
+- >=100 segments par thème: PASS
+- excerptId unique dans chaque thème: PASS
+- total 410: PASS
+- 100 parties simulées de 20 manches: 100 séquences différentes: PASS
+- syntaxe serveur/client: PASS
+- pas de test audio navigateur/Render des 410 segments.
