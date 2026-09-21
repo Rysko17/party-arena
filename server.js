@@ -348,11 +348,13 @@ const WHO_REBUS=[
 {q:"🐱 + 🐭 + 💥",a:["Tom et Jerry", "Titi et Grosminet", "Scooby-Doo", "Garfield"],c:0,theme:"Dessins animés"},
 {q:"🐕 + 👻 + 🚐",a:["Scooby-Doo", "Tom et Jerry", "Snoopy", "Bluey"],c:0,theme:"Dessins animés"}
 ];
+WHO_PHOTOS.push(...[{"answer": "Karim Benzema", "theme": "Football", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Karim%20Benzema%202021.jpg?width=700"}, {"answer": "Antoine Griezmann", "theme": "Football", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Antoine%20Griezmann%202018.jpg?width=700"}, {"answer": "Mohamed Salah", "theme": "Football", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Mohamed%20Salah%202018.jpg?width=700"}, {"answer": "Kevin De Bruyne", "theme": "Football", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Kevin%20De%20Bruyne%20201807091.jpg?width=700"}, {"answer": "Robert Lewandowski", "theme": "Football", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Robert%20Lewandowski%202018.jpg?width=700"}, {"answer": "Sergio Ramos", "theme": "Football", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Sergio%20Ramos%202018.jpg?width=700"}, {"answer": "Conor McGregor", "theme": "Sport", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Conor%20McGregor%202015.jpg?width=700"}, {"answer": "Khabib Nurmagomedov", "theme": "Sport", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Khabib%20Nurmagomedov%202019.jpg?width=700"}, {"answer": "Tiger Woods", "theme": "Sport", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Tiger%20Woods%202018.jpg?width=700"}, {"answer": "Michael Phelps", "theme": "Sport", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Michael%20Phelps%20Rio%20Olympics%202016.jpg?width=700"}, {"answer": "Simone Biles", "theme": "Sport", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Simone%20Biles%20Rio%202016.jpg?width=700"}, {"answer": "Valentino Rossi", "theme": "Sport", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Valentino%20Rossi%202017.jpg?width=700"}, {"answer": "Kendrick Lamar", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Kendrick%20Lamar%202018%20Pulitzer%20Prize%20ceremony.jpg?width=700"}, {"answer": "Snoop Dogg", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Snoop%20Dogg%202019%20by%20Glenn%20Francis.jpg?width=700"}, {"answer": "50 Cent", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/50%20Cent%202018.jpg?width=700"}, {"answer": "Pharrell Williams", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Pharrell%20Williams%20-%20Global%20Citizen%20Festival%20Hamburg%2002.jpg?width=700"}, {"answer": "Ariana Grande", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Ariana%20Grande%202017.png?width=700"}, {"answer": "Dua Lipa", "theme": "Musique", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Dua%20Lipa%202021.jpg?width=700"}, {"answer": "Isaac Newton", "theme": "Culture générale", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/GodfreyKneller-IsaacNewton-1689.jpg?width=700"}, {"answer": "Stephen Hawking", "theme": "Culture générale", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Stephen%20Hawking.StarChild.jpg?width=700"}, {"answer": "Mahatma Gandhi", "theme": "Culture générale", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Mahatma-Gandhi%2C%20studio%2C%201931.jpg?width=700"}, {"answer": "Martin Luther King Jr.", "theme": "Culture générale", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Martin%20Luther%20King%20Jr%20NYWTS%204.jpg?width=700"}, {"answer": "Nelson Mandela", "theme": "Culture générale", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Nelson%20Mandela-2008%20%28edit%29.jpg?width=700"}, {"answer": "Abraham Lincoln", "theme": "Culture générale", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Abraham%20Lincoln%20O-77%20matte%20collodion%20print.jpg?width=700"}]);
+
 function pickWhoMixed(r){
  const themes=r.settings.themes||[];
  let photos=WHO_PHOTOS.filter(x=>themes.includes(x.theme)),rebus=WHO_REBUS.filter(x=>themes.includes(x.theme));
  if(!photos.length&&!rebus.length){photos=WHO_PHOTOS;rebus=WHO_REBUS}
- if(photos.length && (Math.random()<0.85 || !rebus.length)){
+ if(photos.length){
    const z=unusedPick(r,'whoPhoto',photos);
    const pool=[...new Set([...WHO_PHOTOS.filter(x=>x.theme===z.theme).map(x=>x.answer),...WHO_REBUS.filter(x=>x.theme===z.theme).flatMap(x=>x.a)])].filter(x=>x!==z.answer);
    const wrong=pool.sort(()=>Math.random()-.5).slice(0,3);
@@ -401,16 +403,29 @@ const BLIND_TEST_BANK={
 };
 
 const BLIND_DECOYS={"Anime & Manga": ["Naruto", "Bleach", "One Piece", "Dragon Ball Z", "Attack on Titan", "Demon Slayer", "Jujutsu Kaisen", "Hunter x Hunter", "My Hero Academia", "Death Note", "Fullmetal Alchemist: Brotherhood", "One Punch Man", "Tokyo Ghoul", "Fairy Tail", "Black Clover", "JoJo's Bizarre Adventure", "Haikyuu!!", "Blue Lock", "Solo Leveling", "Frieren", "Vinland Saga", "Chainsaw Man", "Spy x Family", "Code Geass", "Neon Genesis Evangelion", "Pokémon", "Sailor Moon", "Saint Seiya", "Captain Tsubasa", "Detective Conan", "Inuyasha", "Berserk", "Steins;Gate", "Re:Zero", "Sword Art Online", "Tokyo Revengers", "Kaiju No. 8", "Dandadan", "Mashle", "Blue Exorcist", "Fire Force", "Soul Eater", "Dr. Stone", "Mob Psycho 100", "The Promised Neverland", "Parasyte", "Noragami", "Gintama", "Boruto", "Akame ga Kill"], "Cinéma & Séries": ["Interstellar", "Inception", "Titanic", "Gladiator", "The Dark Knight", "Pirates des Caraïbes", "Harry Potter", "Le Seigneur des Anneaux", "Star Wars", "Jurassic Park", "Rocky", "Mission Impossible", "James Bond", "Avengers", "Iron Man", "Spider-Man", "Black Panther", "The Matrix", "Dune", "Oppenheimer", "Game of Thrones", "Breaking Bad", "Stranger Things", "The Walking Dead", "Peaky Blinders", "La Casa de Papel", "Squid Game", "The Boys", "The Last of Us", "Wednesday", "Sherlock", "Vikings", "Lost", "Prison Break", "Dexter", "Narcos", "The Office", "Friends", "House of the Dragon", "The Mandalorian", "Better Call Saul", "Dark", "Arcane", "The Witcher", "Euphoria", "Suits", "Mr. Robot", "Westworld", "The Crown", "Loki"], "Musique": ["The Weeknd", "Drake", "Rihanna", "Beyoncé", "Eminem", "Kanye West", "Travis Scott", "Kendrick Lamar", "Bruno Mars", "Adele", "Dua Lipa", "Billie Eilish", "Post Malone", "SZA", "Doja Cat", "Ariana Grande", "Lady Gaga", "Justin Bieber", "Ed Sheeran", "Taylor Swift", "Michael Jackson", "Stromae", "Booba", "Ninho", "Damso", "PNL", "Gazo", "Tiakola", "SCH", "Jul", "Orelsan", "Nekfeu", "Aya Nakamura", "Dadju", "Gims", "Hamza", "SDM", "Kaaris", "Lomepal", "MHD", "Central Cee", "21 Savage", "Future", "Metro Boomin", "Chris Brown", "Frank Ocean", "Usher", "Alicia Keys", "50 Cent", "Snoop Dogg"]};
+
+const BLIND_EXCERPT_BANK={};
+for(const [theme,tracks] of Object.entries(BLIND_TEST_BANK)){
+ BLIND_EXCERPT_BANK[theme]=[];
+ for(const track of tracks){
+   // 14 distinct ten-second windows per source = 140 excerpt slots per theme.
+   // Starts are intentionally separated so the exact audio segment never repeats.
+   for(let variant=0;variant<14;variant++){
+     BLIND_EXCERPT_BANK[theme].push({...track,start:track.start+variant*11,excerptId:`${theme}|${track.video}|${track.start+variant*11}`});
+   }
+ }
+}
+
 function blindRound(r){
- let themes=(r.settings.themes||[]).filter(t=>BLIND_TEST_BANK[t]?.length);
+ let themes=(r.settings.themes||[]).filter(t=>BLIND_EXCERPT_BANK[t]?.length);
  if(!themes.length)themes=['Musique','Anime & Manga','Cinéma & Séries'];
- const t=chooseTheme(r,'blindTheme',themes),pool=BLIND_TEST_BANK[t],z=unusedPick(r,'blind:'+t,pool);
- const playable=pool.filter(x=>x.title!==z.title).map(x=>x.title);
+ const t=chooseTheme(r,'blindTheme',themes),pool=BLIND_EXCERPT_BANK[t],z=unusedPick(r,'blindExcerpt:'+t,pool);
+ const playable=[...new Set(pool.filter(x=>x.title!==z.title).map(x=>x.title))];
  const decoys=[...new Set([...(BLIND_DECOYS[t]||[]),...playable])].filter(x=>x!==z.title);
  const wrong=[];while(wrong.length<3&&decoys.length){const i=Math.floor(Math.random()*decoys.length);wrong.push(decoys.splice(i,1)[0])}
  const a=[z.title,...wrong].sort(()=>Math.random()-.5);
  const difficulty=['simple','moyen','dur'][(Math.max(1,r.gameRound)-1)%3];
- return {game:'Blind Test',q:'🎧 BLIND TEST — écoute les 10 secondes',a,c:a.indexOf(z.title),theme:t,blind:true,video:z.video,start:z.start,end:z.start+10,difficulty,points:difficultyPoints(difficulty)};
+ return {game:'Blind Test',q:'🎧 BLIND TEST — écoute les 10 secondes',a,c:a.indexOf(z.title),theme:t,blind:true,video:z.video,start:z.start,end:z.start+10,excerptId:z.excerptId,difficulty,points:difficultyPoints(difficulty)};
 }
 
 function difficultyPoints(d){return ({simple:250,moyen:500,dur:1000}[d]||500)}
@@ -461,7 +476,7 @@ function makeRound(r,g){
  return c;
 }
 
-function roundSeconds(c){if(!c)return 0;if(c.game==='Blind Test')return 20;if(c.game==='Mot interdit'||c.game==='Trouve l’intrus')return 20;if(['Quiz Battle','Qui est-ce ?','Duel','La Bombe'].includes(c.game))return 10;return 0}
+function roundSeconds(c){if(!c)return 0;if(c.game==='Blind Test')return 20;if(c.game==='Mot interdit')return 30;if(c.game==='Trouve l’intrus')return 20;if(['Quiz Battle','Qui est-ce ?','Duel','La Bombe'].includes(c.game))return 10;return 0}
 function armRoundTimer(r){
  if(r._roundTimer)clearTimeout(r._roundTimer);const sec=roundSeconds(r.current);if(!sec)return;
  const token=(r._timerToken=(r._timerToken||0)+1);
@@ -692,5 +707,5 @@ s.on('majorityNext',({code}={})=>{
 });
 s.on('disconnect',()=>{for(const c in rooms){let r=rooms[c];if(r.players[s.id]){delete r.players[s.id];if(!Object.keys(r.players).length)delete rooms[c];else{if(r.host===s.id)r.host=Object.keys(r.players)[0];emit(r)}}}})
 });
-server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.40 lancé'));
+server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.41 lancé'));
 const HARD_EXTRA={"Culture générale": [{"q": "Quel traité de 1648 est associé à la fin de la guerre de Trente Ans ?", "a": ["Westphalie", "Utrecht", "Versailles", "Tordesillas"], "c": 0, "difficulty": "dur"}, {"q": "Quel élément chimique porte le numéro atomique 74 ?", "a": ["Tungstène", "Osmium", "Iridium", "Hafnium"], "c": 0, "difficulty": "dur"}, {"q": "Quelle dynastie chinoise a précédé immédiatement les Ming ?", "a": ["Yuan", "Song", "Qing", "Tang"], "c": 0, "difficulty": "dur"}, {"q": "Quel philosophe a écrit Critique de la raison pure ?", "a": ["Kant", "Hegel", "Spinoza", "Leibniz"], "c": 0, "difficulty": "dur"}], "Football": [{"q": "Quel club a remporté la première Coupe d’Europe des clubs champions en 1956 ?", "a": ["Real Madrid", "Benfica", "Milan", "Reims"], "c": 0, "difficulty": "dur"}, {"q": "Quel gardien a remporté le Ballon d’Or 1963 ?", "a": ["Lev Yachine", "Dino Zoff", "Gordon Banks", "Sepp Maier"], "c": 0, "difficulty": "dur"}, {"q": "Quel pays a remporté l’Euro 1992 après avoir été repêché tardivement ?", "a": ["Danemark", "Suède", "Pays-Bas", "Allemagne"], "c": 0, "difficulty": "dur"}], "Anime & Manga": [{"q": "Dans Hunter × Hunter, quel type de Nen est associé à Kurapika lorsque ses yeux deviennent écarlates ?", "a": ["Spécialisation", "Matérialisation", "Renforcement", "Manipulation"], "c": 0, "difficulty": "dur"}, {"q": "Dans Fullmetal Alchemist, quel principe est présenté comme fondamental à l’alchimie au début de l’œuvre ?", "a": ["Échange équivalent", "Transmutation absolue", "Résonance vitale", "Cercle parfait"], "c": 0, "difficulty": "dur"}, {"q": "Dans Bleach, comment se nomme l’étape supérieure de libération d’un Zanpakutō ?", "a": ["Bankai", "Resurrección", "Shikai", "Vollständig"], "c": 0, "difficulty": "dur"}], "Mathématiques": [{"q": "Quelle est la dérivée de ln(x²+1) ?", "a": ["2x/(x²+1)", "1/(x²+1)", "2/(x²+1)", "ln(2x)"], "c": 0, "difficulty": "dur"}, {"q": "Combien vaut la somme des angles intérieurs d’un dodécagone ?", "a": ["1800°", "1620°", "1980°", "2160°"], "c": 0, "difficulty": "dur"}, {"q": "Si log₂(x)=7, combien vaut x ?", "a": ["128", "64", "256", "49"], "c": 0, "difficulty": "dur"}]};for(const [t,a] of Object.entries(HARD_EXTRA)){DB[t]=DB[t]||[];DB[t].push(...a)}
