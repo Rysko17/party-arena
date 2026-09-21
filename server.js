@@ -398,11 +398,15 @@ const BLIND_TEST_BANK={
  {title:'Stromae — Alors on danse',video:'VHoT4N43jK8',start:18}
 ]
 };
+
+const BLIND_DECOYS={"Anime & Manga": ["Naruto", "Bleach", "One Piece", "Dragon Ball Z", "Attack on Titan", "Demon Slayer", "Jujutsu Kaisen", "Hunter x Hunter", "My Hero Academia", "Death Note", "Fullmetal Alchemist: Brotherhood", "One Punch Man", "Tokyo Ghoul", "Fairy Tail", "Black Clover", "JoJo's Bizarre Adventure", "Haikyuu!!", "Blue Lock", "Solo Leveling", "Frieren", "Vinland Saga", "Chainsaw Man", "Spy x Family", "Code Geass", "Neon Genesis Evangelion", "Pokémon", "Sailor Moon", "Saint Seiya", "Captain Tsubasa", "Detective Conan", "Inuyasha", "Berserk", "Steins;Gate", "Re:Zero", "Sword Art Online", "Tokyo Revengers", "Kaiju No. 8", "Dandadan", "Mashle", "Blue Exorcist", "Fire Force", "Soul Eater", "Dr. Stone", "Mob Psycho 100", "The Promised Neverland", "Parasyte", "Noragami", "Gintama", "Boruto", "Akame ga Kill"], "Cinéma & Séries": ["Interstellar", "Inception", "Titanic", "Gladiator", "The Dark Knight", "Pirates des Caraïbes", "Harry Potter", "Le Seigneur des Anneaux", "Star Wars", "Jurassic Park", "Rocky", "Mission Impossible", "James Bond", "Avengers", "Iron Man", "Spider-Man", "Black Panther", "The Matrix", "Dune", "Oppenheimer", "Game of Thrones", "Breaking Bad", "Stranger Things", "The Walking Dead", "Peaky Blinders", "La Casa de Papel", "Squid Game", "The Boys", "The Last of Us", "Wednesday", "Sherlock", "Vikings", "Lost", "Prison Break", "Dexter", "Narcos", "The Office", "Friends", "House of the Dragon", "The Mandalorian", "Better Call Saul", "Dark", "Arcane", "The Witcher", "Euphoria", "Suits", "Mr. Robot", "Westworld", "The Crown", "Loki"], "Musique": ["The Weeknd", "Drake", "Rihanna", "Beyoncé", "Eminem", "Kanye West", "Travis Scott", "Kendrick Lamar", "Bruno Mars", "Adele", "Dua Lipa", "Billie Eilish", "Post Malone", "SZA", "Doja Cat", "Ariana Grande", "Lady Gaga", "Justin Bieber", "Ed Sheeran", "Taylor Swift", "Michael Jackson", "Stromae", "Booba", "Ninho", "Damso", "PNL", "Gazo", "Tiakola", "SCH", "Jul", "Orelsan", "Nekfeu", "Aya Nakamura", "Dadju", "Gims", "Hamza", "SDM", "Kaaris", "Lomepal", "MHD", "Central Cee", "21 Savage", "Future", "Metro Boomin", "Chris Brown", "Frank Ocean", "Usher", "Alicia Keys", "50 Cent", "Snoop Dogg"]};
 function blindRound(r){
  let themes=(r.settings.themes||[]).filter(t=>BLIND_TEST_BANK[t]?.length);
  if(!themes.length)themes=['Musique','Anime & Manga','Cinéma & Séries'];
  const t=chooseTheme(r,'blindTheme',themes),pool=BLIND_TEST_BANK[t],z=unusedPick(r,'blind:'+t,pool);
- const wrong=pool.filter(x=>x.title!==z.title).sort(()=>Math.random()-.5).slice(0,3).map(x=>x.title);
+ const playable=pool.filter(x=>x.title!==z.title).map(x=>x.title);
+ const decoys=[...new Set([...(BLIND_DECOYS[t]||[]),...playable])].filter(x=>x!==z.title);
+ const wrong=[];while(wrong.length<3&&decoys.length){const i=Math.floor(Math.random()*decoys.length);wrong.push(decoys.splice(i,1)[0])}
  const a=[z.title,...wrong].sort(()=>Math.random()-.5);
  const difficulty=['simple','moyen','dur'][(Math.max(1,r.gameRound)-1)%3];
  return {game:'Blind Test',q:'🎧 BLIND TEST — écoute les 10 secondes',a,c:a.indexOf(z.title),theme:t,blind:true,video:z.video,start:z.start,end:z.start+10,difficulty,points:difficultyPoints(difficulty)};
@@ -427,7 +431,7 @@ function makeRound(r,g){
    const duels=pairing.pairs.map((pair,i)=>{const z=pickDuelPrompt(r,String(r.gameRound)+':'+i);const difficulty=['simple','moyen','dur'][(r.gameRound+i)%3];return{id:'d'+i,players:pair,theme:z.t,q:z.x,difficulty,points:difficultyPoints(difficulty)}});
    c={game:g,q:'DUELS',duels,bye:pairing.bye,pairDuel:true,points:500}
  }
- else if(g==='Mot interdit'){let themes=(r.settings.themes||[]).filter(t=>TABOO_CLEAN[t]?.length);if(!themes.length)themes=Object.keys(TABOO_CLEAN);const t=chooseTheme(r,'tabooTheme',themes),m=unusedPick(r,'tabooClean:'+t,TABOO_CLEAN[t]);c={game:g,q:`Fais deviner « ${m[0]} » sans prononcer « ${m[1]} ».`,theme:t,oral:true,tabooWord:m[0],forbiddenWord:m[1],origin:t,points:500}}
+ else if(g==='Mot interdit'){let themes=(r.settings.themes||[]).filter(t=>TABOO_CLEAN[t]?.length);if(!themes.length)themes=Object.keys(TABOO_CLEAN);const t=chooseTheme(r,'tabooTheme',themes),m=unusedPick(r,'tabooClean:'+t,TABOO_CLEAN[t]);c={game:g,q:`🎯 MOT À FAIRE DEVINER : ${m[0]} — 🚫 MOT INTERDIT : ${m[1]} — 📚 ORIGINE : ${t}`,theme:t,oral:true,tabooWord:m[0],forbiddenWord:m[1],origin:t,points:500}}
  else if(g==='Blind Test'){c=blindRound(r)}
  else if(g==='Qui est-ce ?'){
  const z=pickWhoMixed(r);
@@ -443,7 +447,7 @@ function makeRound(r,g){
  return c;
 }
 
-function roundSeconds(c){if(!c)return 0;if(c.game==='Blind Test')return 20;if(['Quiz Battle','Qui est-ce ?','Duel','La Bombe','Mot interdit'].includes(c.game))return 10;return 0}
+function roundSeconds(c){if(!c)return 0;if(c.game==='Blind Test')return 20;if(c.game==='Mot interdit')return 20;if(['Quiz Battle','Qui est-ce ?','Duel','La Bombe'].includes(c.game))return 10;return 0}
 function armRoundTimer(r){
  if(r._roundTimer)clearTimeout(r._roundTimer);const sec=roundSeconds(r.current);if(!sec)return;
  const token=(r._timerToken=(r._timerToken||0)+1);
@@ -674,5 +678,5 @@ s.on('majorityNext',({code}={})=>{
 });
 s.on('disconnect',()=>{for(const c in rooms){let r=rooms[c];if(r.players[s.id]){delete r.players[s.id];if(!Object.keys(r.players).length)delete rooms[c];else{if(r.host===s.id)r.host=Object.keys(r.players)[0];emit(r)}}}})
 });
-server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.38 lancé'));
+server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.39 lancé'));
 const HARD_EXTRA={"Culture générale": [{"q": "Quel traité de 1648 est associé à la fin de la guerre de Trente Ans ?", "a": ["Westphalie", "Utrecht", "Versailles", "Tordesillas"], "c": 0, "difficulty": "dur"}, {"q": "Quel élément chimique porte le numéro atomique 74 ?", "a": ["Tungstène", "Osmium", "Iridium", "Hafnium"], "c": 0, "difficulty": "dur"}, {"q": "Quelle dynastie chinoise a précédé immédiatement les Ming ?", "a": ["Yuan", "Song", "Qing", "Tang"], "c": 0, "difficulty": "dur"}, {"q": "Quel philosophe a écrit Critique de la raison pure ?", "a": ["Kant", "Hegel", "Spinoza", "Leibniz"], "c": 0, "difficulty": "dur"}], "Football": [{"q": "Quel club a remporté la première Coupe d’Europe des clubs champions en 1956 ?", "a": ["Real Madrid", "Benfica", "Milan", "Reims"], "c": 0, "difficulty": "dur"}, {"q": "Quel gardien a remporté le Ballon d’Or 1963 ?", "a": ["Lev Yachine", "Dino Zoff", "Gordon Banks", "Sepp Maier"], "c": 0, "difficulty": "dur"}, {"q": "Quel pays a remporté l’Euro 1992 après avoir été repêché tardivement ?", "a": ["Danemark", "Suède", "Pays-Bas", "Allemagne"], "c": 0, "difficulty": "dur"}], "Anime & Manga": [{"q": "Dans Hunter × Hunter, quel type de Nen est associé à Kurapika lorsque ses yeux deviennent écarlates ?", "a": ["Spécialisation", "Matérialisation", "Renforcement", "Manipulation"], "c": 0, "difficulty": "dur"}, {"q": "Dans Fullmetal Alchemist, quel principe est présenté comme fondamental à l’alchimie au début de l’œuvre ?", "a": ["Échange équivalent", "Transmutation absolue", "Résonance vitale", "Cercle parfait"], "c": 0, "difficulty": "dur"}, {"q": "Dans Bleach, comment se nomme l’étape supérieure de libération d’un Zanpakutō ?", "a": ["Bankai", "Resurrección", "Shikai", "Vollständig"], "c": 0, "difficulty": "dur"}], "Mathématiques": [{"q": "Quelle est la dérivée de ln(x²+1) ?", "a": ["2x/(x²+1)", "1/(x²+1)", "2/(x²+1)", "ln(2x)"], "c": 0, "difficulty": "dur"}, {"q": "Combien vaut la somme des angles intérieurs d’un dodécagone ?", "a": ["1800°", "1620°", "1980°", "2160°"], "c": 0, "difficulty": "dur"}, {"q": "Si log₂(x)=7, combien vaut x ?", "a": ["128", "64", "256", "49"], "c": 0, "difficulty": "dur"}]};for(const [t,a] of Object.entries(HARD_EXTRA)){DB[t]=DB[t]||[];DB[t].push(...a)}

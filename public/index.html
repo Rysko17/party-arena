@@ -14,7 +14,7 @@
 #answerFlash.good .feedbackBox{outline:6px solid #35d07f}
 #answerFlash.bad .feedbackBox{outline:6px solid #ff4d5a}
 </style>
-</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.38 — CHRONOS & AUDIO</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
+</head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.39 — BLIND & MOT INTERDIT</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
 <div id="home" class="card">
 <h2>Que veux-tu faire ?</h2>
 <p>Crée une nouvelle partie ou rejoins tes amis avec leur code.</p>
@@ -189,7 +189,7 @@ if(isHost){render();}});
 
 let roundTimerInt=null;
 function startRoundTimer(sec){clearInterval(roundTimerInt);let el=document.getElementById('roundTimer');if(!el){el=document.createElement('div');el.id='roundTimer';el.className='pill';el.style.cssText='font-size:22px;font-weight:900;margin:10px auto;display:block;width:max-content';(document.getElementById('play')||document.body).prepend(el)}if(!sec){el.style.display='none';return}el.style.display='block';let left=sec;el.textContent=`⏱️ ${left}s`;roundTimerInt=setInterval(()=>{left--;el.textContent=`⏱️ ${Math.max(0,left)}s`;if(left<=0)clearInterval(roundTimerInt)},1000)}
-function timerForGame(g){if(g==='Blind Test')return 20;if(['Quiz Battle','Qui est-ce ?','Duel','La Bombe','Mot interdit'].includes(g))return 10;return 0}
+function timerForGame(g){if(g==='Blind Test')return 20;if(g==='Mot interdit')return 20;if(['Quiz Battle','Qui est-ce ?','Duel','La Bombe'].includes(g))return 10;return 0}
 
 s.on('round',x=>{startRoundTimer(timerForGame(x.current.game));const ac=document.getElementById('answerCount');if(ac)ac.textContent='Réponses : 0/0';const rf=document.getElementById('roundFeedback');if(rf)rf.innerHTML='';
 const jb=[...document.querySelectorAll('button')].find(b=>b.textContent==='Lancement…');if(jb){jb.disabled=false;jb.textContent='▶ JOUER'};lobby.classList.add('hide');play.classList.remove('hide');secret.classList.add('hide');rl.textContent=`${x.current.game} — Manche ${x.gameRound}/${x.gameTotal}`;gl.textContent=x.current.game;tl.textContent=x.current.theme||'';q.innerHTML=(x.current.q||'')+(x.current.difficulty?` <span class="pill">🎯 ${x.current.difficulty.toUpperCase()} • ${x.current.points} pts</span>`:'');
@@ -201,8 +201,18 @@ if(x.current.typedBomb){
  return;
 }
 if(x.current.game==='Mot interdit'){
- q.innerHTML='🚫 MOT INTERDIT';
- answers.innerHTML=`<div class="card"><small>📚 ${x.current.origin||x.current.theme||''}</small><h2>🎯 À FAIRE DEVINER : ${x.current.tabooWord||''}</h2><h3>🚫 MOT INTERDIT : ${x.current.forbiddenWord||''}</h3><p><b>Règle :</b> tu as 10 secondes pour faire deviner le mot principal sans prononcer le mot interdit. L’hôte valide ou refuse.</p></div>`;
+ img.classList.add('hide');
+ q.innerHTML=`🚫 <b>MOT INTERDIT</b> <span class="pill">20 SECONDES</span>`;
+ answers.innerHTML=`<div class="card tabooCard" style="text-align:center;max-width:760px;margin:18px auto;padding:28px">
+ <div style="font-size:15px;opacity:.8;margin-bottom:12px">📚 ORIGINE : <b>${x.current.origin||x.current.theme||''}</b></div>
+ <div style="font-size:16px">🎯 MOT À FAIRE DEVINER</div>
+ <div style="font-size:38px;font-weight:1000;margin:10px 0 24px">${x.current.tabooWord||'MOT MANQUANT'}</div>
+ <div style="font-size:16px">🚫 TU N'AS PAS LE DROIT DE DIRE</div>
+ <div style="font-size:30px;font-weight:900;margin:10px 0 22px">${x.current.forbiddenWord||'MOT MANQUANT'}</div>
+ <p>Fais deviner le premier mot sans prononcer le mot interdit. L’hôte valide ou refuse à la fin.</p></div>`;
+ hc.classList.toggle('hide',me!==state?.host);
+ if(me===state?.host)award.innerHTML=state.players.map(p=>`<div style="margin:8px 0"><b>${p.name}</b> <button onclick="give('${p.id}')">✅ Valider +500</button> <button class="backBtn" onclick="refuse('${p.id}')">❌ Refuser</button></div>`).join('');
+ return;
 }
 if(x.current.game==='L’Imposteur'){
  setTimeout(()=>{
@@ -212,8 +222,11 @@ if(x.current.game==='L’Imposteur'){
  },100);
 }
 if(x.current.blind){
- img.classList.add('hide');q.innerHTML=`🎧 <b>BLIND TEST</b> — ${x.current.theme} <span class="pill">🎯 ${(x.current.difficulty||'moyen').toUpperCase()} • ${x.current.points||500} pts</span>`;
- answers.innerHTML=`<div class="card"><p>🔊 Tu as 20 secondes. La vidéo reste totalement masquée pour ne pas révéler la réponse.</p><button id="blindPlay" onclick="playBlind('${x.current.video}',${x.current.start},${x.current.end})">▶️ ÉCOUTER LES 10 SECONDES</button><div id="blindPlayer" style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none"></div></div>`+x.current.a.map((a,i)=>`<div class="ans" onclick="answer(${i})">${a}</div>`).join('');return;
+ img.classList.add('hide');
+ q.innerHTML=`🎧 <b>BLIND TEST</b><br><span class="pill">${x.current.theme}</span> <span class="pill">🎯 ${(x.current.difficulty||'moyen').toUpperCase()} • ${x.current.points||500} pts</span>`;
+ answers.innerHTML=`<div class="card" style="max-width:760px;margin:16px auto;text-align:center;padding:22px"><div style="font-size:34px">🎵</div><h3>Écoute l'extrait</h3><p>10 secondes d'audio • 20 secondes pour répondre</p><button id="blindPlay" style="max-width:360px" onclick="playBlind('${x.current.video}',${x.current.start},${x.current.end})">▶️ LANCER L'EXTRAIT</button><div id="blindPlayer" style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none"></div></div><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:900px;margin:18px auto">`+
+ x.current.a.map((a,i)=>`<div class="ans" style="margin:0;min-height:68px;display:flex;align-items:center;justify-content:center;text-align:center" onclick="answer(${i})">${a}</div>`).join('')+`</div>`;
+ return;
 }
 if(x.current.game==='Duel'&&x.current.pairDuel){
  img.classList.add('hide');const ds=x.current.duels||[];
