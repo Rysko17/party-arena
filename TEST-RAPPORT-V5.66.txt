@@ -1,0 +1,10 @@
+V5.66 — Majorité + Image Culte
+- 78 nouvelles questions Majorité rédigées, réparties sur 9 thèmes : anime, cinéma/séries, jeux vidéo, musique, football, sport, dessins animés, internet, culture générale.
+- Chaque question possède quatre réponses de même catégorie ; rotation des thèmes sélectionnés sans répétition avant fin du cycle.
+- Catalogue Image Culte : 115 œuvres uniques TMDB (ancienne banque 96, +19 nettes après dédoublonnage).
+- Jusqu'à 5 scènes distinctes vérifiées et conservées par œuvre ET niveau, si TMDB en propose autant.
+- Anti-répétition des chemins d'images sur la partie, même si la difficulté change ; favorise aussi les œuvres encore jamais vues.
+- Images sélectionnées depuis un éventail d'œuvres, pas systématiquement la première œuvre mise en cache.
+- Les scènes difficiles de séries/animes privilégient les images d'épisodes, puis les backdrops moins populaires.
+TESTS : node --check server.js PASS ; node --check script client PASS ; 40 manches Majorité simulées, rotation sur 4 thèmes PASS ; 20 manches Image Culte simulées avec API TMDB simulée, 20 chemins d'images distincts PASS.
+LIMITES : la disponibilité des nouvelles œuvres, la qualité réelle des scènes et l'affichage en partie multijoueur sur Render ne sont pas vérifiés avec une vraie clé TMDB. Certaines œuvres peuvent proposer moins de cinq scènes.

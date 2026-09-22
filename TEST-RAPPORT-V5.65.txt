@@ -1,0 +1,8 @@
+V5.65 — Rotation des thèmes + Tu me connais ?
+- Rotation en sac mélangé : chaque thème sélectionné apparaît une fois avant répétition (si toutes les banques ont du contenu), pas deux fois de suite entre cycles.
+- Sacs indépendants pour jeux généraux, Tu me connais ?, Blind Test et Image Culte.
+- 69 nouvelles questions d'opinion écrites à la main, avec quatre propositions de même catégorie.
+- Thèmes ajoutés : Anime & Manga, Cinéma & Séries, Jeux vidéo, Musique, Football, Dessins animés, Sport, Internet & Réseaux.
+- Questions existantes conservées, cible choisit secrètement sa réponse puis les autres devinent.
+- Tests : node --check OK ; 80 rounds simulés par famille de rotation x4, 8 thèmes uniques par cycle ; 8 banques TMC validées, 4 propositions par question.
+- Limites : Image Culte et Blind Test ne peuvent alterner que parmi les thèmes ayant réellement des œuvres/sources prêtes ; TMDB réel et session multijoueur Render non testés ici.
