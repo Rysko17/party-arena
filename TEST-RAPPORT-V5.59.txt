@@ -1,0 +1,21 @@
+V5.59 — BLINDHISTORY CRASH FIX
+Erreur Render observée:
+TypeError: x.players.some is not a function
+server.js:783, événement blindHistory.
+
+Cause:
+rooms[*].players est un objet indexé par socket ID, pas un tableau. Array.prototype.some() ne peut donc pas être appelé dessus.
+
+Correction:
+Object.values(rooms).find(x => x && x.players && Object.prototype.hasOwnProperty.call(x.players, s.id))
+Le handler retrouve maintenant la room en testant directement la clé socket dans l'objet players.
+
+Régressions:
+- aucun `.players.some(` restant dans server.js
+- syntaxe serveur PASS
+- syntaxe JS client PASS
+- test sémantique avec players={sock1:{...},sock2:{...}} PASS
+- import blindHistory test: 2 IDs importés PASS
+- banque Blind V5.58 conservée.
+
+Cette correction cible exactement le crash affiché dans les logs Render.
