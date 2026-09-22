@@ -56,9 +56,9 @@ function whoImageFallback(img){
 let blindYTPlayer=null,blindGuard=null,ytReady=false;(function(){const tag=document.createElement('script');tag.src='https://www.youtube.com/iframe_api';document.head.appendChild(tag)})();(function(){const tag=document.createElement('script');tag.src='https://w.soundcloud.com/player/api.js';document.head.appendChild(tag)})();window.onYouTubeIframeAPIReady=()=>{ytReady=true};
 function blindFail(excerptId,reason){clearTimeout(blindGuard);const b=document.getElementById('blindPlay');if(b){b.disabled=false;b.textContent='🔄 REMPLACEMENT...'}s.emit('blindPlaybackError',{code:room,excerptId,reason})}
 
-let blindSources=[],blindSourceIndex=0,blindExcerptId='',blindRate=1,blindSC=null,blindStop=null;
+let blindSources=[],blindSourceIndex=0,blindExcerptId='',blindRate=1,blindSC=null,blindStop=null,blindJumpTimer=null,blindPlayToken=0;
 function blindSourceFail(reason){
- clearTimeout(blindGuard);clearTimeout(blindStop);
+ clearTimeout(blindGuard);clearTimeout(blindStop);clearInterval(blindJumpTimer);blindPlayToken++;
  blindSourceIndex++;
  if(blindSourceIndex<blindSources.length){playBlindSource();return}
  blindFail(blindExcerptId,reason||'ALL_SOURCES_FAILED');
@@ -94,7 +94,27 @@ function playBlindTikTok(src){
  const listener=e=>{if(e.source!==f.contentWindow||!e.data||!e.data['x-tiktok-player'])return;const d=e.data;if(d.type==='onPlayerReady'){f.contentWindow.postMessage({type:'seekTo',value:Number(src.start)||0,'x-tiktok-player':true},'*');f.contentWindow.postMessage({type:'play','x-tiktok-player':true},'*')}if(d.type==='onStateChange'&&d.value===1){started=true;clearTimeout(blindGuard);s.emit('blindPlaybackStarted',{code:room,excerptId:blindExcerptId});if(b)b.textContent='🔊 EXTRAIT EN COURS';blindStop=setTimeout(()=>{f.contentWindow.postMessage({type:'pause','x-tiktok-player':true},'*');window.removeEventListener('message',listener)},8000)}if(d.type==='onPlayerError'){window.removeEventListener('message',listener);blindSourceFail('TT_ERROR')}};
  window.addEventListener('message',listener);blindGuard=setTimeout(()=>{if(!started){window.removeEventListener('message',listener);blindSourceFail('TT_TIMEOUT')}},7000);
 }
-function playBlindYouTube(video,start,end,excerptId,rate){const b=document.getElementById('blindPlay'),p=document.getElementById('blindPlayer');if(!p)return;if(b){b.disabled=true;b.textContent='⏳ Vérification audio...'}if(!ytReady||!window.YT||!YT.Player){if(b){b.disabled=false;b.textContent='▶️ RÉESSAYER'}return}try{if(blindYTPlayer&&blindYTPlayer.destroy)blindYTPlayer.destroy()}catch(e){}p.innerHTML='<div id="blindYTMount"></div>';let started=false;blindGuard=setTimeout(()=>{if(!started)blindSourceFail('YT_TIMEOUT')},7000);blindYTPlayer=new YT.Player('blindYTMount',{height:'200',width:'200',videoId:video,playerVars:{playsinline:1,controls:0,rel:0,start:Math.floor(start),end:Math.ceil(end),origin:location.origin},events:{onReady:e=>{const d=e.target.getDuration();if(!Number.isFinite(d)||d<=0||start+8>d){blindSourceFail('YT_BAD_DURATION');return}try{const rs=e.target.getAvailablePlaybackRates?e.target.getAvailablePlaybackRates():[1],w=Number(rate)||1;e.target.setPlaybackRate(rs.includes(w)?w:1)}catch(_){}e.target.seekTo(start,true);e.target.playVideo()},onStateChange:e=>{if(e.data===YT.PlayerState.PLAYING){started=true;clearTimeout(blindGuard);s.emit('blindPlaybackStarted',{code:room,excerptId});if(b)b.textContent='🔊 EXTRAIT EN COURS';const m=window.__blindMod||{mode:'normal'},base=Number(start)||0;if(m.mode==='stutter'||m.mode==='scramble'||m.mode==='micro'){const jumps=m.mode==='micro'?[0.2,3.8,6.4]:m.mode==='scramble'?[5.8,1.0,4.2,2.4,6.3]:[0,2.7,1.1,4.6,3.2,6.1];let k=0;const iv=setInterval(()=>{if(k>=jumps.length){clearInterval(iv);return}try{e.target.seekTo(base+jumps[k++],true)}catch(_){}},m.mode==='micro'?650:1100);setTimeout(()=>{clearInterval(iv);try{e.target.pauseVideo()}catch(_){}},8000)}else setTimeout(()=>{try{e.target.pauseVideo()}catch(_){}},8000)}},onError:e=>blindSourceFail('YT_'+e.data)}})}
+function playBlindYouTube(video,start,end,excerptId,rate){
+ const b=document.getElementById('blindPlay'),p=document.getElementById('blindPlayer');if(!p)return;
+ if(b){b.disabled=true;b.textContent='⏳ Vérification audio...'}
+ if(!ytReady||!window.YT||!YT.Player){if(b){b.disabled=false;b.textContent='▶️ RÉESSAYER'}return}
+ clearTimeout(blindGuard);clearTimeout(blindStop);clearInterval(blindJumpTimer);
+ const token=++blindPlayToken;
+ try{if(blindYTPlayer&&blindYTPlayer.destroy)blindYTPlayer.destroy()}catch(e){}
+ p.innerHTML='<div id="blindYTMount"></div>';
+ let started=false,finished=false;
+ blindGuard=setTimeout(()=>{if(!started&&token===blindPlayToken)blindSourceFail('YT_TIMEOUT')},8500);
+ const m=window.__blindMod||{mode:'normal'},base=Number(start)||0;
+ const seekPattern=m.mode==='reverse-order'?[6.5,4.9,3.3,1.7,.1]:m.mode==='chaos'?[5.7,.3,4.3,1.2,6.6,2.6]:m.mode==='micro'?[.2,3.8,6.4]:m.mode==='scramble'?[5.8,1,4.2,2.4,6.3]:m.mode==='stutter'?[0,2.7,1.1,4.6,3.2,6.1]:null;
+ blindYTPlayer=new YT.Player('blindYTMount',{height:'200',width:'200',videoId:video,playerVars:{playsinline:1,controls:0,rel:0,start:Math.floor(start),origin:location.origin},events:{
+  onReady:e=>{if(token!==blindPlayToken)return;const d=e.target.getDuration();if(!Number.isFinite(d)||d<=0||base+8>d){blindSourceFail('YT_BAD_DURATION');return}try{const rs=e.target.getAvailablePlaybackRates?e.target.getAvailablePlaybackRates():[1],w=Number(rate)||1;e.target.setPlaybackRate(rs.includes(w)?w:1)}catch(_){}e.target.seekTo(base+(m.mode==='reverse-order'?6.5:0),true);e.target.playVideo()},
+  onStateChange:e=>{if(token!==blindPlayToken||finished)return;if(e.data===YT.PlayerState.PLAYING&&!started){started=true;clearTimeout(blindGuard);s.emit('blindPlaybackStarted',{code:room,excerptId});if(b)b.textContent='🔊 EXTRAIT EN COURS';
+   if(seekPattern){let k=1;blindJumpTimer=setInterval(()=>{if(token!==blindPlayToken||finished||k>=seekPattern.length){clearInterval(blindJumpTimer);return}try{e.target.seekTo(base+seekPattern[k++],true)}catch(_){}},m.mode==='micro'?700:m.mode==='reverse-order'?1500:1100)}
+   blindStop=setTimeout(()=>{if(token!==blindPlayToken)return;finished=true;clearInterval(blindJumpTimer);try{e.target.pauseVideo()}catch(_){}},8000)
+  }},onError:e=>{if(token===blindPlayToken&&!finished)blindSourceFail('YT_'+e.data)}
+ }});
+}
+
 let clipPlayer=null,clipWatch=null,clipStarted=false;
 function playCineClip(video,start,seconds,excerptId){
  const box=document.getElementById('cinePlayer'),btn=document.getElementById('cinePlay');if(!box||!window.YT||!YT.Player||!ytReady){if(btn)btn.textContent='⏳ YouTube charge… Réessaie';return}
@@ -103,10 +123,27 @@ function playCineClip(video,start,seconds,excerptId){
  box.innerHTML='<div id="cineMount"></div><div class="cineTitleMask" aria-hidden="true"></div><div class="cineBottomMask" aria-hidden="true"></div>';box.style.cssText='max-width:540px;margin:14px auto;overflow:hidden;border-radius:12px;position:relative';clipStarted=false;clearTimeout(clipWatch);
  clipWatch=setTimeout(()=>{if(!clipStarted){s.emit('clipPlaybackError',{code:room,excerptId});if(btn){btn.disabled=false;btn.textContent='🔄 Changer l’extrait'}}},11000);
  clipPlayer=new YT.Player('cineMount',{width:'100%',height:'300',videoId:video,playerVars:{playsinline:1,controls:0,rel:0,start:Math.floor(start),origin:location.origin},events:{
- onReady:e=>{let duration=e.target.getDuration();if(duration>0&&duration<start+seconds+1){clearTimeout(clipWatch);s.emit('clipPlaybackError',{code:room,excerptId});return}e.target.seekTo(start,true);e.target.playVideo()},
+ onReady:e=>{let duration=e.target.getDuration();if(!Number.isFinite(duration)||duration<seconds+28){clearTimeout(clipWatch);s.emit('clipPlaybackError',{code:room,excerptId});return}const lo=Math.max(14,Math.floor(duration*.23)),hi=Math.floor(Math.min(duration-seconds-7,duration*.78));const actual=hi>lo?lo+Math.floor(Math.random()*(hi-lo+1)):Math.min(Math.floor(duration-seconds-5),Math.max(5,start));e.target.seekTo(actual,true);e.target.playVideo()},
  onStateChange:e=>{if(e.data===YT.PlayerState.PLAYING&&!clipStarted){clipStarted=true;clearTimeout(clipWatch);if(btn)btn.textContent='▶️ EXTRAIT EN COURS';s.emit('clipPlaybackStarted',{code:room,excerptId});setTimeout(()=>{try{e.target.pauseVideo()}catch(_){}s.emit('clipPlaybackEnded',{code:room,excerptId});const opts=document.getElementById('clipTyped');if(opts){opts.disabled=false;opts.placeholder='Écris le titre ici…';opts.focus()}const send=document.getElementById('clipSubmit');if(send)send.disabled=false;startRoundTimer(10)},seconds*1000)}},
  onError:e=>{clearTimeout(clipWatch);s.emit('clipPlaybackError',{code:room,excerptId})}
  }});
+}
+// Visual challenges are deterministic for every player in a round (server chooses effect).
+function applyImageCulteEffect(effect){
+ const img=document.getElementById('img');if(!img)return;
+ img.style.filter='';img.style.clipPath='';img.style.transform='';
+ let cover=document.getElementById('imageCulteCover');if(cover)cover.remove();
+ const filters={'soft-blur':'blur(3px)','strong-blur':'blur(8px)','desaturate':'grayscale(1) contrast(1.35)','hue':'hue-rotate(145deg) saturate(1.8)','invert':'invert(.85) hue-rotate(100deg)'};
+ if(filters[effect])img.style.filter=filters[effect];
+ if(effect==='crop'){img.style.clipPath='inset(15% 19% 15% 19%)';img.style.transform='scale(1.15)'}
+ if(effect==='mask'&&img.parentNode){
+  // Overlay positioned relative to the image, without obscuring the choices.
+  const rect=img.getBoundingClientRect();if(rect.width>0){
+   cover=document.createElement('div');cover.id='imageCulteCover';cover.setAttribute('aria-hidden','true');
+   cover.style.cssText='pointer-events:none;position:fixed;background:#080b14;opacity:.97;z-index:15;border-radius:5px;left:'+(rect.left+rect.width*.29)+'px;top:'+(rect.top+rect.height*.18)+'px;width:'+(rect.width*.43)+'px;height:'+(rect.height*.46)+'px';
+   document.body.appendChild(cover);
+  }
+ }
 }
 const hostKey=localStorage.getItem('partyArenaHostKey')||(()=>{const k=(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random());localStorage.setItem('partyArenaHostKey',k);return k})();
 const s=io(),GL=['Quiz Battle','Tu me connais ?','Majorité','La Bombe',"L’Imposteur",'Duel','Mot interdit','Défi surprise','Trouve l’intrus','Qui est-ce ?','Image culte','Blind Test','Ciné Extrait'],TL=['Culture générale','Football','Sport','Cinéma & Séries','Anime & Manga','Musique','Jeux vidéo','Dessins animés','Internet & Réseaux','Mathématiques','Images'];let room,me,state,cg=new Set(['Quiz Battle']),ct=new Set(['Culture générale']);
@@ -287,7 +324,7 @@ if(x.current.clip){
 if(x.current.blind){
  img.classList.add('hide');
  q.innerHTML=`🎧 <b>BLIND TEST</b><br><span class="pill">${x.current.theme}</span> <span class="pill">🎯 ${(x.current.difficulty||'moyen').toUpperCase()} • ${x.current.points||500} pts</span>`;
- answers.innerHTML=`<div class="card" style="max-width:760px;margin:16px auto;text-align:center;padding:22px"><div style="font-size:34px">🎵</div><h3>Écoute l'extrait</h3><p>8 secondes d'audio • 10 secondes pour répondre</p><button id="blindPlay" style="max-width:360px" onclick='playBlindMulti(${JSON.stringify(x.current.sources||[{provider:"youtube",id:x.current.video,start:x.current.start,end:x.current.end}])},${JSON.stringify(x.current.excerptId)},${x.current.playbackRate||1},${JSON.stringify(x.current.blindMod||{mode:"normal",rate:1})})'>▶️ LANCER L'EXTRAIT</button><div id="blindPlayer" style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none"></div></div><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:900px;margin:18px auto">`+
+ answers.innerHTML=`<div class="card" style="max-width:760px;margin:16px auto;text-align:center;padding:22px"><div style="font-size:34px">🎵</div><h3>Écoute l'extrait</h3><p>8 secondes d'audio • 10 secondes pour répondre</p><p style="font-size:12px;opacity:.75">En extra dur : voix accélérée/ralentie, fragments inversés dans l'ordre ou mix chaotique. L'audio YouTube ne peut pas être lu réellement à l'envers.</p><button id="blindPlay" style="max-width:360px" onclick='playBlindMulti(${JSON.stringify(x.current.sources||[{provider:"youtube",id:x.current.video,start:x.current.start,end:x.current.end}])},${JSON.stringify(x.current.excerptId)},${x.current.playbackRate||1},${JSON.stringify(x.current.blindMod||{mode:"normal",rate:1})})'>▶️ LANCER L'EXTRAIT</button><div id="blindPlayer" style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none"></div></div><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:900px;margin:18px auto">`+
  x.current.a.map((a,i)=>`<div class="ans" style="margin:0;min-height:68px;display:flex;align-items:center;justify-content:center;text-align:center" onclick="answer(${i})">${a}</div>`).join('')+`</div>`;
  return;
 }
@@ -312,7 +349,7 @@ if(x.current.game==='L’Imposteur' && me===state?.host && x.current.phase!=='vo
  award.innerHTML=`<div class="card"><h3>🕵️ Imposteur</h3><button onclick="startImpostorVote()">🗳️ LANCER LE VOTE</button><button onclick="s.emit('next',room)">⏭️ PASSER / JEU SUIVANT</button></div>`;
 }
 if(x.current.difficulty && !x.current.blind && !x.current.pairDuel) q.innerHTML += ` <small>• ${x.current.difficulty.toUpperCase()} • ${x.current.points||500} pts</small>`;
-if(x.current.answer && state && state.host===me) q.textContent += '  •  Réponse : '+x.current.answer;img.classList.toggle('hide',!x.current.image);if(x.current.image)img.src=x.current.image;document.getElementById('tmdbCredit').classList.toggle('hide',!x.current.imageCulte);if(x.current.game==='Tu me connais ?'&&x.current.phase==='choose'){if(me===x.current.target){q.textContent=x.current.q+' — choisis ta réponse secrètement';answers.innerHTML=x.current.a.map((a,i)=>`<div class="ans" onclick="secretChoice(${i})">${a}</div>`).join('')}else{q.textContent=x.current.targetName+' choisit sa réponse secrète…';answers.innerHTML='<div class="card">⏳ Attends que '+x.current.targetName+' ait choisi. Tu ne peux pas répondre avant.</div>'}}else{answers.innerHTML=x.current.a?x.current.a.map((a,i)=>`<div class="ans" onclick="answer(${i})">${a}</div>`).join(''):''}if(x.current.specialDuel){
+if(x.current.answer && state && state.host===me) q.textContent += '  •  Réponse : '+x.current.answer;img.classList.toggle('hide',!x.current.image);if(x.current.image)img.src=x.current.image;img.onload=()=>{if(x.current.imageCulte)applyImageCulteEffect(x.current.imageEffect)};applyImageCulteEffect(x.current.imageCulte?x.current.imageEffect:'none');document.getElementById('tmdbCredit').classList.toggle('hide',!x.current.imageCulte);if(x.current.game==='Tu me connais ?'&&x.current.phase==='choose'){if(me===x.current.target){q.textContent=x.current.q+' — choisis ta réponse secrètement';answers.innerHTML=x.current.a.map((a,i)=>`<div class="ans" onclick="secretChoice(${i})">${a}</div>`).join('')}else{q.textContent=x.current.targetName+' choisit sa réponse secrète…';answers.innerHTML='<div class="card">⏳ Attends que '+x.current.targetName+' ait choisi. Tu ne peux pas répondre avant.</div>'}}else{answers.innerHTML=x.current.a?x.current.a.map((a,i)=>`<div class="ans" onclick="answer(${i})">${a}</div>`).join(''):''}if(x.current.specialDuel){
  const allowed=[x.current.first,x.current.last].includes(me);
  const f=state?.players?.find(p=>p.id===x.current.first)?.name||'Premier';
  const l=state?.players?.find(p=>p.id===x.current.last)?.name||'Dernier';

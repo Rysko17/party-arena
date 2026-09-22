@@ -1,0 +1,8 @@
+PARTY ARENA V5.71 — BLIND TEST EXTRA DUR
+- Rotation des difficultés Blind Test : simple, moyen, dur, extra-dur.
+- Extra-dur : 1500 points, six choix si la banque permet cinq leurres.
+- Effets : voix aiguë/grave via vitesse du lecteur lorsque supportée, microfragments, mix chaotique, fragments joués dans l'ordre inverse.
+- IMPORTANT : le lecteur officiel YouTube ne permet PAS de renverser réellement le signal sonore ni de modifier la hauteur de voix indépendamment de la vitesse. « reverse-order » signifie segments diffusés en ordre inverse. La vitesse peut aussi être refusée selon la vidéo ou le lecteur.
+- Minuteur anti-doublon : un seul démarrage du compte à rebours par lecture, arrêt et nettoyage des timers lors des changements de source.
+- Contrôles : node --check server.js, analyse syntaxique JavaScript intégré, 4 difficultés et barème vérifiés.
+- Non vérifié : audition des vidéos réelles sur Render, disponibilité et taux de lecture YouTube.

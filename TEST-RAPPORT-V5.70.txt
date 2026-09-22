@@ -1,0 +1,7 @@
+PARTY ARENA V5.70 — 22 septembre 2026
+- Ciné Extrait: alias exacts des abréviations populaires (SNK/AOT, JJK, KNY, DBZ, etc.), en plus des titres français et fautes légères.
+- Ciné Extrait: départ aléatoire dans la portion centrale de la durée réelle de la bande-annonce/du clip (23 à 78 %), et non systématiquement au début; garde-fou durée.
+- Image Culte: effets par difficulté choisis sur le serveur (flou, noir et blanc, changement de teinte, négatif, recadrage, masque central). Même effet pour tous les joueurs de la manche.
+- Vérification node --check serveur et compilation du JavaScript client: OK.
+- Tests locaux alias, tolérance orthographique, anti-faux positif, effets (150 simulations), départ vidéo: OK.
+LIMITES: les vidéos TMDB sont des bandes-annonces/clips YouTube, pas des épisodes complets; des titres incrustés dans la vidéo peuvent encore apparaître. Le lecteur YouTube peut refuser certaines vidéos selon les droits. Lecture réelle sur Render et apparence mobile non vérifiées.

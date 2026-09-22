@@ -1,0 +1,4 @@
+V5.69 — Tu me connais / Ciné Extrait
+Tu me connais : remplace l’ancien pool de questions génériques par un pool filtré à partir des questions Premium et Majorité. Questions d’opinion concrètes et quatre choix distincts; thèmes sélectionnés respectés. Volumes: Anime 31, Cinéma/Séries 32, Jeux vidéo 10, Musique 10, Football 10, Sport 6, Dessins animés 6, Internet 5, Culture générale 6.
+Ciné Extrait : récupère le titre français via TMDB fr-FR par œuvre, le met en cache et ajoute des alias français courants de secours. Tolère accents, ponctuation, articles et fautes d’orthographe limitées; garde la comparaison côté serveur.
+Tests: node --check serveur/client PASS; 8 cas de titres français et de fautes PASS; banque Tu me connais contrôlée sans placeholders PASS. Aucun test réel de TMDB ou YouTube sur Render.

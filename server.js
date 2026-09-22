@@ -485,18 +485,25 @@ function blindRound(r){
  // Fisher-Yates shuffle before selection: each new game/round gets a fresh order.
  fresh=[...fresh];for(let i=fresh.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[fresh[i],fresh[j]]=[fresh[j],fresh[i]]}
  const z=fresh[0];if(!r.blindSeen)r.blindSeen=new Set();r.blindSeen.add(z.excerptId);
- const difficulty=['simple','moyen','dur'][(Math.max(1,r.gameRound)-1)%3];
+ const difficulty=['simple','moyen','dur','extra-dur'][(Math.max(1,r.gameRound)-1)%4];
  const sameGenre=z.genre?pool.filter(x=>x.genre===z.genre&&x.title!==z.title).map(x=>x.title):[];
  const sameSource=pool.filter(x=>x.video===z.video&&x.title!==z.title).map(x=>x.title);
  const playable=[...new Set([...sameSource,...sameGenre,...pool.filter(x=>x.title!==z.title).map(x=>x.title)])];
  const decoys=[...new Set([...sameSource,...sameGenre,...blindDecoyPool(t,z.title),...playable,...(BLIND_DECOYS[t]||[])])].filter(x=>x!==z.title);
- const want=difficulty==='dur'?5:difficulty==='moyen'?4:3,wrong=[];while(wrong.length<want&&decoys.length){const i=Math.floor(Math.random()*Math.min(decoys.length,Math.max(1,sameSource.length+sameGenre.length+4)));wrong.push(decoys.splice(i,1)[0])}
+ const want=difficulty==='extra-dur'?5:difficulty==='dur'?5:difficulty==='moyen'?4:3,wrong=[];while(wrong.length<want&&decoys.length){const i=Math.floor(Math.random()*Math.min(decoys.length,Math.max(1,sameSource.length+sameGenre.length+4)));wrong.push(decoys.splice(i,1)[0])}
  const a=[z.title,...wrong].sort(()=>Math.random()-.5);
- const hardMods=[{mode:'speed',rate:.50},{mode:'speed',rate:.75},{mode:'speed',rate:1.50},{mode:'speed',rate:2.00},{mode:'scramble',rate:1},{mode:'stutter',rate:1},{mode:'micro',rate:1}];const mediumMods=[{mode:'speed',rate:.75},{mode:'speed',rate:1.25},{mode:'stutter',rate:1}];const blindMod=difficulty==='dur'?hardMods[Math.floor(Math.random()*hardMods.length)]:difficulty==='moyen'?(Math.random()<.8?mediumMods[Math.floor(Math.random()*mediumMods.length)]:{mode:'normal',rate:1}):{mode:'normal',rate:1};const playbackRate=blindMod.rate||1;
+ const hardMods=[{mode:'speed',rate:.50},{mode:'speed',rate:.75},{mode:'speed',rate:1.50},{mode:'speed',rate:2.00},{mode:'scramble',rate:1},{mode:'stutter',rate:1},{mode:'micro',rate:1}];
+ const mediumMods=[{mode:'speed',rate:.75},{mode:'speed',rate:1.25},{mode:'stutter',rate:1}];
+ // Official embedded players do not expose audio samples. "reverse-order" plays
+ // fragments in reverse order, NOT reversed waveform; actual reversal requires
+ // a licensed local audio file and Web Audio processing.
+ const extremeMods=[{mode:'reverse-order',rate:1},{mode:'reverse-order',rate:.75},{mode:'pitch',rate:.5},{mode:'pitch',rate:2},{mode:'chaos',rate:1.5},{mode:'micro',rate:.75},{mode:'scramble',rate:2}];
+ const blindMod=difficulty==='extra-dur'?extremeMods[Math.floor(Math.random()*extremeMods.length)]:difficulty==='dur'?hardMods[Math.floor(Math.random()*hardMods.length)]:difficulty==='moyen'?(Math.random()<.8?mediumMods[Math.floor(Math.random()*mediumMods.length)]:{mode:'normal',rate:1}):{mode:'normal',rate:1};
+ const playbackRate=blindMod.rate||1;
  return {game:'Blind Test',q:'🎧 BLIND TEST — écoute les 8 secondes',a,c:a.indexOf(z.title),theme:t,blind:true,video:z.video,start:z.start,end:z.start+8,excerptId:z.excerptId,difficulty,points:difficultyPoints(difficulty),playbackRate,blindMod,sources:z.sources||[{provider:'youtube',id:z.video,start:z.start,end:z.start+8}]};
 }
 
-function difficultyPoints(d){return ({simple:250,moyen:500,dur:1000}[d]||500)}
+function difficultyPoints(d){return ({simple:250,moyen:500,dur:1000,'extra-dur':1500}[d]||500)}
 function speedPoints(base,rank){
  const mult=[1,0.85,0.70,0.60,0.50,0.45,0.40,0.35,0.30,0.25][Math.min(Math.max(rank-1,0),9)];
  return Math.max(100,Math.round(base*mult/50)*50);
@@ -683,6 +690,10 @@ async function tmdbLoadScene(entry,difficulty='moyen'){
  })();tmdbScenePending.set(key,promise);try{return await promise}finally{tmdbScenePending.delete(key)}
 }
 function tmdbWarmScenes(){if(tmdbWarmRunning||!tmdbKey())return;tmdbWarmRunning=true;(async()=>{while(tmdbWarmIndex<IMAGE_CULTE_BANK.length){const batch=IMAGE_CULTE_BANK.slice(tmdbWarmIndex,tmdbWarmIndex+3);tmdbWarmIndex+=3;await Promise.allSettled(batch.map(x=>tmdbLoadScene(x,'moyen')));await new Promise(r=>setTimeout(r,250))}tmdbWarmRunning=false})().catch(e=>{console.warn('TMDB warm',e.message);tmdbWarmRunning=false})}
+function pickImageEffect(difficulty){
+ const variants=difficulty==='simple'?['none','none','none','soft-blur','desaturate']:difficulty==='moyen'?['none','soft-blur','desaturate','hue','crop','mask']:['strong-blur','desaturate','hue','crop','mask','mask','invert'];
+ return variants[Math.floor(Math.random()*variants.length)];
+}
 async function imageCulteRound(r){
  const selected=r.settings.themes||[];let pool=IMAGE_CULTE_BANK.filter(x=>selected.includes(x.theme));if(!pool.length)pool=IMAGE_CULTE_BANK;
  r.imageCulteSeen=r.imageCulteSeen||new Set();r.imageCulteWorkSeen=r.imageCulteWorkSeen||new Set();
@@ -703,12 +714,55 @@ async function imageCulteRound(r){
  const unseen=choicePool.filter(x=>!r.imageCulteWorkSeen.has(x.entry.type+'-'+x.entry.id));const picked=(unseen.length?unseen:choicePool)[Math.floor(Math.random()*(unseen.length?unseen:choicePool).length)];
  const z=picked.entry,pic=picked.pic;r.imageCulteSeen.add(pic.tmdbPath);r.imageCulteWorkSeen.add(z.type+'-'+z.id);
  const dec=imageCulteDecoys(z,pool),a=[z.work,...dec].sort(()=>Math.random()-.5);
- return {game:'Image culte',q:difficulty==='dur'?'🎬 PLAN DIFFICILE — De quelle œuvre vient cette scène ?':'🎬 De quelle œuvre vient cette scène ?',a,c:a.indexOf(z.work),image:'/tmdb-scene/'+z.type+'/'+z.id+'/'+difficulty+'?file='+encodeURIComponent(pic.tmdbPath),theme:z.theme,difficulty,points:difficultyPoints(difficulty),imageCulte:true,tmdbAttribution};
+ return {game:'Image culte',q:difficulty==='dur'?'🎬 PLAN DIFFICILE — De quelle œuvre vient cette scène ?':'🎬 De quelle œuvre vient cette scène ?',a,c:a.indexOf(z.work),image:'/tmdb-scene/'+z.type+'/'+z.id+'/'+difficulty+'?file='+encodeURIComponent(pic.tmdbPath),theme:z.theme,difficulty,points:difficultyPoints(difficulty),imageCulte:true,imageEffect:pickImageEffect(difficulty),tmdbAttribution};
 }
 // Comparaison souple pour les réponses écrites (accents, ponctuation, petites fautes).
 function normalizeClipTitle(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/&/g,' and ').replace(/[^a-z0-9]+/g,' ').replace(/\b(le|la|les|the|a|an|un|une|de|du|des|of)\b/g,' ').replace(/\s+/g,' ').trim()}
 function clipEditDistance(a,b){const prev=Array.from({length:b.length+1},(_,i)=>i);for(let i=1;i<=a.length;i++){let last=prev[0];prev[0]=i;for(let j=1;j<=b.length;j++){const old=prev[j];prev[j]=Math.min(prev[j]+1,prev[j-1]+1,last+(a[i-1]===b[j-1]?0:1));last=old}}return prev[b.length]}
-function clipAnswerMatches(input,answer,aliases=[]){const a=normalizeClipTitle(input);if(a.length<2)return false;return [answer,...aliases].some(t=>{const b=normalizeClipTitle(t);if(!b)return false;if(a===b)return true;const d=clipEditDistance(a,b);return d<=Math.min(3,Math.floor(b.length/5))&&a.length>=Math.max(3,Math.floor(b.length*.65))})}
+function clipAnswerMatches(input,answer,aliases=[]){const a=normalizeClipTitle(input);if(a.length<2)return false;return [answer,...aliases].some(t=>{const b=normalizeClipTitle(t);if(!b)return false;if(a===b)return true;const d=clipEditDistance(a,b);const limit=b.length<6?1:b.length<12?2:b.length<22?3:4;return d<=limit&&a.length>=Math.max(3,Math.floor(b.length*.72))})}
+// V5.69: accept the localized French TMDB title as well as the original and common French names.
+const CLIP_FR_TITLES={
+ 'Interstellar':['Interstellaire'], 'The Dark Knight':['Le Chevalier noir'],
+ 'The Dark Knight Rises':['Le Chevalier noir : La Légende renaît'],
+ 'The Shawshank Redemption':['Les Évadés'], 'The Green Mile':['La Ligne verte'],
+ 'The Lord of the Rings: The Fellowship of the Ring':['Le Seigneur des anneaux : La Communauté de l’anneau'],
+ 'The Lord of the Rings: The Two Towers':['Le Seigneur des anneaux : Les Deux Tours'],
+ 'The Lord of the Rings: The Return of the King':['Le Seigneur des anneaux : Le Retour du roi'],
+ 'Harry Potter and the Philosopher’s Stone':['Harry Potter à l’école des sorciers'],
+ 'Harry Potter and the Sorcerer’s Stone':['Harry Potter à l’école des sorciers'],
+ 'Spirited Away':['Le Voyage de Chihiro'], 'Princess Mononoke':['Princesse Mononoké'],
+ 'Howl’s Moving Castle':['Le Château ambulant'], 'My Neighbor Totoro':['Mon voisin Totoro'],
+ 'A Silent Voice':['Silent Voice'],
+ 'Death Note':['DN'], 'Fullmetal Alchemist: Brotherhood':['FMAB','FMA Brotherhood'], 'Jujutsu Kaisen':['JJK'], 'Demon Slayer':['KNY','Kimetsu no Yaiba'], 'My Hero Academia':['MHA','BNHA'], 'One Piece':['OP'], 'Dragon Ball Z':['DBZ'], 'Dragon Ball Super':['DBS'], 'Hunter x Hunter':['HXH','H x H'], 'Neon Genesis Evangelion':['NGE'], 'Code Geass':['CG'], 'Sword Art Online':['SAO'], 'JoJo’s Bizarre Adventure':['JJBA','JoJo'], 'JoJo’s Bizarre Adventure: Stardust Crusaders':['JJBA','JoJo'], 'Attack on Titan':['L’Attaque des Titans','SNK','Shingeki no Kyojin','AOT'], 'Money Heist':['La Casa de Papel'], 'The Walking Dead':['The Walking Dead'],
+ 'The Wolf of Wall Street':['Le Loup de Wall Street'], 'The Prestige':['Le Prestige'],
+ 'The Sixth Sense':['Sixième Sens'], 'The Godfather':['Le Parrain'],
+ 'Pirates of the Caribbean: The Curse of the Black Pearl':['Pirates des Caraïbes : La Malédiction du Black Pearl'],
+ 'Avengers: Endgame':['Avengers : Phase finale']
+};
+// Short fandom names are accepted only as exact normalized aliases, never by fuzzy distance.
+const CLIP_ABBREVIATIONS={
+ 'attack on titan':['SNK','AOT'], 'l attaque des titans':['SNK','AOT'],
+ 'jujutsu kaisen':['JJK'], 'demon slayer':['KNY'], 'kimetsu no yaiba':['KNY'],
+ 'my hero academia':['MHA','BNHA'], 'boku no hero academia':['MHA','BNHA'],
+ 'fullmetal alchemist brotherhood':['FMAB'], 'fullmetal alchemist':['FMA'],
+ 'dragon ball z':['DBZ'], 'dragon ball super':['DBS'], 'hunter x hunter':['HXH'],
+ 'sword art online':['SAO'], 'neon genesis evangelion':['NGE'],
+ 'jojos bizarre adventure':['JJBA'], 'one piece':['OP']
+};
+function clipAbbreviations(entry,names){return [...new Set([entry.work,...names].flatMap(n=>CLIP_ABBREVIATIONS[normalizeClipTitle(n)]||[]))]}
+const clipFrenchTitleCache=new Map();
+async function clipFrenchAliases(entry){
+ const k=entry.type+'-'+entry.id;
+ if(clipFrenchTitleCache.has(k))return clipFrenchTitleCache.get(k);
+ const manual=CLIP_FR_TITLES[entry.work]||[];
+ let names=[...manual];
+ if(tmdbKey())try{
+  const u='https://api.themoviedb.org/3/'+entry.type+'/'+entry.id+'?api_key='+encodeURIComponent(tmdbKey())+'&language=fr-FR';
+  const j=await tmdbJson(u);const french=entry.type==='movie'?j.title:j.name;
+  if(typeof french==='string'&&french.trim())names.push(french.trim());
+ }catch(e){console.warn('Ciné Extrait titre FR',entry.work,e.message)}
+ names=[...new Set(names.filter(Boolean))];clipFrenchTitleCache.set(k,names);return names;
+}
 // Ciné Extrait: official YouTube trailers referenced by TMDB. Never downloads copyrighted video.
 const clipVideoCache=new Map();
 async function tmdbOfficialClips(entry){
@@ -731,9 +785,11 @@ async function cineExtraitRound(r){
   const z=fresh[Math.floor(Math.random()*fresh.length)];r.clipSeen.add(entry.type+'-'+entry.id+'-'+z.key);r.clipWorkSeen.add(entry.type+'-'+entry.id);
   const dec=imageCulteDecoys(entry,pool);if(dec.length!==3)continue;
   const a=[entry.work,...dec].sort(()=>Math.random()-.5);
+  const localizedAliases=await clipFrenchAliases(entry);
   // Seek past the opening logo; the player validates video length before playback.
-  const start=difficulty==='dur'?45:difficulty==='moyen'?30:15;
-  return {game:'Ciné Extrait',q:'🎞️ Devine le film, la série ou l’anime avec cet extrait de bande-annonce officielle',a:[],c:0,clipAnswer:entry.work,clipAliases:entry.aliases||[],theme:entry.theme,difficulty,points:difficultyPoints(difficulty),clip:true,clipSeconds:seconds,excerptId:'clip-'+entry.type+'-'+entry.id+'-'+z.key,video:z.key,start,end:start+seconds,sourceLabel:z.name||'Bande-annonce officielle'};
+  // Random seed: browser repositions within the actual video's safe middle after duration check.
+  const start=25+Math.floor(Math.random()*65);
+  return {game:'Ciné Extrait',q:'🎞️ Devine le film, la série ou l’anime avec cet extrait de bande-annonce officielle',a:[],c:0,clipAnswer:entry.work,clipAliases:[...(entry.aliases||[]),...localizedAliases,...clipAbbreviations(entry,localizedAliases)],theme:entry.theme,difficulty,points:difficultyPoints(difficulty),clip:true,clipSeconds:seconds,excerptId:'clip-'+entry.type+'-'+entry.id+'-'+z.key,video:z.key,start,end:start+seconds,sourceLabel:'Extrait officiel'};
  }
  return {game:'Ciné Extrait',q:'⚠️ Aucune bande-annonce officielle accessible trouvée. Vérifie TMDB ou relance.',a:[],clip:true,clipUnavailable:true,theme:'Cinéma & Séries',points:0};
 }
@@ -876,10 +932,20 @@ const TMC_PREMIUM={
  ['Quelle série a le meilleur dernier épisode ?', ['Breaking Bad','Better Call Saul','The Good Place','Mr. Robot']]
  ]
 };
+// V5.69: Tu me connais ? uses only curated, theme-specific opinion questions.
+// Majority provides a large bank of genuinely comparable answers; reject vague/placeholder questions.
+const TMC_REJECT_QUESTIONS=/^(lequel|laquelle|lesquels|qui préfères-tu|quel est ton préféré|que préfères-tu)\s*\??$|choix [a-d]|option [1-4]/i;
+const TMC_REJECT_ANSWERS=/^(choix\s*[a-d]|option\s*[1-4]|premier|deuxième|troisième|quatrième|[a-d])$/i;
+function validTmcOpinion(x){return x&&typeof x.q==='string'&&x.q.length>=25&&x.q.length<=175&&Array.isArray(x.a)&&x.a.length===4&&new Set(x.a).size===4&&!TMC_REJECT_QUESTIONS.test(x.q)&&x.a.every(a=>typeof a==='string'&&a.length>1&&!TMC_REJECT_ANSWERS.test(a));}
+const TMC_CURATED={};
+for(const theme of new Set([...Object.keys(MAJORITY_VARIANTS),...Object.keys(TMC_PREMIUM)])){
+ const candidates=[...(TMC_PREMIUM[theme]||[]).map(([q,a])=>({q,a})),...(MAJORITY_VARIANTS[theme]||[])];
+ const seen=new Set();TMC_CURATED[theme]=candidates.filter(x=>{if(!validTmcOpinion(x))return false;const k=x.q.toLowerCase().trim()+'|'+x.a.join('|').toLowerCase();if(seen.has(k))return false;seen.add(k);return true});
+}
 function makeRound(r,g){
  let c={game:g};
  if(g==='Quiz Battle'){let x=question(r);c={game:g,q:x.q,a:x.a,c:x.c,image:x.image||null,theme:x.theme,difficulty:x.difficulty||'simple',points:({simple:250,moyen:500,dur:1000}[x.difficulty]||250)}}
- else if(g==='Tu me connais ?'){let ps=Object.values(r.players),target=ps[(r.gameRound-1)%ps.length];r.secretChoice=null;r.guesses={};let pool=[];for(const t of r.settings.themes||[]){const premium=TMC_PREMIUM[t]||[];for(const [q,a] of premium)pool.push({t,x:{q,a}});if(!premium.length)for(const x of (TMC_THEME_BANK[t]||[]))pool.push({t,x})}if(!pool.length)for(const [t,a] of Object.entries(TMC_THEME_BANK))for(const x of a)pool.push({t,x});let av=[...new Set(pool.map(o=>o.t))],tt=chooseTheme(r,'tmcThemes',av),tp=pool.filter(o=>o.t===tt),z=unusedPick(r,'tmcTheme:'+tt,tp);c={game:g,phase:'choose',target:target.id,targetName:target.name,q:`🎯 Question sur ${target.name} : ${z.x.q}`,a:z.x.a}}
+ else if(g==='Tu me connais ?'){let ps=Object.values(r.players),target=ps[(r.gameRound-1)%ps.length];r.secretChoice=null;r.guesses={};let selected=(r.settings.themes||[]).filter(t=>(TMC_CURATED[t]||[]).length);if(!selected.length)selected=Object.keys(TMC_CURATED).filter(t=>TMC_CURATED[t].length);const tt=chooseTheme(r,'tmcThemes',selected),z=unusedPick(r,'tmcCurated:'+tt,TMC_CURATED[tt]);c={game:g,phase:'choose',target:target.id,targetName:target.name,q:`🎯 Question sur ${target.name} : ${z.q}`,a:z.a,theme:tt}}
  else if(g==='Majorité'){let selected=(r.settings.themes||[]).filter(t=>(MAJORITY_VARIANTS[t]||[]).length);if(!selected.length)selected=Object.keys(MAJORITY_VARIANTS);let theme=chooseTheme(r,'majorityThemes',selected),mq=unusedPick(r,'majority:'+theme,MAJORITY_VARIANTS[theme]);c={game:g,q:mq.q,a:mq.a,theme}}
  else if(g==='La Bombe'){let z=themedPick(r,'bomb');c={game:g,q:z.value,theme:z.theme,typedBomb:true,points:500}}
  else if(g==="L’Imposteur"){let z=themedPick(r,'impostor'),w=z.value,ps=Object.values(r.players),imp=ps[Math.floor(Math.random()*ps.length)];r.secret={imp:imp.id,n:w[0],o:w[1]};r.impostorId=imp.id;r.normalWord=w[0];c={game:g,q:`Thème : ${z.theme} — Décris ton mot sans le dire, puis trouvez l’imposteur !`,theme:z.theme,oral:true}}
@@ -1175,5 +1241,5 @@ s.on('disconnect',()=>{for(const c in rooms){let r=rooms[c];if(r.players[s.id]){
 app.get('/tmdb-scene/:type/:id/:difficulty',(req,res)=>{const type=req.params.type,id=Number(req.params.id);if(!['movie','tv'].includes(type)||!Number.isSafeInteger(id))return res.status(400).end();const difficulty=['simple','moyen','dur'].includes(req.params.difficulty)?req.params.difficulty:'moyen';const hits=tmdbSceneCache.get(id+'-'+type+'-'+difficulty);const hit=Array.isArray(hits)?hits.find(x=>x.tmdbPath===req.query.file):null;if(!hit)return res.status(404).end();res.set('Content-Type',hit.ct);res.set('Cache-Control','public,max-age=3600');res.send(hit.buffer)});
 app.get('/image-culte-status',(req,res)=>res.json({tmdbConfigured:!!tmdbKey(),ready:tmdbSceneCache.size,total:IMAGE_CULTE_BANK.length,discovered:tmdbDiscoverStatus.loaded,discoveryError:tmdbDiscoverStatus.error,pending:tmdbScenePending.size}));
 if(tmdbKey()){setTimeout(async()=>{await tmdbExpandCatalogue();tmdbWarmScenes()},500)}else{console.warn('Image Culte: TMDB_API_KEY manquante dans Render Environment')}
-server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.67 lancé'));
+server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.69 lancé'));
 const HARD_EXTRA={"Culture générale": [{"q": "Quel traité de 1648 est associé à la fin de la guerre de Trente Ans ?", "a": ["Westphalie", "Utrecht", "Versailles", "Tordesillas"], "c": 0, "difficulty": "dur"}, {"q": "Quel élément chimique porte le numéro atomique 74 ?", "a": ["Tungstène", "Osmium", "Iridium", "Hafnium"], "c": 0, "difficulty": "dur"}, {"q": "Quelle dynastie chinoise a précédé immédiatement les Ming ?", "a": ["Yuan", "Song", "Qing", "Tang"], "c": 0, "difficulty": "dur"}, {"q": "Quel philosophe a écrit Critique de la raison pure ?", "a": ["Kant", "Hegel", "Spinoza", "Leibniz"], "c": 0, "difficulty": "dur"}], "Football": [{"q": "Quel club a remporté la première Coupe d’Europe des clubs champions en 1956 ?", "a": ["Real Madrid", "Benfica", "Milan", "Reims"], "c": 0, "difficulty": "dur"}, {"q": "Quel gardien a remporté le Ballon d’Or 1963 ?", "a": ["Lev Yachine", "Dino Zoff", "Gordon Banks", "Sepp Maier"], "c": 0, "difficulty": "dur"}, {"q": "Quel pays a remporté l’Euro 1992 après avoir été repêché tardivement ?", "a": ["Danemark", "Suède", "Pays-Bas", "Allemagne"], "c": 0, "difficulty": "dur"}], "Anime & Manga": [{"q": "Dans Hunter × Hunter, quel type de Nen est associé à Kurapika lorsque ses yeux deviennent écarlates ?", "a": ["Spécialisation", "Matérialisation", "Renforcement", "Manipulation"], "c": 0, "difficulty": "dur"}, {"q": "Dans Fullmetal Alchemist, quel principe est présenté comme fondamental à l’alchimie au début de l’œuvre ?", "a": ["Échange équivalent", "Transmutation absolue", "Résonance vitale", "Cercle parfait"], "c": 0, "difficulty": "dur"}, {"q": "Dans Bleach, comment se nomme l’étape supérieure de libération d’un Zanpakutō ?", "a": ["Bankai", "Resurrección", "Shikai", "Vollständig"], "c": 0, "difficulty": "dur"}], "Mathématiques": [{"q": "Quelle est la dérivée de ln(x²+1) ?", "a": ["2x/(x²+1)", "1/(x²+1)", "2/(x²+1)", "ln(2x)"], "c": 0, "difficulty": "dur"}, {"q": "Combien vaut la somme des angles intérieurs d’un dodécagone ?", "a": ["1800°", "1620°", "1980°", "2160°"], "c": 0, "difficulty": "dur"}, {"q": "Si log₂(x)=7, combien vaut x ?", "a": ["128", "64", "256", "49"], "c": 0, "difficulty": "dur"}]};for(const [t,a] of Object.entries(HARD_EXTRA)){DB[t]=DB[t]||[];DB[t].push(...a)}
