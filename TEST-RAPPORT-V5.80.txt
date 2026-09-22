@@ -1,0 +1,9 @@
+PARTY ARENA V5.80 — Qui est-ce ? photos obligatoires + chrono 15 s
+- Le jeu ne propose plus les rébus/énigmes sans photo lorsque la banque photo est insuffisante.
+- Chaque photo distante est vérifiée (HTTP et type image) avant de lancer la manche ; vérification mise en cache.
+- Les duos exigent deux images accessibles ; si aucune photo ne fonctionne après 24 tentatives, la manche est passée automatiquement.
+- Le bouton hôte Changer l'image applique également la vérification des photos.
+- Si un navigateur n'arrive malgré tout pas à afficher la photo, le formulaire est bloqué et l'hôte demande une autre manche.
+- Le chrono Qui est-ce ? passe de 10 à 15 secondes côté serveur et navigateur ; les autres jeux ne changent pas.
+Tests locaux : node --check server.js ; analyse syntaxique du script du navigateur ; vérification des règles.
+Limite : les liens d'images et la synchronisation multijoueur sur Render n'ont pas été testés en direct.

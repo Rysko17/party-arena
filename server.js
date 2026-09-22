@@ -453,10 +453,39 @@ function pickWhoMixed(r){
    const wrong=pool.sort(()=>Math.random()-.5).slice(0,3);
    if(wrong.length===3){const a=[z.answer,...wrong].sort(()=>Math.random()-.5);return {q:z.theme==='Culture générale'&&kind==='monument'?'Quel est ce monument ?':z.theme==='Anime & Manga'?'Quel est ce personnage d’anime ?':'Qui est-ce ?',a,c:a.indexOf(z.answer),theme:z.theme,image:z.image,whoPhoto:true,difficulty:(WHO_PHOTOS.indexOf(z)>=28?'dur':'moyen')}}
  }
- let rebus=WHO_REBUS.filter(x=>selected.includes(x.theme));if(!rebus.length)rebus=WHO_REBUS;
- const z=unusedPick(r,'whoRebus',rebus);return {...z,whoRebus:true,difficulty:'dur'};
+ return null; // V5.80: aucune question Qui est-ce ? sans photo.
 }
 
+// V5.80 : une manche Qui est-ce ? ne part que si ses images sont réellement accessibles.
+const whoImageChecks=new Map();
+async function whoImageAvailable(url){
+ if(!url||typeof url!=='string')return false;
+ if(url.startsWith('/sportsdb-photo/'))return sportsImageCache.has(url.split('/').pop());
+ if(url.startsWith('/tmdb-scene/'))return true; // cache local TMDB déjà contrôlé
+ if(!/^https:\/\//i.test(url))return false;
+ const cached=whoImageChecks.get(url);if(cached&&cached.until>Date.now())return cached.ok;
+ let ok=false;
+ try{const response=await fetch(url,{headers:{'User-Agent':'PartyArena/5.80 (image availability check)','Range':'bytes=0-8191'},signal:AbortSignal.timeout(4500)});
+  const type=response.headers.get('content-type')||'';ok=response.ok&&/^image\/(jpeg|png|webp|gif)/i.test(type);
+  if(response.body)await response.body.cancel();
+ }catch(e){}
+ whoImageChecks.set(url,{ok,until:Date.now()+(ok?20*60000:3*60000)});return ok;
+}
+async function pickWhoWithPhoto(r){
+ const selected=r.settings.themes||[];
+ // Tester au maximum 24 portraits sans boucler sur les images déjà refusées.
+ const rejected=new Set();
+ for(let i=0;i<24;i++){
+  const z=pickWhoMixed(r);if(!z)break;
+  const urls=z.duoImages||[z.image];
+  if(!urls.length||urls.some(u=>!u||rejected.has(u)))continue;
+  const results=await Promise.all(urls.map(whoImageAvailable));
+  if(results.every(Boolean))return z;
+  urls.forEach((u,j)=>{if(!results[j])rejected.add(u)});
+ }
+ return null;
+}
+function unavailableWhoRound(){return {game:'Qui est-ce ?',q:'Aucune photo disponible pour cette manche. Passage automatique…',a:[],image:null,whoImageUnavailable:true,theme:'Images'};}
 const BLIND_TEST_BANK={
 'Anime & Manga':[
  {title:'Attack on Titan — Guren no Yumiya',video:'8OkpRK2_gVs',start:18},
@@ -1130,7 +1159,7 @@ function makeRound(r,g){
  return c;
 }
 
-function roundSeconds(c){if(!c)return 0;if(c.game==='Petit Bac')return 30;if(c.game==='Blind Test'||c.game==='Ciné Extrait')return 10;if(c.game==='Mot interdit')return 30;if(c.game==='Trouve l’intrus')return 20;if(['Quiz Battle','Qui est-ce ?','Image culte','Duel','La Bombe'].includes(c.game))return 10;return 0}
+function roundSeconds(c){if(!c)return 0;if(c.game==='Petit Bac')return 30;if(c.game==='Qui est-ce ?')return 15;if(c.game==='Blind Test'||c.game==='Ciné Extrait')return 10;if(c.game==='Mot interdit')return 30;if(c.game==='Trouve l’intrus')return 20;if(['Quiz Battle','Qui est-ce ?','Image culte','Duel','La Bombe'].includes(c.game))return 10;return 0}
 function armRoundTimer(r){
  if(r._roundTimer)clearTimeout(r._roundTimer);const sec=roundSeconds(r.current);if(!sec)return;
  const token=(r._timerToken=(r._timerToken||0)+1);
@@ -1160,9 +1189,9 @@ async function next(r){
    limit=gameLimit(r)
  }
  r.gameRound++;r.round++;r.answers={};r.answerOrder=[];r.guesses={};r.oralDecisions={};r.bombAnswers={};r.impostorVotes={};r._advancing=false;
- const g=r.settings.games[r.gameIndex],c=g==='Image culte'?await imageCulteRound(r):g==='Ciné Extrait'?await cineExtraitRound(r):makeRound(r,g);r.current=c;r._clipStarted=false;r._clipEnded=false;r._blindPlaybackStarted=c?.game==='Blind Test'?false:true;
+ const g=r.settings.games[r.gameIndex],c=g==='Image culte'?await imageCulteRound(r):g==='Ciné Extrait'?await cineExtraitRound(r):g==='Qui est-ce ?'?(await pickWhoWithPhoto(r).then(z=>z?{game:g,q:z.q,a:z.a,c:z.c,theme:z.theme,whoRebus:false,whoPhoto:true,image:z.image||null,duoImages:z.duoImages||null,difficulty:z.difficulty||'dur',points:difficultyPoints(z.difficulty||'dur')}:unavailableWhoRound())):makeRound(r,g);r.current=c;r._clipStarted=false;r._clipEnded=false;r._blindPlaybackStarted=c?.game==='Blind Test'?false:true;
  io.to(r.code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:limit,gameIndex:r.gameIndex,current:g==='Petit Bac'?bacPublic(r):publicRound(c)});
- if(!c.imageCulteUnavailable&&!c.clipUnavailable&&g!=='Ciné Extrait')armRoundTimer(r);
+ if(c.whoImageUnavailable){r._advancing=true;setTimeout(()=>next(r),1800)}else if(!c.imageCulteUnavailable&&!c.clipUnavailable&&g!=='Ciné Extrait')armRoundTimer(r);
  if(g==="L’Imposteur")for(const p of Object.values(r.players))io.to(p.id).emit('secret',{word:p.id===r.secret.imp?r.secret.o:r.secret.n});
  emit(r);
 }
@@ -1183,9 +1212,9 @@ io.on('connection',(s)=>{
  s.on('blindPlaybackError',({code,excerptId,reason}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Blind Test'||r.current?.excerptId!==excerptId)return;r.badBlind=r.badBlind||new Set();if(r.badBlind.has(excerptId))return;r.badBlind.add(excerptId);r.blindSeen=r.blindSeen||new Set();r.blindSeen.add(excerptId);r.current=blindRound(r);r.answers={};r.answerOrder=[];r._advancing=false;io.to(code).emit('blindReplaced',{bad:excerptId,reason:reason||'playback'});io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:publicRound(r.current)});armRoundTimer(r)});
 
 
- socket.on('rerollWho',({code}={})=>{
+ socket.on('rerollWho',async({code}={})=>{
  const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Qui est-ce ?')return;
- const z=pickWhoMixed(r);r.current={game:'Qui est-ce ?',q:z.q,a:z.a,c:z.c,theme:z.theme,whoRebus:!!z.whoRebus,whoPhoto:!!z.whoPhoto,image:z.image||null,duoImages:z.duoImages||null,difficulty:z.difficulty||'dur',points:difficultyPoints(z.difficulty||'dur')};r.answers={};
+ const z=await pickWhoWithPhoto(r);if(!z){r.current=unavailableWhoRound();io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:publicRound(r.current)});r._advancing=true;setTimeout(()=>next(r),1800);return;}r.current={game:'Qui est-ce ?',q:z.q,a:z.a,c:z.c,theme:z.theme,whoRebus:!!z.whoRebus,whoPhoto:!!z.whoPhoto,image:z.image||null,duoImages:z.duoImages||null,difficulty:z.difficulty||'dur',points:difficultyPoints(z.difficulty||'dur')};r.answers={};armRoundTimer(r);
  io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:publicRound(r.current)});
 });
  socket.on('rerollImpostor',({code}={})=>{
