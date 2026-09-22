@@ -1,0 +1,11 @@
+PARTY ARENA V5.63 — IMAGE CULTE TMDB
+96 films, séries et animes préconfigurés par ID TMDB.
+Les scènes viennent des backdrops TMDB, pas des affiches, logos ou portraits.
+La recherche sélectionne des visuels horizontaux sans langue et favorise les moins populaires.
+Le serveur vérifie et télécharge chaque image AVANT de proposer la question, puis sert les octets via /tmdb-scene/:type/:id sur le même domaine.
+Cache en mémoire et préchargement progressif par lots de 3. Si aucune image n’est accessible, affiche un message explicite au lieu d’une question avec image vide.
+Endpoint diagnostic: /image-culte-status (tmdbConfigured, ready, total, pending).
+Variable Render: TMDB_API_KEY = clé v3 TMDB. Ne jamais mettre la clé dans GitHub.
+Attribution TMDB affichée sous l’image.
+TESTS LOCAUX: syntaxe serveur + client PASS; 20/20 manches avec API TMDB simulée et fichiers image simulés; 4 réponses uniques à chaque manche; aucune manche n’est envoyée sans image prévalidée.
+LIMITE: pas de test réseau réel avec votre clé secrète ni de déploiement Render; les backdrops ne sont pas garantis d’être des captures d’épisodes, et la sélection visuelle doit être évaluée sur votre site.

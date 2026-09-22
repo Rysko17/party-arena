@@ -479,13 +479,14 @@ function blindRound(r){
  // Fisher-Yates shuffle before selection: each new game/round gets a fresh order.
  fresh=[...fresh];for(let i=fresh.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[fresh[i],fresh[j]]=[fresh[j],fresh[i]]}
  const z=fresh[0];if(!r.blindSeen)r.blindSeen=new Set();r.blindSeen.add(z.excerptId);
- const sameGenre=z.genre?pool.filter(x=>x.genre===z.genre&&x.title!==z.title).map(x=>x.title):[];
- const playable=[...new Set([...sameGenre,...pool.filter(x=>x.title!==z.title).map(x=>x.title)])];
- const decoys=[...new Set([...blindDecoyPool(t,z.title),...playable,...(BLIND_DECOYS[t]||[])])].filter(x=>x!==z.title);
- const wrong=[];while(wrong.length<3&&decoys.length){const i=Math.floor(Math.random()*decoys.length);wrong.push(decoys.splice(i,1)[0])}
- const a=[z.title,...wrong].sort(()=>Math.random()-.5);
  const difficulty=['simple','moyen','dur'][(Math.max(1,r.gameRound)-1)%3];
- const hardMods=[{mode:'speed',rate:.80},{mode:'speed',rate:.85},{mode:'speed',rate:1.15},{mode:'speed',rate:1.20},{mode:'scramble',rate:1},{mode:'stutter',rate:1}];const mediumMods=[{mode:'speed',rate:.90},{mode:'speed',rate:1.10},{mode:'stutter',rate:1}];const blindMod=difficulty==='dur'?hardMods[Math.floor(Math.random()*hardMods.length)]:difficulty==='moyen'?(Math.random()<.8?mediumMods[Math.floor(Math.random()*mediumMods.length)]:{mode:'normal',rate:1}):{mode:'normal',rate:1};const playbackRate=blindMod.rate||1;
+ const sameGenre=z.genre?pool.filter(x=>x.genre===z.genre&&x.title!==z.title).map(x=>x.title):[];
+ const sameSource=pool.filter(x=>x.video===z.video&&x.title!==z.title).map(x=>x.title);
+ const playable=[...new Set([...sameSource,...sameGenre,...pool.filter(x=>x.title!==z.title).map(x=>x.title)])];
+ const decoys=[...new Set([...sameSource,...sameGenre,...blindDecoyPool(t,z.title),...playable,...(BLIND_DECOYS[t]||[])])].filter(x=>x!==z.title);
+ const want=difficulty==='dur'?5:difficulty==='moyen'?4:3,wrong=[];while(wrong.length<want&&decoys.length){const i=Math.floor(Math.random()*Math.min(decoys.length,Math.max(1,sameSource.length+sameGenre.length+4)));wrong.push(decoys.splice(i,1)[0])}
+ const a=[z.title,...wrong].sort(()=>Math.random()-.5);
+ const hardMods=[{mode:'speed',rate:.50},{mode:'speed',rate:.75},{mode:'speed',rate:1.50},{mode:'speed',rate:2.00},{mode:'scramble',rate:1},{mode:'stutter',rate:1},{mode:'micro',rate:1}];const mediumMods=[{mode:'speed',rate:.75},{mode:'speed',rate:1.25},{mode:'stutter',rate:1}];const blindMod=difficulty==='dur'?hardMods[Math.floor(Math.random()*hardMods.length)]:difficulty==='moyen'?(Math.random()<.8?mediumMods[Math.floor(Math.random()*mediumMods.length)]:{mode:'normal',rate:1}):{mode:'normal',rate:1};const playbackRate=blindMod.rate||1;
  return {game:'Blind Test',q:'🎧 BLIND TEST — écoute les 8 secondes',a,c:a.indexOf(z.title),theme:t,blind:true,video:z.video,start:z.start,end:z.start+8,excerptId:z.excerptId,difficulty,points:difficultyPoints(difficulty),playbackRate,blindMod,sources:z.sources||[{provider:'youtube',id:z.video,start:z.start,end:z.start+8}]};
 }
 
@@ -499,8 +500,145 @@ const TABOO_CLEAN={"Football": [["Lionel Messi", "Argentine"], ["Cristiano Ronal
 
 const TABOO_THREE={"Anime & Manga": [["Ichigo Kurosaki", "personnage", ["physique", "cheveux", "vêtements"]], ["Urahara Kisuke", "personnage", ["physique", "chapeau", "vêtements"]], ["Shikamaru Nara", "personnage", ["physique", "cheveux", "vêtements"]], ["Killer Bee", "personnage", ["physique", "cheveux", "vêtements"]], ["Koby", "personnage", ["physique", "cheveux", "vêtements"]], ["Kaku", "personnage", ["physique", "nez", "vêtements"]], ["Mechamaru", "personnage", ["physique", "cheveux", "vêtements"]], ["Kento Nanami", "personnage", ["physique", "cheveux", "costume"]], ["Genya Shinazugawa", "personnage", ["physique", "cheveux", "vêtements"]], ["Kanao Tsuyuri", "personnage", ["physique", "cheveux", "vêtements"]], ["Mumen Rider", "personnage", ["physique", "casque", "vêtements"]], ["Reiner Braun", "personnage", ["physique", "cheveux", "vêtements"]]], "Football": [["Javier Zanetti", "personne", ["physique", "cheveux", "visage"]], ["Claude Makélélé", "personne", ["physique", "cheveux", "visage"]], ["Dimitar Berbatov", "personne", ["physique", "cheveux", "visage"]], ["Juan Román Riquelme", "personne", ["physique", "cheveux", "visage"]], ["Park Ji-sung", "personne", ["physique", "cheveux", "visage"]], ["Diego Forlán", "personne", ["physique", "cheveux", "visage"]], ["David Trezeguet", "personne", ["physique", "cheveux", "visage"]], ["Edgar Davids", "personne", ["physique", "lunettes", "cheveux"]]], "Cinéma & Séries": [["Saul Goodman", "personnage", ["physique", "cheveux", "vêtements"]], ["Gus Fring", "personnage", ["physique", "visage", "vêtements"]], ["Oberyn Martell", "personnage", ["physique", "cheveux", "vêtements"]], ["Jorah Mormont", "personnage", ["physique", "cheveux", "vêtements"]], ["Hank Schrader", "personnage", ["physique", "visage", "vêtements"]], ["Steve Harrington", "personnage", ["physique", "cheveux", "vêtements"]], ["Negan", "personnage", ["physique", "barbe", "vêtements"]], ["Lalo Salamanca", "personnage", ["physique", "visage", "vêtements"]]], "Jeux vidéo": [["Waluigi", "personnage", ["physique", "moustache", "vêtements"]], ["Tingle", "personnage", ["physique", "vêtements", "visage"]], ["Big Smoke", "personnage", ["physique", "vêtements", "visage"]], ["Roman Bellic", "personnage", ["physique", "cheveux", "vêtements"]], ["Sully", "personnage", ["physique", "moustache", "vêtements"]], ["Mimir", "personnage", ["physique", "barbe", "visage"]], ["Vaas Montenegro", "personnage", ["physique", "cheveux", "vêtements"]], ["Handsome Jack", "personnage", ["physique", "visage", "vêtements"]]], "Musique": [["Anderson .Paak", "personne", ["physique", "cheveux", "vêtements"]], ["Pusha T", "personne", ["physique", "cheveux", "vêtements"]], ["Schoolboy Q", "personne", ["physique", "barbe", "vêtements"]], ["Jorja Smith", "personne", ["physique", "cheveux", "vêtements"]], ["Kaytranada", "personne", ["physique", "cheveux", "vêtements"]], ["6LACK", "personne", ["physique", "cheveux", "vêtements"]], ["Denzel Curry", "personne", ["physique", "cheveux", "vêtements"]], ["Vince Staples", "personne", ["physique", "cheveux", "vêtements"]]]};
 
-const IMAGE_CULTE_BANK=[{"work": "Night of the Living Dead", "theme": "Cinéma & Séries", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Night_of_the_Living_Dead_(1968)_-_Ben.jpg", "decoys": ["Plan 9 from Outer Space", "Nosferatu", "The Brain That Wouldn't Die"]}, {"work": "Nosferatu", "theme": "Cinéma & Séries", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/NosferatuShadow.jpg", "decoys": ["The Cabinet of Dr. Caligari", "Metropolis", "The Phantom of the Opera"]}, {"work": "The General", "theme": "Cinéma & Séries", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/The_General_(1926)_-_Buster_Keaton.jpg", "decoys": ["Sherlock Jr.", "Safety Last!", "Steamboat Bill, Jr."]}, {"work": "Sherlock Jr.", "theme": "Cinéma & Séries", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Sherlock_Jr._(1924)_-_1.jpg", "decoys": ["The General", "The Kid", "Safety Last!"]}, {"work": "The Kid", "theme": "Cinéma & Séries", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Charlie_Chaplin_and_Jackie_Coogan_in_The_Kid.jpg", "decoys": ["City Lights", "The Gold Rush", "Modern Times"]}, {"work": "The Gold Rush", "theme": "Cinéma & Séries", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Chaplin_The_Gold_Rush.jpg", "decoys": ["The Kid", "City Lights", "The Circus"]}, {"work": "Steamboat Willie", "theme": "Dessins animés", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Steamboat_Willie_1928_Poster.png", "decoys": ["Plane Crazy", "The Gallopin' Gaucho", "Mickey's Orphans"]}, {"work": "Gertie the Dinosaur", "theme": "Dessins animés", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Gertie_the_Dinosaur_1914.jpg", "decoys": ["Felix the Cat", "Little Nemo", "Koko the Clown"]}, {"work": "The Adventures of Prince Achmed", "theme": "Dessins animés", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Die_Abenteuer_des_Prinzen_Achmed_(1926).jpg", "decoys": ["Gertie the Dinosaur", "The Cameraman's Revenge", "Fantasmagorie"]}, {"work": "A Trip to the Moon", "theme": "Cinéma & Séries", "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Le_Voyage_dans_la_lune.jpg", "decoys": ["Metropolis", "The General", "Nosferatu"]}];
-function imageCulteRound(r){let selected=r.settings.themes||[],pool=IMAGE_CULTE_BANK.filter(x=>selected.includes(x.theme));if(!pool.length)pool=IMAGE_CULTE_BANK;let z=unusedPick(r,'imageCulte',pool),a=[z.work,...z.decoys].sort(()=>Math.random()-.5);return{game:'Image culte',q:'🎬 De quelle œuvre vient cette image ?',a,c:a.indexOf(z.work),image:z.image,theme:z.theme,difficulty:'dur',points:1000,imageCulte:true}}
+// V5.63: verified, same-origin TMDB image buffers. Never start a round with an unverified image.
+const IMAGE_CULTE_BANK=[
+{work:'Interstellar',type:'movie',id:157336,theme:'Cinéma & Séries'},
+{work:'Inception',type:'movie',id:27205,theme:'Cinéma & Séries'},
+{work:'The Dark Knight',type:'movie',id:155,theme:'Cinéma & Séries'},
+{work:'The Batman',type:'movie',id:414906,theme:'Cinéma & Séries'},
+{work:'Joker',type:'movie',id:475557,theme:'Cinéma & Séries'},
+{work:'Dune',type:'movie',id:438631,theme:'Cinéma & Séries'},
+{work:'Dune: Part Two',type:'movie',id:693134,theme:'Cinéma & Séries'},
+{work:'Oppenheimer',type:'movie',id:872585,theme:'Cinéma & Séries'},
+{work:'Titanic',type:'movie',id:597,theme:'Cinéma & Séries'},
+{work:'Avatar',type:'movie',id:19995,theme:'Cinéma & Séries'},
+{work:'Avatar: The Way of Water',type:'movie',id:76600,theme:'Cinéma & Séries'},
+{work:'The Matrix',type:'movie',id:603,theme:'Cinéma & Séries'},
+{work:'John Wick',type:'movie',id:245891,theme:'Cinéma & Séries'},
+{work:'John Wick: Chapter 4',type:'movie',id:603692,theme:'Cinéma & Séries'},
+{work:'Gladiator',type:'movie',id:98,theme:'Cinéma & Séries'},
+{work:'The Lord of the Rings: The Fellowship of the Ring',type:'movie',id:120,theme:'Cinéma & Séries'},
+{work:'The Lord of the Rings: The Two Towers',type:'movie',id:121,theme:'Cinéma & Séries'},
+{work:'The Lord of the Rings: The Return of the King',type:'movie',id:122,theme:'Cinéma & Séries'},
+{work:'Harry Potter and the Philosopher’s Stone',type:'movie',id:671,theme:'Cinéma & Séries'},
+{work:'Harry Potter and the Prisoner of Azkaban',type:'movie',id:673,theme:'Cinéma & Séries'},
+{work:'Harry Potter and the Goblet of Fire',type:'movie',id:674,theme:'Cinéma & Séries'},
+{work:'Pirates of the Caribbean: The Curse of the Black Pearl',type:'movie',id:22,theme:'Cinéma & Séries'},
+{work:'Pirates of the Caribbean: Dead Man’s Chest',type:'movie',id:58,theme:'Cinéma & Séries'},
+{work:'Star Wars: A New Hope',type:'movie',id:11,theme:'Cinéma & Séries'},
+{work:'Star Wars: The Empire Strikes Back',type:'movie',id:1891,theme:'Cinéma & Séries'},
+{work:'Star Wars: Revenge of the Sith',type:'movie',id:1895,theme:'Cinéma & Séries'},
+{work:'Avengers: Infinity War',type:'movie',id:299536,theme:'Cinéma & Séries'},
+{work:'Avengers: Endgame',type:'movie',id:299534,theme:'Cinéma & Séries'},
+{work:'Iron Man',type:'movie',id:1726,theme:'Cinéma & Séries'},
+{work:'Spider-Man: No Way Home',type:'movie',id:634649,theme:'Cinéma & Séries'},
+{work:'Spider-Man: Into the Spider-Verse',type:'movie',id:324857,theme:'Cinéma & Séries'},
+{work:'Jurassic Park',type:'movie',id:329,theme:'Cinéma & Séries'},
+{work:'Jurassic World',type:'movie',id:135397,theme:'Cinéma & Séries'},
+{work:'The Hunger Games',type:'movie',id:70160,theme:'Cinéma & Séries'},
+{work:'The Maze Runner',type:'movie',id:198663,theme:'Cinéma & Séries'},
+{work:'The Truman Show',type:'movie',id:37165,theme:'Cinéma & Séries'},
+{work:'Fight Club',type:'movie',id:550,theme:'Cinéma & Séries'},
+{work:'Se7en',type:'movie',id:807,theme:'Cinéma & Séries'},
+{work:'Pulp Fiction',type:'movie',id:680,theme:'Cinéma & Séries'},
+{work:'The Wolf of Wall Street',type:'movie',id:106646,theme:'Cinéma & Séries'},
+{work:'The Shawshank Redemption',type:'movie',id:278,theme:'Cinéma & Séries'},
+{work:'Forrest Gump',type:'movie',id:13,theme:'Cinéma & Séries'},
+{work:'La La Land',type:'movie',id:313369,theme:'Cinéma & Séries'},
+{work:'Whiplash',type:'movie',id:244786,theme:'Cinéma & Séries'},
+{work:'Parasite',type:'movie',id:496243,theme:'Cinéma & Séries'},
+{work:'Get Out',type:'movie',id:419430,theme:'Cinéma & Séries'},
+{work:'The Conjuring',type:'movie',id:138843,theme:'Cinéma & Séries'},
+{work:'Scream',type:'movie',id:4232,theme:'Cinéma & Séries'},
+{work:'It',type:'movie',id:346364,theme:'Cinéma & Séries'},
+{work:'A Quiet Place',type:'movie',id:447332,theme:'Cinéma & Séries'},
+{work:'Breaking Bad',type:'tv',id:1396,theme:'Cinéma & Séries'},
+{work:'Better Call Saul',type:'tv',id:60059,theme:'Cinéma & Séries'},
+{work:'Stranger Things',type:'tv',id:66732,theme:'Cinéma & Séries'},
+{work:'Game of Thrones',type:'tv',id:1399,theme:'Cinéma & Séries'},
+{work:'House of the Dragon',type:'tv',id:94997,theme:'Cinéma & Séries'},
+{work:'The Last of Us',type:'tv',id:100088,theme:'Cinéma & Séries'},
+{work:'The Walking Dead',type:'tv',id:1402,theme:'Cinéma & Séries'},
+{work:'Peaky Blinders',type:'tv',id:60574,theme:'Cinéma & Séries'},
+{work:'Money Heist',type:'tv',id:71446,theme:'Cinéma & Séries'},
+{work:'Squid Game',type:'tv',id:93405,theme:'Cinéma & Séries'},
+{work:'Dark',type:'tv',id:70523,theme:'Cinéma & Séries'},
+{work:'The Boys',type:'tv',id:76479,theme:'Cinéma & Séries'},
+{work:'The Mandalorian',type:'tv',id:82856,theme:'Cinéma & Séries'},
+{work:'The Witcher',type:'tv',id:71912,theme:'Cinéma & Séries'},
+{work:'Wednesday',type:'tv',id:119051,theme:'Cinéma & Séries'},
+{work:'Euphoria',type:'tv',id:85552,theme:'Cinéma & Séries'},
+{work:'Lost',type:'tv',id:4607,theme:'Cinéma & Séries'},
+{work:'Prison Break',type:'tv',id:2288,theme:'Cinéma & Séries'},
+{work:'Sherlock',type:'tv',id:19885,theme:'Cinéma & Séries'},
+{work:'The Office',type:'tv',id:2316,theme:'Cinéma & Séries'},
+{work:'The Bear',type:'tv',id:136315,theme:'Cinéma & Séries'},
+{work:'Arcane',type:'tv',id:94605,theme:'Anime & Manga'},
+{work:'Attack on Titan',type:'tv',id:1429,theme:'Anime & Manga'},
+{work:'Demon Slayer',type:'tv',id:85937,theme:'Anime & Manga'},
+{work:'Jujutsu Kaisen',type:'tv',id:95479,theme:'Anime & Manga'},
+{work:'One Piece',type:'tv',id:37854,theme:'Anime & Manga'},
+{work:'Naruto',type:'tv',id:46260,theme:'Anime & Manga'},
+{work:'Naruto Shippuden',type:'tv',id:31910,theme:'Anime & Manga'},
+{work:'Death Note',type:'tv',id:13916,theme:'Anime & Manga'},
+{work:'Fullmetal Alchemist: Brotherhood',type:'tv',id:31911,theme:'Anime & Manga'},
+{work:'Chainsaw Man',type:'tv',id:114410,theme:'Anime & Manga'},
+{work:'Solo Leveling',type:'tv',id:127532,theme:'Anime & Manga'},
+{work:'My Hero Academia',type:'tv',id:65930,theme:'Anime & Manga'},
+{work:'Vinland Saga',type:'tv',id:88803,theme:'Anime & Manga'},
+{work:'One Punch Man',type:'tv',id:63926,theme:'Anime & Manga'},
+{work:'Dragon Ball Z',type:'tv',id:12971,theme:'Anime & Manga'},
+{work:'Bleach',type:'tv',id:30984,theme:'Anime & Manga'},
+{work:'Spy x Family',type:'tv',id:120089,theme:'Anime & Manga'},
+{work:'Cyberpunk: Edgerunners',type:'tv',id:105248,theme:'Anime & Manga'},
+{work:'Frieren: Beyond Journey’s End',type:'tv',id:209867,theme:'Anime & Manga'},
+{work:'Spirited Away',type:'movie',id:129,theme:'Anime & Manga'},
+{work:'Princess Mononoke',type:'movie',id:128,theme:'Anime & Manga'},
+{work:'Howl’s Moving Castle',type:'movie',id:4935,theme:'Anime & Manga'},
+{work:'Your Name',type:'movie',id:372058,theme:'Anime & Manga'},
+{work:'A Silent Voice',type:'movie',id:378064,theme:'Anime & Manga'},
+{work:'Suzume',type:'movie',id:916224,theme:'Anime & Manga'}
+];
+const tmdbSceneCache=new Map(),tmdbScenePending=new Map(),tmdbSceneBad=new Map();
+let tmdbWarmIndex=0,tmdbWarmRunning=false;
+const tmdbAttribution='Images : TMDB (The Movie Database). Ce produit utilise l’API TMDB mais n’est ni approuvé ni certifié par TMDB.';
+function tmdbKey(){return String(process.env.TMDB_API_KEY||'').trim()}
+async function tmdbJson(url){const response=await fetch(url,{headers:{accept:'application/json'},signal:AbortSignal.timeout(9000)});if(!response.ok)throw Error('TMDB API HTTP '+response.status);return response.json()}
+async function tmdbLoadScene(entry){
+ if(tmdbSceneCache.has(entry.id+'-'+entry.type))return tmdbSceneCache.get(entry.id+'-'+entry.type);
+ const key=entry.id+'-'+entry.type;if(tmdbScenePending.has(key))return tmdbScenePending.get(key);
+ if(tmdbSceneBad.get(key)>Date.now())return null;
+ const promise=(async()=>{try{
+  const api=tmdbKey();if(!api)return null;
+  const base='https://api.themoviedb.org/3/'+entry.type+'/'+entry.id+'/images?api_key='+encodeURIComponent(api)+'&include_image_language=null,en';
+  const data=await tmdbJson(base);
+  // Backdrops are actual horizontal images from the work, not posters, logos or portraits.
+  // Prefer less popular frames over the first promotional image; avoid text-bearing backdrops.
+  const candidates=(data.backdrops||[]).filter(x=>x.file_path&&x.width>=900&&x.height>=450&&x.aspect_ratio>1.3&&x.aspect_ratio<2.8&&x.iso_639_1==null);
+  if(!candidates.length)return null;
+  const chosen=candidates.slice(0,Math.min(candidates.length,25)).sort((a,b)=>(a.vote_count||0)-(b.vote_count||0));
+  const start=Math.min(chosen.length-1,Math.floor(chosen.length*.3));
+  for(const pic of [...chosen.slice(start),...chosen.slice(0,start)]){
+   try{const url='https://image.tmdb.org/t/p/w780'+pic.file_path;const ir=await fetch(url,{signal:AbortSignal.timeout(8500)});if(!ir.ok)continue;const ct=ir.headers.get('content-type')||'';if(!ct.startsWith('image/'))continue;const buffer=Buffer.from(await ir.arrayBuffer());if(buffer.length<4000||buffer.length>4000000)continue;
+    const item={buffer,ct,entry,tmdbPath:pic.file_path};tmdbSceneCache.set(key,item);return item;
+   }catch(e){}
+  }
+ }catch(e){console.warn('TMDB Image Culte',entry.work,e.message)}
+ tmdbSceneBad.set(key,Date.now()+3*60*1000);return null
+ })();tmdbScenePending.set(key,promise);try{return await promise}finally{tmdbScenePending.delete(key)}
+}
+function tmdbWarmScenes(){if(tmdbWarmRunning||!tmdbKey())return;tmdbWarmRunning=true;(async()=>{while(tmdbWarmIndex<IMAGE_CULTE_BANK.length){const batch=IMAGE_CULTE_BANK.slice(tmdbWarmIndex,tmdbWarmIndex+3);tmdbWarmIndex+=3;await Promise.allSettled(batch.map(tmdbLoadScene));await new Promise(r=>setTimeout(r,250))}tmdbWarmRunning=false})().catch(e=>{console.warn('TMDB warm',e.message);tmdbWarmRunning=false})}
+async function imageCulteRound(r){
+ const selected=r.settings.themes||[];let pool=IMAGE_CULTE_BANK.filter(x=>selected.includes(x.theme));if(!pool.length)pool=IMAGE_CULTE_BANK;
+ r.imageCulteSeen=r.imageCulteSeen||new Set();let ready=pool.filter(x=>tmdbSceneCache.has(x.id+'-'+x.type)&&!r.imageCulteSeen.has(x.id+'-'+x.type));
+ if(!ready.length){const shuffled=[...pool].sort(()=>Math.random()-.5);for(const entry of shuffled.slice(0,9)){if(r.imageCulteSeen.has(entry.id+'-'+entry.type))continue;const scene=await tmdbLoadScene(entry);if(scene){ready=[entry];break}}}
+ if(!ready.length){r.imageCulteSeen.clear();ready=pool.filter(x=>tmdbSceneCache.has(x.id+'-'+x.type));}
+ if(!ready.length){return {game:'Image culte',q:'⚠️ Aucune image disponible pour le moment. Vérifie TMDB_API_KEY dans Render, puis relance une partie.',a:[],image:null,imageCulteUnavailable:true,theme:'Images',difficulty:'simple',points:0}}
+ const z=ready[Math.floor(Math.random()*ready.length)];r.imageCulteSeen.add(z.id+'-'+z.type);
+ const decPool=pool.filter(x=>x.work!==z.work).sort(()=>Math.random()-.5);const dec=[...new Set(decPool.map(x=>x.work))].slice(0,3);if(dec.length<3)dec.push(...IMAGE_CULTE_BANK.filter(x=>x.work!==z.work&&!dec.includes(x.work)).map(x=>x.work).slice(0,3-dec.length));
+ const a=[z.work,...dec].sort(()=>Math.random()-.5);
+ return {game:'Image culte',q:'🎬 De quelle œuvre vient cette scène ?',a,c:a.indexOf(z.work),image:'/tmdb-scene/'+z.type+'/'+z.id,theme:z.theme,difficulty:'dur',points:1000,imageCulte:true,tmdbAttribution};
+}
 function makeRound(r,g){
  let c={game:g};
  if(g==='Quiz Battle'){let x=question(r);c={game:g,q:x.q,a:x.a,c:x.c,image:x.image||null,theme:x.theme,difficulty:x.difficulty||'simple',points:({simple:250,moyen:500,dur:1000}[x.difficulty]||250)}}
@@ -525,7 +663,7 @@ function makeRound(r,g){
    }
  }
  else if(g==='Blind Test'){c=blindRound(r)}
- else if(g==='Image culte'){c=imageCulteRound(r)}
+ else if(g==='Image culte'){c={game:'Image culte',q:'Chargement de la scène…',a:[]}}
  else if(g==='Qui est-ce ?'){
  const z=pickWhoMixed(r);
  c={game:g,q:z.q,a:z.a,c:z.c,theme:z.theme,whoRebus:!!z.whoRebus,whoPhoto:!!z.whoPhoto,image:z.image||null,difficulty:z.difficulty||'dur',points:difficultyPoints(z.difficulty||'dur')}
@@ -551,7 +689,7 @@ function armRoundTimer(r){
  },sec*1000);
 }
 
-function next(r){
+async function next(r){
  if(r.gameIndex==null)r.gameIndex=0;
  if(r.gameRound==null)r.gameRound=0;
  if(r.gameIndex>=r.settings.games.length){io.to(r.code).emit('finished',view(r));return}
@@ -570,9 +708,9 @@ function next(r){
    limit=gameLimit(r)
  }
  r.gameRound++;r.round++;r.answers={};r.answerOrder=[];r.guesses={};r.oralDecisions={};r.bombAnswers={};r.impostorVotes={};r._advancing=false;
- const g=r.settings.games[r.gameIndex],c=makeRound(r,g);r.current=c;r._blindPlaybackStarted=c?.game==='Blind Test'?false:true;
+ const g=r.settings.games[r.gameIndex],c=g==='Image culte'?await imageCulteRound(r):makeRound(r,g);r.current=c;r._blindPlaybackStarted=c?.game==='Blind Test'?false:true;
  io.to(r.code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:limit,gameIndex:r.gameIndex,current:c});
- armRoundTimer(r);
+ if(!c.imageCulteUnavailable)armRoundTimer(r);
  if(g==="L’Imposteur")for(const p of Object.values(r.players))io.to(p.id).emit('secret',{word:p.id===r.secret.imp?r.secret.o:r.secret.n});
  emit(r);
 }
@@ -783,5 +921,9 @@ s.on('majorityNext',({code}={})=>{
 s.on('blindHistory',ids=>{const r=Object.values(rooms).find(x=>x&&x.players&&Object.prototype.hasOwnProperty.call(x.players,s.id));if(!r)return;if(!r.blindSeen)r.blindSeen=new Set();for(const id of (Array.isArray(ids)?ids:[]).slice(-5000))r.blindSeen.add(String(id));});
 s.on('disconnect',()=>{for(const c in rooms){let r=rooms[c];if(r.players[s.id]){delete r.players[s.id];if(!Object.keys(r.players).length)delete rooms[c];else{if(r.host===s.id)r.host=Object.keys(r.players)[0];emit(r)}}}})
 });
-server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.60 lancé'));
+
+app.get('/tmdb-scene/:type/:id',(req,res)=>{const type=req.params.type,id=Number(req.params.id);if(!['movie','tv'].includes(type)||!Number.isSafeInteger(id))return res.status(400).end();const hit=tmdbSceneCache.get(id+'-'+type);if(!hit)return res.status(404).end();res.set('Content-Type',hit.ct);res.set('Cache-Control','public,max-age=3600');res.send(hit.buffer)});
+app.get('/image-culte-status',(req,res)=>res.json({tmdbConfigured:!!tmdbKey(),ready:tmdbSceneCache.size,total:IMAGE_CULTE_BANK.length,pending:tmdbScenePending.size}));
+if(tmdbKey()){setTimeout(tmdbWarmScenes,500)}else{console.warn('Image Culte: TMDB_API_KEY manquante dans Render Environment')}
+server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.63 lancé'));
 const HARD_EXTRA={"Culture générale": [{"q": "Quel traité de 1648 est associé à la fin de la guerre de Trente Ans ?", "a": ["Westphalie", "Utrecht", "Versailles", "Tordesillas"], "c": 0, "difficulty": "dur"}, {"q": "Quel élément chimique porte le numéro atomique 74 ?", "a": ["Tungstène", "Osmium", "Iridium", "Hafnium"], "c": 0, "difficulty": "dur"}, {"q": "Quelle dynastie chinoise a précédé immédiatement les Ming ?", "a": ["Yuan", "Song", "Qing", "Tang"], "c": 0, "difficulty": "dur"}, {"q": "Quel philosophe a écrit Critique de la raison pure ?", "a": ["Kant", "Hegel", "Spinoza", "Leibniz"], "c": 0, "difficulty": "dur"}], "Football": [{"q": "Quel club a remporté la première Coupe d’Europe des clubs champions en 1956 ?", "a": ["Real Madrid", "Benfica", "Milan", "Reims"], "c": 0, "difficulty": "dur"}, {"q": "Quel gardien a remporté le Ballon d’Or 1963 ?", "a": ["Lev Yachine", "Dino Zoff", "Gordon Banks", "Sepp Maier"], "c": 0, "difficulty": "dur"}, {"q": "Quel pays a remporté l’Euro 1992 après avoir été repêché tardivement ?", "a": ["Danemark", "Suède", "Pays-Bas", "Allemagne"], "c": 0, "difficulty": "dur"}], "Anime & Manga": [{"q": "Dans Hunter × Hunter, quel type de Nen est associé à Kurapika lorsque ses yeux deviennent écarlates ?", "a": ["Spécialisation", "Matérialisation", "Renforcement", "Manipulation"], "c": 0, "difficulty": "dur"}, {"q": "Dans Fullmetal Alchemist, quel principe est présenté comme fondamental à l’alchimie au début de l’œuvre ?", "a": ["Échange équivalent", "Transmutation absolue", "Résonance vitale", "Cercle parfait"], "c": 0, "difficulty": "dur"}, {"q": "Dans Bleach, comment se nomme l’étape supérieure de libération d’un Zanpakutō ?", "a": ["Bankai", "Resurrección", "Shikai", "Vollständig"], "c": 0, "difficulty": "dur"}], "Mathématiques": [{"q": "Quelle est la dérivée de ln(x²+1) ?", "a": ["2x/(x²+1)", "1/(x²+1)", "2/(x²+1)", "ln(2x)"], "c": 0, "difficulty": "dur"}, {"q": "Combien vaut la somme des angles intérieurs d’un dodécagone ?", "a": ["1800°", "1620°", "1980°", "2160°"], "c": 0, "difficulty": "dur"}, {"q": "Si log₂(x)=7, combien vaut x ?", "a": ["128", "64", "256", "49"], "c": 0, "difficulty": "dur"}]};for(const [t,a] of Object.entries(HARD_EXTRA)){DB[t]=DB[t]||[];DB[t].push(...a)}
