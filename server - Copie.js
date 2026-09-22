@@ -2,6 +2,7 @@ const express=require('express'),http=require('http'),{Server}=require('socket.i
 const app=express(),server=http.createServer(app),io=new Server(server),GLOBAL_USED={},DB=JSON.parse(fs.readFileSync(path.join(__dirname,'questions.json'),'utf8')),rooms={};
 app.use(express.static(path.join(__dirname,'public')));
 function code(){let s='',a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';for(let i=0;i<4;i++)s+=a[Math.floor(Math.random()*a.length)];return s}
+function publicRound(c){if(!c||c.game!=='Ciné Extrait')return c;const {clipAnswer,clipAliases,c:correctIndex,...safe}=c;return safe}
 function view(r){return{code:r.code,host:r.host,players:Object.values(r.players).map(p=>({id:p.id,name:p.name,score:p.score})),settings:r.settings,round:r.round,total:r.total,state:r.state,gameIndex:r.gameIndex,gameRound:r.gameRound}}
 function emit(r){io.to(r.code).emit('room',view(r))}
 function question(r){
@@ -28,6 +29,7 @@ const THEME_BANKS={"Football": {"bomb": ["Écris un joueur du PSG.", "Écris un 
 const BOMB_TYPED_BANK=["Écris le nom d’un pays d’Europe.", "Écris le nom d’un personnage d’anime.", "Écris le nom d’un club de football.", "Écris le nom d’un rappeur français.", "Écris le nom d’un jeu vidéo.", "Écris le nom d’une capitale.", "Écris le nom d’un film Marvel ou DC.", "Écris le nom d’un animal marin.", "Écris une marque de voiture.", "Écris le nom d’un pays d’Afrique.", "Écris le nom d’un fruit.", "Écris le nom d’une série.", "Écris le nom d’un Pokémon.", "Écris le nom d’un footballeur.", "Écris le nom d’une ville française.", "Écris le nom d’un personnage de jeu vidéo.", "Écris le nom d’un sport.", "Écris le nom d’un métier.", "Écris le nom d’un manga.", "Écris le nom d’une célébrité internationale.", "Écris un aliment commençant par P.", "Écris un pays commençant par A.", "Écris un personnage de One Piece.", "Écris un personnage de Naruto.", "Écris un super-héros.", "Écris un réseau social.", "Écris une marque de vêtements.", "Écris un film d’animation.", "Écris une console de jeux.", "Écris un joueur ayant remporté la Ligue des champions."];
 const DUEL_THEME_BANK={"Football": ["Duel : Écris un joueur du PSG.", "Duel : Écris un joueur du Real Madrid.", "Duel : Écris un vainqueur de la Ligue des champions.", "Duel : Écris un Ballon d'Or.", "Duel : Écris un gardien célèbre.", "Duel : Écris un club anglais.", "Duel : Écris un club espagnol.", "Duel : Écris un club italien.", "Duel : Écris un club français.", "Duel : Écris un sélectionneur célèbre.", "Duel : Écris rapidement un joueur du PSG différent de tes réponses précédentes.", "Duel : Écris rapidement un joueur du Real Madrid différent de tes réponses précédentes.", "Duel : Écris rapidement un vainqueur de la Ligue des champions différent de tes réponses précédentes.", "Duel : Écris rapidement un Ballon d'Or différent de tes réponses précédentes.", "Duel : Écris rapidement un gardien célèbre différent de tes réponses précédentes.", "Duel : Écris rapidement un club anglais différent de tes réponses précédentes.", "Duel : Écris rapidement un club espagnol différent de tes réponses précédentes.", "Duel : Écris rapidement un club italien différent de tes réponses précédentes.", "Duel : Écris rapidement un club français différent de tes réponses précédentes.", "Duel : Écris rapidement un sélectionneur célèbre différent de tes réponses précédentes."], "Anime & Manga": ["Duel : Écris un personnage de Bleach.", "Duel : Écris un personnage de Naruto.", "Duel : Écris un personnage de One Piece.", "Duel : Écris un Saiyan.", "Duel : Écris un personnage de Jujutsu Kaisen.", "Duel : Écris un personnage de Demon Slayer.", "Duel : Écris un capitaine de Bleach.", "Duel : Écris un Hokage.", "Duel : Écris un pirate de One Piece.", "Duel : Écris un antagoniste d’anime.", "Duel : Écris rapidement un personnage de Bleach différent de tes réponses précédentes.", "Duel : Écris rapidement un personnage de Naruto différent de tes réponses précédentes.", "Duel : Écris rapidement un personnage de One Piece différent de tes réponses précédentes.", "Duel : Écris rapidement un Saiyan différent de tes réponses précédentes.", "Duel : Écris rapidement un personnage de Jujutsu Kaisen différent de tes réponses précédentes.", "Duel : Écris rapidement un personnage de Demon Slayer différent de tes réponses précédentes.", "Duel : Écris rapidement un capitaine de Bleach différent de tes réponses précédentes.", "Duel : Écris rapidement un Hokage différent de tes réponses précédentes.", "Duel : Écris rapidement un pirate de One Piece différent de tes réponses précédentes.", "Duel : Écris rapidement un antagoniste d’anime différent de tes réponses précédentes."], "Cinéma & Séries": ["Duel : Écris un film Marvel.", "Duel : Écris un film DC.", "Duel : Écris un film avec Leonardo DiCaprio.", "Duel : Écris une série Netflix.", "Duel : Écris un film d’horreur.", "Duel : Écris une comédie française.", "Duel : Écris un film de science-fiction.", "Duel : Écris un personnage de Star Wars.", "Duel : Écris un personnage de Harry Potter.", "Duel : Écris un super-héros de cinéma.", "Duel : Écris rapidement un film Marvel différent de tes réponses précédentes.", "Duel : Écris rapidement un film DC différent de tes réponses précédentes.", "Duel : Écris rapidement un film avec Leonardo DiCaprio différent de tes réponses précédentes.", "Duel : Écris rapidement une série Netflix différent de tes réponses précédentes.", "Duel : Écris rapidement un film d’horreur différent de tes réponses précédentes.", "Duel : Écris rapidement une comédie française différent de tes réponses précédentes.", "Duel : Écris rapidement un film de science-fiction différent de tes réponses précédentes.", "Duel : Écris rapidement un personnage de Star Wars différent de tes réponses précédentes.", "Duel : Écris rapidement un personnage de Harry Potter différent de tes réponses précédentes.", "Duel : Écris rapidement un super-héros de cinéma différent de tes réponses précédentes."], "Jeux vidéo": ["Duel : Écris un personnage Nintendo.", "Duel : Écris un jeu PlayStation.", "Duel : Écris un jeu Xbox.", "Duel : Écris un personnage de GTA.", "Duel : Écris un Pokémon.", "Duel : Écris un jeu de combat.", "Duel : Écris un jeu de course.", "Duel : Écris un jeu multijoueur.", "Duel : Écris un personnage de jeu vidéo.", "Duel : Écris un jeu sorti sur PC.", "Duel : Écris rapidement un personnage Nintendo différent de tes réponses précédentes.", "Duel : Écris rapidement un jeu PlayStation différent de tes réponses précédentes.", "Duel : Écris rapidement un jeu Xbox différent de tes réponses précédentes.", "Duel : Écris rapidement un personnage de GTA différent de tes réponses précédentes.", "Duel : Écris rapidement un Pokémon différent de tes réponses précédentes.", "Duel : Écris rapidement un jeu de combat différent de tes réponses précédentes.", "Duel : Écris rapidement un jeu de course différent de tes réponses précédentes.", "Duel : Écris rapidement un jeu multijoueur différent de tes réponses précédentes.", "Duel : Écris rapidement un personnage de jeu vidéo différent de tes réponses précédentes.", "Duel : Écris rapidement un jeu sorti sur PC différent de tes réponses précédentes."], "Musique": ["Duel : Écris un rappeur français.", "Duel : Écris une chanteuse internationale.", "Duel : Écris un groupe célèbre.", "Duel : Écris un artiste R&B.", "Duel : Écris un artiste afro.", "Duel : Écris une chanson connue.", "Duel : Écris un instrument.", "Duel : Écris un DJ célèbre.", "Duel : Écris un rappeur américain.", "Duel : Écris un artiste francophone.", "Duel : Écris rapidement un rappeur français différent de tes réponses précédentes.", "Duel : Écris rapidement une chanteuse internationale différent de tes réponses précédentes.", "Duel : Écris rapidement un groupe célèbre différent de tes réponses précédentes.", "Duel : Écris rapidement un artiste R&B différent de tes réponses précédentes.", "Duel : Écris rapidement un artiste afro différent de tes réponses précédentes.", "Duel : Écris rapidement une chanson connue différent de tes réponses précédentes.", "Duel : Écris rapidement un instrument différent de tes réponses précédentes.", "Duel : Écris rapidement un DJ célèbre différent de tes réponses précédentes.", "Duel : Écris rapidement un rappeur américain différent de tes réponses précédentes.", "Duel : Écris rapidement un artiste francophone différent de tes réponses précédentes."], "Mathématiques": ["Duel : Écris un nombre premier.", "Duel : Écris un multiple de 7.", "Duel : Écris un carré parfait.", "Duel : Écris un nombre pair supérieur à 50.", "Duel : Écris une fraction inférieure à 1.", "Duel : Écris une puissance de 2.", "Duel : Écris un multiple de 9.", "Duel : Écris un nombre impair.", "Duel : Écris une forme géométrique.", "Duel : Écris une unité de longueur.", "Duel : Écris rapidement un nombre premier différent de tes réponses précédentes.", "Duel : Écris rapidement un multiple de 7 différent de tes réponses précédentes.", "Duel : Écris rapidement un carré parfait différent de tes réponses précédentes.", "Duel : Écris rapidement un nombre pair supérieur à 50 différent de tes réponses précédentes.", "Duel : Écris rapidement une fraction inférieure à 1 différent de tes réponses précédentes.", "Duel : Écris rapidement une puissance de 2 différent de tes réponses précédentes.", "Duel : Écris rapidement un multiple de 9 différent de tes réponses précédentes.", "Duel : Écris rapidement un nombre impair différent de tes réponses précédentes.", "Duel : Écris rapidement une forme géométrique différent de tes réponses précédentes.", "Duel : Écris rapidement une unité de longueur différent de tes réponses précédentes."], "Culture générale": ["Duel : Écris un pays d’Europe.", "Duel : Écris une capitale.", "Duel : Écris un pays d’Afrique.", "Duel : Écris un animal marin.", "Duel : Écris une invention.", "Duel : Écris un monument célèbre.", "Duel : Écris un océan.", "Duel : Écris une planète.", "Duel : Écris un scientifique célèbre.", "Duel : Écris une ville française.", "Duel : Écris rapidement un pays d’Europe différent de tes réponses précédentes.", "Duel : Écris rapidement une capitale différent de tes réponses précédentes.", "Duel : Écris rapidement un pays d’Afrique différent de tes réponses précédentes.", "Duel : Écris rapidement un animal marin différent de tes réponses précédentes.", "Duel : Écris rapidement une invention différent de tes réponses précédentes.", "Duel : Écris rapidement un monument célèbre différent de tes réponses précédentes.", "Duel : Écris rapidement un océan différent de tes réponses précédentes.", "Duel : Écris rapidement une planète différent de tes réponses précédentes.", "Duel : Écris rapidement un scientifique célèbre différent de tes réponses précédentes.", "Duel : Écris rapidement une ville française différent de tes réponses précédentes."], "Dessins animés": ["Duel : Écris un personnage Disney.", "Duel : Écris un personnage Pixar.", "Duel : Écris un personnage des Simpson.", "Duel : Écris un méchant de dessin animé.", "Duel : Écris un animal de dessin animé.", "Duel : Écris un héros de dessin animé.", "Duel : Écris un film Pixar.", "Duel : Écris une princesse Disney.", "Duel : Écris un personnage de Bob l’éponge.", "Duel : Écris un personnage de Toy Story.", "Duel : Écris rapidement un personnage Disney différent de tes réponses précédentes.", "Duel : Écris rapidement un personnage Pixar différent de tes réponses précédentes.", "Duel : Écris rapidement un personnage des Simpson différent de tes réponses précédentes.", "Duel : Écris rapidement un méchant de dessin animé différent de tes réponses précédentes.", "Duel : Écris rapidement un animal de dessin animé différent de tes réponses précédentes.", "Duel : Écris rapidement un héros de dessin animé différent de tes réponses précédentes.", "Duel : Écris rapidement un film Pixar différent de tes réponses précédentes.", "Duel : Écris rapidement une princesse Disney différent de tes réponses précédentes.", "Duel : Écris rapidement un personnage de Bob l’éponge différent de tes réponses précédentes.", "Duel : Écris rapidement un personnage de Toy Story différent de tes réponses précédentes."], "Internet & Réseaux": ["Duel : Écris un réseau social.", "Duel : Écris un créateur YouTube.", "Duel : Écris une application de messagerie.", "Duel : Écris une plateforme vidéo.", "Duel : Écris un moteur de recherche.", "Duel : Écris un navigateur web.", "Duel : Écris une plateforme de streaming.", "Duel : Écris un terme Internet.", "Duel : Écris une application mobile.", "Duel : Écris un site connu.", "Duel : Écris rapidement un réseau social différent de tes réponses précédentes.", "Duel : Écris rapidement un créateur YouTube différent de tes réponses précédentes.", "Duel : Écris rapidement une application de messagerie différent de tes réponses précédentes.", "Duel : Écris rapidement une plateforme vidéo différent de tes réponses précédentes.", "Duel : Écris rapidement un moteur de recherche différent de tes réponses précédentes.", "Duel : Écris rapidement un navigateur web différent de tes réponses précédentes.", "Duel : Écris rapidement une plateforme de streaming différent de tes réponses précédentes.", "Duel : Écris rapidement un terme Internet différent de tes réponses précédentes.", "Duel : Écris rapidement une application mobile différent de tes réponses précédentes.", "Duel : Écris rapidement un site connu différent de tes réponses précédentes."], "Images": ["Duel : Écris un personnage célèbre.", "Duel : Écris un monument célèbre.", "Duel : Écris un animal reconnaissable.", "Duel : Écris un personnage d’anime.", "Duel : Écris un footballeur célèbre.", "Duel : Écris un héros de film.", "Duel : Écris un personnage de jeu vidéo.", "Duel : Écris un logo connu.", "Duel : Écris un objet reconnaissable.", "Duel : Écris un lieu célèbre.", "Duel : Écris rapidement un personnage célèbre différent de tes réponses précédentes.", "Duel : Écris rapidement un monument célèbre différent de tes réponses précédentes.", "Duel : Écris rapidement un animal reconnaissable différent de tes réponses précédentes.", "Duel : Écris rapidement un personnage d’anime différent de tes réponses précédentes.", "Duel : Écris rapidement un footballeur célèbre différent de tes réponses précédentes.", "Duel : Écris rapidement un héros de film différent de tes réponses précédentes.", "Duel : Écris rapidement un personnage de jeu vidéo différent de tes réponses précédentes.", "Duel : Écris rapidement un logo connu différent de tes réponses précédentes.", "Duel : Écris rapidement un objet reconnaissable différent de tes réponses précédentes.", "Duel : Écris rapidement un lieu célèbre différent de tes réponses précédentes."]};
 const TMC_THEME_BANK={"Anime & Manga": [{"q": "Lequel préfères-tu ?", "a": ["Ichigo", "Naruto", "Luffy", "Goku"]}, {"q": "Lequel choisirais-tu pour une journée ?", "a": ["Zoro", "Gojo", "Levi", "Sasuke"]}, {"q": "Lequel correspond le plus à ton style ?", "a": ["Rukia", "Nami", "Sakura", "Nobara"]}, {"q": "Lequel garderais-tu si tu devais n’en choisir qu’un ?", "a": ["Aizen", "Madara", "Sukuna", "Doflamingo"]}, {"q": "Lequel choisirais-tu comme partenaire ?", "a": ["Ichigo", "Naruto", "Luffy", "Goku"]}, {"q": "Lequel te fait le plus rire ?", "a": ["Zoro", "Gojo", "Levi", "Sasuke"]}, {"q": "Lequel trouves-tu le plus impressionnant ?", "a": ["Rukia", "Nami", "Sakura", "Nobara"]}, {"q": "Lequel choisirais-tu pour un voyage ?", "a": ["Aizen", "Madara", "Sukuna", "Doflamingo"]}, {"q": "Lequel aimerais-tu rencontrer ?", "a": ["Ichigo", "Naruto", "Luffy", "Goku"]}, {"q": "Lequel défendrais-tu dans un débat ?", "a": ["Zoro", "Gojo", "Levi", "Sasuke"]}, {"q": "Lequel choisirais-tu dans une équipe ?", "a": ["Rukia", "Nami", "Sakura", "Nobara"]}, {"q": "Lequel connais-tu le mieux ?", "a": ["Aizen", "Madara", "Sukuna", "Doflamingo"]}, {"q": "Lequel choisirais-tu pour relever un défi ?", "a": ["Ichigo", "Naruto", "Luffy", "Goku"]}, {"q": "Lequel te rend le plus nostalgique ?", "a": ["Zoro", "Gojo", "Levi", "Sasuke"]}, {"q": "Lequel recommanderais-tu à un ami ?", "a": ["Rukia", "Nami", "Sakura", "Nobara"]}], "Football": [{"q": "Lequel préfères-tu ?", "a": ["Messi", "Ronaldo", "Mbappé", "Haaland"]}, {"q": "Lequel choisirais-tu pour une journée ?", "a": ["PSG", "Real Madrid", "Barcelone", "Liverpool"]}, {"q": "Lequel correspond le plus à ton style ?", "a": ["Zidane", "Ronaldinho", "Henry", "Iniesta"]}, {"q": "Lequel garderais-tu si tu devais n’en choisir qu’un ?", "a": ["Gardien", "Défenseur", "Milieu", "Attaquant"]}, {"q": "Lequel choisirais-tu comme partenaire ?", "a": ["Messi", "Ronaldo", "Mbappé", "Haaland"]}, {"q": "Lequel te fait le plus rire ?", "a": ["PSG", "Real Madrid", "Barcelone", "Liverpool"]}, {"q": "Lequel trouves-tu le plus impressionnant ?", "a": ["Zidane", "Ronaldinho", "Henry", "Iniesta"]}, {"q": "Lequel choisirais-tu pour un voyage ?", "a": ["Gardien", "Défenseur", "Milieu", "Attaquant"]}, {"q": "Lequel aimerais-tu rencontrer ?", "a": ["Messi", "Ronaldo", "Mbappé", "Haaland"]}, {"q": "Lequel défendrais-tu dans un débat ?", "a": ["PSG", "Real Madrid", "Barcelone", "Liverpool"]}, {"q": "Lequel choisirais-tu dans une équipe ?", "a": ["Zidane", "Ronaldinho", "Henry", "Iniesta"]}, {"q": "Lequel connais-tu le mieux ?", "a": ["Gardien", "Défenseur", "Milieu", "Attaquant"]}, {"q": "Lequel choisirais-tu pour relever un défi ?", "a": ["Messi", "Ronaldo", "Mbappé", "Haaland"]}, {"q": "Lequel te rend le plus nostalgique ?", "a": ["PSG", "Real Madrid", "Barcelone", "Liverpool"]}, {"q": "Lequel recommanderais-tu à un ami ?", "a": ["Zidane", "Ronaldinho", "Henry", "Iniesta"]}], "Cinéma & Séries": [{"q": "Lequel préfères-tu ?", "a": ["Marvel", "DC", "Star Wars", "Harry Potter"]}, {"q": "Lequel choisirais-tu pour une journée ?", "a": ["Action", "Comédie", "Horreur", "Science-fiction"]}, {"q": "Lequel correspond le plus à ton style ?", "a": ["Netflix", "Disney+", "Prime Video", "Max"]}, {"q": "Lequel garderais-tu si tu devais n’en choisir qu’un ?", "a": ["Batman", "Spider-Man", "Iron Man", "Jack Sparrow"]}, {"q": "Lequel choisirais-tu comme partenaire ?", "a": ["Marvel", "DC", "Star Wars", "Harry Potter"]}, {"q": "Lequel te fait le plus rire ?", "a": ["Action", "Comédie", "Horreur", "Science-fiction"]}, {"q": "Lequel trouves-tu le plus impressionnant ?", "a": ["Netflix", "Disney+", "Prime Video", "Max"]}, {"q": "Lequel choisirais-tu pour un voyage ?", "a": ["Batman", "Spider-Man", "Iron Man", "Jack Sparrow"]}, {"q": "Lequel aimerais-tu rencontrer ?", "a": ["Marvel", "DC", "Star Wars", "Harry Potter"]}, {"q": "Lequel défendrais-tu dans un débat ?", "a": ["Action", "Comédie", "Horreur", "Science-fiction"]}, {"q": "Lequel choisirais-tu dans une équipe ?", "a": ["Netflix", "Disney+", "Prime Video", "Max"]}, {"q": "Lequel connais-tu le mieux ?", "a": ["Batman", "Spider-Man", "Iron Man", "Jack Sparrow"]}, {"q": "Lequel choisirais-tu pour relever un défi ?", "a": ["Marvel", "DC", "Star Wars", "Harry Potter"]}, {"q": "Lequel te rend le plus nostalgique ?", "a": ["Action", "Comédie", "Horreur", "Science-fiction"]}, {"q": "Lequel recommanderais-tu à un ami ?", "a": ["Netflix", "Disney+", "Prime Video", "Max"]}], "Jeux vidéo": [{"q": "Lequel préfères-tu ?", "a": ["Mario", "Sonic", "Kratos", "Link"]}, {"q": "Lequel choisirais-tu pour une journée ?", "a": ["GTA", "Minecraft", "Fortnite", "EA Sports FC"]}, {"q": "Lequel correspond le plus à ton style ?", "a": ["PlayStation", "Xbox", "Switch", "PC"]}, {"q": "Lequel garderais-tu si tu devais n’en choisir qu’un ?", "a": ["Pikachu", "Lara Croft", "Steve", "Jinx"]}, {"q": "Lequel choisirais-tu comme partenaire ?", "a": ["Mario", "Sonic", "Kratos", "Link"]}, {"q": "Lequel te fait le plus rire ?", "a": ["GTA", "Minecraft", "Fortnite", "EA Sports FC"]}, {"q": "Lequel trouves-tu le plus impressionnant ?", "a": ["PlayStation", "Xbox", "Switch", "PC"]}, {"q": "Lequel choisirais-tu pour un voyage ?", "a": ["Pikachu", "Lara Croft", "Steve", "Jinx"]}, {"q": "Lequel aimerais-tu rencontrer ?", "a": ["Mario", "Sonic", "Kratos", "Link"]}, {"q": "Lequel défendrais-tu dans un débat ?", "a": ["GTA", "Minecraft", "Fortnite", "EA Sports FC"]}, {"q": "Lequel choisirais-tu dans une équipe ?", "a": ["PlayStation", "Xbox", "Switch", "PC"]}, {"q": "Lequel connais-tu le mieux ?", "a": ["Pikachu", "Lara Croft", "Steve", "Jinx"]}, {"q": "Lequel choisirais-tu pour relever un défi ?", "a": ["Mario", "Sonic", "Kratos", "Link"]}, {"q": "Lequel te rend le plus nostalgique ?", "a": ["GTA", "Minecraft", "Fortnite", "EA Sports FC"]}, {"q": "Lequel recommanderais-tu à un ami ?", "a": ["PlayStation", "Xbox", "Switch", "PC"]}], "Musique": [{"q": "Lequel préfères-tu ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel choisirais-tu pour une journée ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel correspond le plus à ton style ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}, {"q": "Lequel garderais-tu si tu devais n’en choisir qu’un ?", "a": ["A", "B", "C", "D"]}, {"q": "Lequel choisirais-tu comme partenaire ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel te fait le plus rire ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel trouves-tu le plus impressionnant ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}, {"q": "Lequel choisirais-tu pour un voyage ?", "a": ["A", "B", "C", "D"]}, {"q": "Lequel aimerais-tu rencontrer ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel défendrais-tu dans un débat ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel choisirais-tu dans une équipe ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}, {"q": "Lequel connais-tu le mieux ?", "a": ["A", "B", "C", "D"]}, {"q": "Lequel choisirais-tu pour relever un défi ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel te rend le plus nostalgique ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel recommanderais-tu à un ami ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}], "Culture générale": [{"q": "Lequel préfères-tu ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel choisirais-tu pour une journée ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel correspond le plus à ton style ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}, {"q": "Lequel garderais-tu si tu devais n’en choisir qu’un ?", "a": ["A", "B", "C", "D"]}, {"q": "Lequel choisirais-tu comme partenaire ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel te fait le plus rire ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel trouves-tu le plus impressionnant ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}, {"q": "Lequel choisirais-tu pour un voyage ?", "a": ["A", "B", "C", "D"]}, {"q": "Lequel aimerais-tu rencontrer ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel défendrais-tu dans un débat ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel choisirais-tu dans une équipe ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}, {"q": "Lequel connais-tu le mieux ?", "a": ["A", "B", "C", "D"]}, {"q": "Lequel choisirais-tu pour relever un défi ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel te rend le plus nostalgique ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel recommanderais-tu à un ami ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}], "Dessins animés": [{"q": "Lequel préfères-tu ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel choisirais-tu pour une journée ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel correspond le plus à ton style ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}, {"q": "Lequel garderais-tu si tu devais n’en choisir qu’un ?", "a": ["A", "B", "C", "D"]}, {"q": "Lequel choisirais-tu comme partenaire ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel te fait le plus rire ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel trouves-tu le plus impressionnant ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}, {"q": "Lequel choisirais-tu pour un voyage ?", "a": ["A", "B", "C", "D"]}, {"q": "Lequel aimerais-tu rencontrer ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel défendrais-tu dans un débat ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel choisirais-tu dans une équipe ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}, {"q": "Lequel connais-tu le mieux ?", "a": ["A", "B", "C", "D"]}, {"q": "Lequel choisirais-tu pour relever un défi ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel te rend le plus nostalgique ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel recommanderais-tu à un ami ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}], "Internet & Réseaux": [{"q": "Lequel préfères-tu ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel choisirais-tu pour une journée ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel correspond le plus à ton style ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}, {"q": "Lequel garderais-tu si tu devais n’en choisir qu’un ?", "a": ["A", "B", "C", "D"]}, {"q": "Lequel choisirais-tu comme partenaire ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel te fait le plus rire ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel trouves-tu le plus impressionnant ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}, {"q": "Lequel choisirais-tu pour un voyage ?", "a": ["A", "B", "C", "D"]}, {"q": "Lequel aimerais-tu rencontrer ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel défendrais-tu dans un débat ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel choisirais-tu dans une équipe ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}, {"q": "Lequel connais-tu le mieux ?", "a": ["A", "B", "C", "D"]}, {"q": "Lequel choisirais-tu pour relever un défi ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel te rend le plus nostalgique ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel recommanderais-tu à un ami ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}], "Mathématiques": [{"q": "Lequel préfères-tu ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel choisirais-tu pour une journée ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel correspond le plus à ton style ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}, {"q": "Lequel garderais-tu si tu devais n’en choisir qu’un ?", "a": ["A", "B", "C", "D"]}, {"q": "Lequel choisirais-tu comme partenaire ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel te fait le plus rire ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel trouves-tu le plus impressionnant ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}, {"q": "Lequel choisirais-tu pour un voyage ?", "a": ["A", "B", "C", "D"]}, {"q": "Lequel aimerais-tu rencontrer ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel défendrais-tu dans un débat ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel choisirais-tu dans une équipe ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}, {"q": "Lequel connais-tu le mieux ?", "a": ["A", "B", "C", "D"]}, {"q": "Lequel choisirais-tu pour relever un défi ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel te rend le plus nostalgique ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel recommanderais-tu à un ami ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}], "Images": [{"q": "Lequel préfères-tu ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel choisirais-tu pour une journée ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel correspond le plus à ton style ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}, {"q": "Lequel garderais-tu si tu devais n’en choisir qu’un ?", "a": ["A", "B", "C", "D"]}, {"q": "Lequel choisirais-tu comme partenaire ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel te fait le plus rire ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel trouves-tu le plus impressionnant ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}, {"q": "Lequel choisirais-tu pour un voyage ?", "a": ["A", "B", "C", "D"]}, {"q": "Lequel aimerais-tu rencontrer ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel défendrais-tu dans un débat ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel choisirais-tu dans une équipe ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}, {"q": "Lequel connais-tu le mieux ?", "a": ["A", "B", "C", "D"]}, {"q": "Lequel choisirais-tu pour relever un défi ?", "a": ["Choix A", "Choix B", "Choix C", "Choix D"]}, {"q": "Lequel te rend le plus nostalgique ?", "a": ["Option 1", "Option 2", "Option 3", "Option 4"]}, {"q": "Lequel recommanderais-tu à un ami ?", "a": ["Premier", "Deuxième", "Troisième", "Quatrième"]}]};
+const MAJORITY_VARIANTS={"Anime & Manga": [{"q": "Quel anime a la meilleure bande-son ?", "a": ["Attack on Titan", "Naruto", "Bleach", "Demon Slayer"], "theme": "Anime & Manga"}, {"q": "Quel personnage a le plus de flow ?", "a": ["Gojo", "Itachi", "Levi", "Aizen"], "theme": "Anime & Manga"}, {"q": "Quel personnage est le plus stratège ?", "a": ["Lelouch", "Light Yagami", "Shikamaru", "Aizen"], "theme": "Anime & Manga"}, {"q": "Quel anime possède le meilleur scénario ?", "a": ["Attack on Titan", "Death Note", "Fullmetal Alchemist", "Code Geass"], "theme": "Anime & Manga"}, {"q": "Quel personnage secondaire mérite son propre anime ?", "a": ["Levi", "Itachi", "Kakashi", "Shanks"], "theme": "Anime & Manga"}, {"q": "Quel anime a les meilleurs combats ?", "a": ["Jujutsu Kaisen", "Demon Slayer", "Naruto", "Bleach"], "theme": "Anime & Manga"}, {"q": "Quel opening vous donne le plus de frissons ?", "a": ["Unravel", "Gurenge", "Silhouette", "The Rumbling"], "theme": "Anime & Manga"}, {"q": "Quel méchant est le plus charismatique ?", "a": ["Madara", "Aizen", "Sukuna", "Doflamingo"], "theme": "Anime & Manga"}, {"q": "Quel héros a le meilleur développement ?", "a": ["Eren", "Thorfinn", "Kaneki", "Edward Elric"], "theme": "Anime & Manga"}, {"q": "Quel univers serait le plus dangereux à vivre ?", "a": ["Attack on Titan", "Berserk", "Jujutsu Kaisen", "Chainsaw Man"], "theme": "Anime & Manga"}, {"q": "Quel duo est le plus marquant ?", "a": ["Naruto et Sasuke", "Gon et Killua", "Goku et Vegeta", "Luffy et Zoro"], "theme": "Anime & Manga"}, {"q": "Quel anime mérite une nouvelle saison ?", "a": ["Hunter x Hunter", "No Game No Life", "Noragami", "Magi"], "theme": "Anime & Manga"}], "Cinéma & Séries": [{"q": "Quel film a la meilleure bande originale ?", "a": ["Interstellar", "Inception", "Gladiator", "Pirates des Caraïbes"], "theme": "Cinéma & Séries"}, {"q": "Quelle série a le meilleur scénario ?", "a": ["Breaking Bad", "Dark", "Game of Thrones", "Better Call Saul"], "theme": "Cinéma & Séries"}, {"q": "Quel personnage a le plus de charisme ?", "a": ["Thomas Shelby", "Walter White", "Saul Goodman", "Tyrion Lannister"], "theme": "Cinéma & Séries"}, {"q": "Quel film est le plus culte ?", "a": ["Le Parrain", "Pulp Fiction", "Titanic", "The Dark Knight"], "theme": "Cinéma & Séries"}, {"q": "Quelle série a le meilleur premier épisode ?", "a": ["Lost", "Breaking Bad", "The Last of Us", "Stranger Things"], "theme": "Cinéma & Séries"}, {"q": "Quel méchant est le plus marquant ?", "a": ["Joker", "Darth Vader", "Thanos", "Hannibal Lecter"], "theme": "Cinéma & Séries"}, {"q": "Quel film a la meilleure photographie ?", "a": ["Blade Runner 2049", "Dune", "Interstellar", "The Batman"], "theme": "Cinéma & Séries"}, {"q": "Quelle série a la meilleure ambiance ?", "a": ["Dark", "Peaky Blinders", "True Detective", "Stranger Things"], "theme": "Cinéma & Séries"}, {"q": "Quel personnage secondaire vole la vedette ?", "a": ["Saul Goodman", "Tyrion Lannister", "Steve Harrington", "Gus Fring"], "theme": "Cinéma & Séries"}, {"q": "Quelle saga a le meilleur univers ?", "a": ["Star Wars", "Harry Potter", "Le Seigneur des anneaux", "Marvel"], "theme": "Cinéma & Séries"}, {"q": "Quel film a le meilleur retournement ?", "a": ["Fight Club", "Shutter Island", "Sixième Sens", "The Prestige"], "theme": "Cinéma & Séries"}, {"q": "Quelle série a le meilleur casting ?", "a": ["Breaking Bad", "The Wire", "Succession", "Game of Thrones"], "theme": "Cinéma & Séries"}], "Jeux vidéo": [{"q": "Quel jeu a la meilleure bande-son ?", "a": ["NieR: Automata", "The Witcher 3", "Elden Ring", "Final Fantasy VII"], "theme": "Jeux vidéo"}, {"q": "Quel jeu a le meilleur scénario ?", "a": ["Red Dead Redemption 2", "The Last of Us", "God of War", "Detroit: Become Human"], "theme": "Jeux vidéo"}, {"q": "Quel personnage a le plus de flow ?", "a": ["Vergil", "Kratos", "Dante", "Jin Sakai"], "theme": "Jeux vidéo"}, {"q": "Quel jeu possède le meilleur monde ouvert ?", "a": ["GTA V", "Red Dead Redemption 2", "Elden Ring", "Zelda: Breath of the Wild"], "theme": "Jeux vidéo"}, {"q": "Quel boss est le plus mémorable ?", "a": ["Malenia", "Isshin", "Sans", "Ornstein et Smough"], "theme": "Jeux vidéo"}, {"q": "Quel jeu est le meilleur entre amis ?", "a": ["Mario Kart", "Minecraft", "Fortnite", "Rocket League"], "theme": "Jeux vidéo"}, {"q": "Quel jeu a les meilleurs combats ?", "a": ["Sekiro", "Elden Ring", "God of War", "Devil May Cry 5"], "theme": "Jeux vidéo"}, {"q": "Quel jeu a la meilleure direction artistique ?", "a": ["Hollow Knight", "Ori", "Cuphead", "Journey"], "theme": "Jeux vidéo"}, {"q": "Quelle licence est la plus nostalgique ?", "a": ["Pokémon", "Mario", "Sonic", "Crash Bandicoot"], "theme": "Jeux vidéo"}, {"q": "Quel jeu mérite un remake ?", "a": ["Bloodborne", "Red Dead Redemption", "Bully", "Fallout: New Vegas"], "theme": "Jeux vidéo"}], "Musique": [{"q": "Quel artiste a les meilleurs refrains ?", "a": ["The Weeknd", "Drake", "Rihanna", "Bruno Mars"], "theme": "Musique"}, {"q": "Quel rappeur a le plus de flow ?", "a": ["Ninho", "SCH", "Damso", "Nekfeu"], "theme": "Musique"}, {"q": "Quel artiste a le meilleur univers visuel ?", "a": ["The Weeknd", "Travis Scott", "Billie Eilish", "Lady Gaga"], "theme": "Musique"}, {"q": "Quel album est le plus culte ?", "a": ["Thriller", "Discovery", "Random Access Memories", "After Hours"], "theme": "Musique"}, {"q": "Quel style musical met tout le monde d’accord ?", "a": ["Rap", "Afro", "R&B", "Pop"], "theme": "Musique"}, {"q": "Quelle décennie a les meilleurs tubes ?", "a": ["Années 1990", "Années 2000", "Années 2010", "Années 2020"], "theme": "Musique"}, {"q": "Quel artiste ferait le meilleur concert ?", "a": ["Beyoncé", "Travis Scott", "The Weeknd", "Bruno Mars"], "theme": "Musique"}, {"q": "Quel rappeur français a les meilleures prods ?", "a": ["SCH", "PNL", "Damso", "Laylow"], "theme": "Musique"}, {"q": "Quel artiste a la voix la plus reconnaissable ?", "a": ["Rihanna", "The Weeknd", "Adele", "Sia"], "theme": "Musique"}, {"q": "Quel duo musical rêvé choisiriez-vous ?", "a": ["Ninho x Damso", "SCH x PNL", "Drake x The Weeknd", "Rihanna x Beyoncé"], "theme": "Musique"}], "Football": [{"q": "Qui a le plus de technique ?", "a": ["Messi", "Neymar", "Ronaldinho", "Zidane"], "theme": "Football"}, {"q": "Qui a le plus de flow sur le terrain ?", "a": ["Ronaldinho", "Neymar", "Vinícius Jr", "Mbappé"], "theme": "Football"}, {"q": "Quel club a le plus beau maillot ?", "a": ["Real Madrid", "Barcelone", "AC Milan", "PSG"], "theme": "Football"}, {"q": "Quel stade a la meilleure ambiance ?", "a": ["Anfield", "Vélodrome", "Signal Iduna Park", "La Bombonera"], "theme": "Football"}, {"q": "Quel joueur est le plus clutch ?", "a": ["Cristiano Ronaldo", "Messi", "Mbappé", "Benzema"], "theme": "Football"}, {"q": "Quel poste est le plus difficile ?", "a": ["Gardien", "Défenseur central", "Milieu défensif", "Avant-centre"], "theme": "Football"}, {"q": "Quelle finale a été la plus mémorable ?", "a": ["Mondial 2022", "Mondial 2006", "Ligue des champions 2005", "Ligue des champions 2014"], "theme": "Football"}, {"q": "Quel trio offensif est le plus culte ?", "a": ["MSN", "BBC", "MNM", "Salah-Firmino-Mané"], "theme": "Football"}, {"q": "Qui a la meilleure vision du jeu ?", "a": ["Messi", "De Bruyne", "Modrić", "Iniesta"], "theme": "Football"}, {"q": "Quel entraîneur a le style le plus spectaculaire ?", "a": ["Guardiola", "Klopp", "Ancelotti", "Arteta"], "theme": "Football"}], "Sport": [{"q": "Quel sportif a le plus de charisme ?", "a": ["Muhammad Ali", "Michael Jordan", "Usain Bolt", "Conor McGregor"], "theme": "Sport"}, {"q": "Quel sport est le plus spectaculaire ?", "a": ["Basketball", "Boxe", "MMA", "Formule 1"], "theme": "Sport"}, {"q": "Quelle rivalité est la plus mythique ?", "a": ["Federer-Nadal", "Messi-Ronaldo", "Ali-Frazier", "Senna-Prost"], "theme": "Sport"}, {"q": "Quel sportif domine le plus son image ?", "a": ["LeBron James", "Lewis Hamilton", "Serena Williams", "Cristiano Ronaldo"], "theme": "Sport"}, {"q": "Quel sport exige le plus de mental ?", "a": ["Tennis", "Boxe", "Marathon", "Gymnastique"], "theme": "Sport"}, {"q": "Quel événement sportif est le plus impressionnant ?", "a": ["Jeux olympiques", "Coupe du monde", "Super Bowl", "Finale NBA"], "theme": "Sport"}], "Dessins animés": [{"q": "Quel dessin animé a le meilleur humour ?", "a": ["Les Simpson", "South Park", "Bob l’éponge", "Regular Show"], "theme": "Dessins animés"}, {"q": "Quel dessin animé est le plus nostalgique ?", "a": ["Ben 10", "Totally Spies", "Code Lyoko", "Kim Possible"], "theme": "Dessins animés"}, {"q": "Quel duo est le plus drôle ?", "a": ["Tom et Jerry", "Bob et Patrick", "Finn et Jake", "Mordecai et Rigby"], "theme": "Dessins animés"}, {"q": "Quel dessin animé a le meilleur générique ?", "a": ["Pokémon", "Code Lyoko", "Les Mystérieuses Cités d’or", "Scooby-Doo"], "theme": "Dessins animés"}, {"q": "Quel méchant est le plus culte ?", "a": ["Aku", "Vilgax", "Plankton", "HIM"], "theme": "Dessins animés"}, {"q": "Quel univers aimeriez-vous visiter ?", "a": ["Adventure Time", "Avatar", "Gravity Falls", "Steven Universe"], "theme": "Dessins animés"}], "Internet & Réseaux": [{"q": "Quel format vidéo vous captive le plus ?", "a": ["Enquête", "Défi", "Vlog", "Documentaire"], "theme": "Internet & Réseaux"}, {"q": "Quel réseau a les meilleurs memes ?", "a": ["TikTok", "X", "Instagram", "Reddit"], "theme": "Internet & Réseaux"}, {"q": "Quel créateur a les meilleurs concepts ?", "a": ["Squeezie", "MrBeast", "Inoxtag", "Amixem"], "theme": "Internet & Réseaux"}, {"q": "Quel format devrait revenir ?", "a": ["Vine", "YouTube 2012", "Forums", "Blogs"], "theme": "Internet & Réseaux"}, {"q": "Quel contenu mérite le plus de vues ?", "a": ["Animation", "Vulgarisation", "Court-métrage", "Gaming"], "theme": "Internet & Réseaux"}, {"q": "Quel type de live est le plus divertissant ?", "a": ["Gaming", "Débat", "IRL", "Musique"], "theme": "Internet & Réseaux"}], "Culture générale": [{"q": "Quelle époque aimeriez-vous visiter ?", "a": ["Égypte antique", "Renaissance", "Années 1980", "Futur"], "theme": "Culture générale"}, {"q": "Quelle invention est la plus révolutionnaire ?", "a": ["Internet", "Électricité", "Imprimerie", "Avion"], "theme": "Culture générale"}, {"q": "Quel pays aimeriez-vous découvrir ?", "a": ["Japon", "Islande", "Brésil", "Nouvelle-Zélande"], "theme": "Culture générale"}, {"q": "Quel talent voudriez-vous maîtriser ?", "a": ["Parler toutes les langues", "Mémoire parfaite", "Jouer de tout instrument", "Dessiner"], "theme": "Culture générale"}, {"q": "Quel mystère vous intrigue le plus ?", "a": ["Espace", "Océans", "Civilisations disparues", "Conscience"], "theme": "Culture générale"}, {"q": "Quel domaine est le plus fascinant ?", "a": ["Astronomie", "Histoire", "Biologie", "Architecture"], "theme": "Culture générale"}]};
 const MAJORITY_BANK=(()=>{
  const A=['Ichigo Kurosaki','Naruto Uzumaki','Monkey D. Luffy','Goku','Satoru Gojo','Eren Yeager','Saitama','Tanjiro Kamado',
  'Spider-Man','Batman','Iron Man','Jack Sparrow','Wednesday Addams','Harry Potter','Darth Vader','Rocky Balboa',
@@ -77,12 +79,16 @@ THEME_BANKS['Anime & Manga'].impostor.push(...[["Ichigo", "Naruto"], ["Ichigo", 
 
 function chooseTheme(r,key,availableThemes){
  const selected=(r.settings.themes||[]).filter(t=>availableThemes.includes(t));
- const pool=selected.length?selected:availableThemes;
- r.lastTheme=r.lastTheme||{};
- let choices=pool.length>1?pool.filter(t=>t!==r.lastTheme[key]):pool;
- if(!choices.length)choices=pool;
- const t=choices[Math.floor(Math.random()*choices.length)];
- r.lastTheme[key]=t;return t;
+ const pool=[...new Set(selected.length?selected:availableThemes)];
+ if(!pool.length)return null;
+ r.themeBags=r.themeBags||{};r.lastTheme=r.lastTheme||{};
+ const signature=[...pool].sort().join('|');let bag=r.themeBags[key];
+ if(!bag||bag.signature!==signature||!bag.remaining.length){
+  let remaining=[...pool];for(let i=remaining.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[remaining[i],remaining[j]]=[remaining[j],remaining[i]]}
+  if(remaining.length>1&&remaining[0]===r.lastTheme[key]){let i=remaining.findIndex(x=>x!==r.lastTheme[key]);[remaining[0],remaining[i]]=[remaining[i],remaining[0]]}
+  bag=r.themeBags[key]={signature,remaining};
+ }
+ const t=bag.remaining.shift();r.lastTheme[key]=t;return t;
 }
 
 
@@ -473,24 +479,31 @@ function blindRound(r){
  // Do not use a deterministic "starter" tied to gameRound.
  let themePool=[...themes];
  if(themes.length>1&&r.lastBlindTheme)themePool=themePool.filter(x=>x!==r.lastBlindTheme);
- const t=themePool[Math.floor(Math.random()*themePool.length)];r.lastBlindTheme=t;
+ const t=chooseTheme(r,'blindThemes',themes);r.lastBlindTheme=t;
  let pool=BLIND_DOUBLE_BANK[t],seen=r.blindSeen||new Set(),fresh=pool.filter(x=>!seen.has(x.excerptId));
  if(!fresh.length)fresh=pool;
  // Fisher-Yates shuffle before selection: each new game/round gets a fresh order.
  fresh=[...fresh];for(let i=fresh.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[fresh[i],fresh[j]]=[fresh[j],fresh[i]]}
  const z=fresh[0];if(!r.blindSeen)r.blindSeen=new Set();r.blindSeen.add(z.excerptId);
- const difficulty=['simple','moyen','dur'][(Math.max(1,r.gameRound)-1)%3];
+ const difficulty=['simple','moyen','dur','extra-dur'][(Math.max(1,r.gameRound)-1)%4];
  const sameGenre=z.genre?pool.filter(x=>x.genre===z.genre&&x.title!==z.title).map(x=>x.title):[];
  const sameSource=pool.filter(x=>x.video===z.video&&x.title!==z.title).map(x=>x.title);
  const playable=[...new Set([...sameSource,...sameGenre,...pool.filter(x=>x.title!==z.title).map(x=>x.title)])];
  const decoys=[...new Set([...sameSource,...sameGenre,...blindDecoyPool(t,z.title),...playable,...(BLIND_DECOYS[t]||[])])].filter(x=>x!==z.title);
- const want=difficulty==='dur'?5:difficulty==='moyen'?4:3,wrong=[];while(wrong.length<want&&decoys.length){const i=Math.floor(Math.random()*Math.min(decoys.length,Math.max(1,sameSource.length+sameGenre.length+4)));wrong.push(decoys.splice(i,1)[0])}
+ const want=difficulty==='extra-dur'?5:difficulty==='dur'?5:difficulty==='moyen'?4:3,wrong=[];while(wrong.length<want&&decoys.length){const i=Math.floor(Math.random()*Math.min(decoys.length,Math.max(1,sameSource.length+sameGenre.length+4)));wrong.push(decoys.splice(i,1)[0])}
  const a=[z.title,...wrong].sort(()=>Math.random()-.5);
- const hardMods=[{mode:'speed',rate:.50},{mode:'speed',rate:.75},{mode:'speed',rate:1.50},{mode:'speed',rate:2.00},{mode:'scramble',rate:1},{mode:'stutter',rate:1},{mode:'micro',rate:1}];const mediumMods=[{mode:'speed',rate:.75},{mode:'speed',rate:1.25},{mode:'stutter',rate:1}];const blindMod=difficulty==='dur'?hardMods[Math.floor(Math.random()*hardMods.length)]:difficulty==='moyen'?(Math.random()<.8?mediumMods[Math.floor(Math.random()*mediumMods.length)]:{mode:'normal',rate:1}):{mode:'normal',rate:1};const playbackRate=blindMod.rate||1;
+ const hardMods=[{mode:'speed',rate:.50},{mode:'speed',rate:.75},{mode:'speed',rate:1.50},{mode:'speed',rate:2.00},{mode:'scramble',rate:1},{mode:'stutter',rate:1},{mode:'micro',rate:1}];
+ const mediumMods=[{mode:'speed',rate:.75},{mode:'speed',rate:1.25},{mode:'stutter',rate:1}];
+ // Official embedded players do not expose audio samples. "reverse-order" plays
+ // fragments in reverse order, NOT reversed waveform; actual reversal requires
+ // a licensed local audio file and Web Audio processing.
+ const extremeMods=[{mode:'reverse-order',rate:1},{mode:'reverse-order',rate:.75},{mode:'pitch',rate:.5},{mode:'pitch',rate:2},{mode:'chaos',rate:1.5},{mode:'micro',rate:.75},{mode:'scramble',rate:2}];
+ const blindMod=difficulty==='extra-dur'?extremeMods[Math.floor(Math.random()*extremeMods.length)]:difficulty==='dur'?hardMods[Math.floor(Math.random()*hardMods.length)]:difficulty==='moyen'?(Math.random()<.8?mediumMods[Math.floor(Math.random()*mediumMods.length)]:{mode:'normal',rate:1}):{mode:'normal',rate:1};
+ const playbackRate=blindMod.rate||1;
  return {game:'Blind Test',q:'🎧 BLIND TEST — écoute les 8 secondes',a,c:a.indexOf(z.title),theme:t,blind:true,video:z.video,start:z.start,end:z.start+8,excerptId:z.excerptId,difficulty,points:difficultyPoints(difficulty),playbackRate,blindMod,sources:z.sources||[{provider:'youtube',id:z.video,start:z.start,end:z.start+8}]};
 }
 
-function difficultyPoints(d){return ({simple:250,moyen:500,dur:1000}[d]||500)}
+function difficultyPoints(d){return ({simple:250,moyen:500,dur:1000,'extra-dur':1500}[d]||500)}
 function speedPoints(base,rank){
  const mult=[1,0.85,0.70,0.60,0.50,0.45,0.40,0.35,0.30,0.25][Math.min(Math.max(rank-1,0),9)];
  return Math.max(100,Math.round(base*mult/50)*50);
@@ -599,51 +612,365 @@ const IMAGE_CULTE_BANK=[
 {work:'A Silent Voice',type:'movie',id:378064,theme:'Anime & Manga'},
 {work:'Suzume',type:'movie',id:916224,theme:'Anime & Manga'}
 ];
+
+// V5.66: additional TMDB catalogue entries; invalid/unavailable imagery is skipped at runtime.
+IMAGE_CULTE_BANK.push(...[{"work": "The Prestige", "type": "movie", "id": 1124, "theme": "Cinéma & Séries"}, {"work": "Shutter Island", "type": "movie", "id": 11324, "theme": "Cinéma & Séries"}, {"work": "Se7en", "type": "movie", "id": 807, "theme": "Cinéma & Séries"}, {"work": "Blade Runner 2049", "type": "movie", "id": 335984, "theme": "Cinéma & Séries"}, {"work": "Mad Max: Fury Road", "type": "movie", "id": 76341, "theme": "Cinéma & Séries"}, {"work": "Whiplash", "type": "movie", "id": 244786, "theme": "Cinéma & Séries"}, {"work": "Parasite", "type": "movie", "id": 496243, "theme": "Cinéma & Séries"}, {"work": "The Shawshank Redemption", "type": "movie", "id": 278, "theme": "Cinéma & Séries"}, {"work": "The Godfather", "type": "movie", "id": 238, "theme": "Cinéma & Séries"}, {"work": "The Green Mile", "type": "movie", "id": 497, "theme": "Cinéma & Séries"}, {"work": "The Revenant", "type": "movie", "id": 281957, "theme": "Cinéma & Séries"}, {"work": "Django Unchained", "type": "movie", "id": 68718, "theme": "Cinéma & Séries"}, {"work": "La La Land", "type": "movie", "id": 313369, "theme": "Cinéma & Séries"}, {"work": "The Wolf of Wall Street", "type": "movie", "id": 106646, "theme": "Cinéma & Séries"}, {"work": "Black Mirror", "type": "tv", "id": 42009, "theme": "Cinéma & Séries"}, {"work": "The Wire", "type": "tv", "id": 1438, "theme": "Cinéma & Séries"}, {"work": "The Sopranos", "type": "tv", "id": 1398, "theme": "Cinéma & Séries"}, {"work": "The Office", "type": "tv", "id": 2316, "theme": "Cinéma & Séries"}, {"work": "Sherlock", "type": "tv", "id": 19885, "theme": "Cinéma & Séries"}, {"work": "True Detective", "type": "tv", "id": 46648, "theme": "Cinéma & Séries"}, {"work": "Arcane", "type": "tv", "id": 94605, "theme": "Anime & Manga"}, {"work": "Cowboy Bebop", "type": "tv", "id": 30991, "theme": "Anime & Manga"}, {"work": "Death Note", "type": "tv", "id": 13916, "theme": "Anime & Manga"}, {"work": "Code Geass", "type": "tv", "id": 31724, "theme": "Anime & Manga"}, {"work": "Mob Psycho 100", "type": "tv", "id": 67075, "theme": "Anime & Manga"}, {"work": "Steins;Gate", "type": "tv", "id": 42509, "theme": "Anime & Manga"}, {"work": "Hunter x Hunter", "type": "tv", "id": 46298, "theme": "Anime & Manga"}, {"work": "JoJo’s Bizarre Adventure", "type": "tv", "id": 45790, "theme": "Anime & Manga"}, {"work": "Neon Genesis Evangelion", "type": "tv", "id": 890, "theme": "Anime & Manga"}, {"work": "Princess Mononoke", "type": "movie", "id": 128, "theme": "Anime & Manga"}].filter(x=>!IMAGE_CULTE_BANK.some(y=>y.type===x.type&&y.id===x.id)));
+// Similar franchises, genres and eras make plausible wrong answers.
+const IMAGE_CULTE_GROUPS=[
+ ['Interstellar','Inception','The Matrix','Dune','Dune: Part Two','Avatar','Avatar: The Way of Water','The Truman Show'],
+ ['The Dark Knight','The Batman','Joker','Iron Man','Avengers: Infinity War','Avengers: Endgame','Spider-Man: No Way Home','Spider-Man: Into the Spider-Verse','The Boys'],
+ ['Harry Potter and the Philosopher’s Stone','Harry Potter and the Prisoner of Azkaban','Harry Potter and the Goblet of Fire','The Lord of the Rings: The Fellowship of the Ring','The Lord of the Rings: The Two Towers','The Lord of the Rings: The Return of the King','The Witcher','Game of Thrones','House of the Dragon'],
+ ['Star Wars: A New Hope','Star Wars: The Empire Strikes Back','Star Wars: Revenge of the Sith','The Mandalorian','Dune','Dune: Part Two'],
+ ['Breaking Bad','Better Call Saul','Ozark','Peaky Blinders','Prison Break','Money Heist','The Walking Dead','The Last of Us'],
+ ['Stranger Things','Dark','Lost','The Last of Us','The Walking Dead','Squid Game','Wednesday'],
+ ['John Wick','John Wick: Chapter 4','The Batman','The Dark Knight','Scream','Se7en','Fight Club','Pulp Fiction'],
+ ['Naruto','Naruto Shippuden','Bleach','One Piece','Dragon Ball Z','My Hero Academia','Jujutsu Kaisen','Demon Slayer','Black Clover'],
+ ['Attack on Titan','Vinland Saga','Fullmetal Alchemist: Brotherhood','Death Note','Chainsaw Man','Jujutsu Kaisen','Solo Leveling','Cyberpunk: Edgerunners'],
+ ['Spirited Away','Princess Mononoke','Howl’s Moving Castle','Your Name','A Silent Voice','Suzume','Frieren: Beyond Journey’s End'],
+ ['Arcane','Cyberpunk: Edgerunners','Spider-Man: Into the Spider-Verse','The Boys','Invincible']
+];
+function imageCulteDecoys(entry,pool){
+ const names=new Set(pool.map(x=>x.work)),out=[];
+ const add=n=>{if(n!==entry.work&&names.has(n)&&!out.includes(n))out.push(n)};
+ const related=IMAGE_CULTE_GROUPS.filter(g=>g.includes(entry.work));
+ for(const group of related){for(const n of [...group].sort(()=>Math.random()-.5))add(n)}
+ for(const e of [...pool].filter(x=>x.type===entry.type&&x.theme===entry.theme).sort(()=>Math.random()-.5))add(e.work);
+ for(const e of [...pool].filter(x=>x.theme===entry.theme).sort(()=>Math.random()-.5))add(e.work);
+ for(const e of [...pool].sort(()=>Math.random()-.5))add(e.work);
+ return out.slice(0,3);
+}
+// Extra works are discovered from TMDB IDs, not invented catalogue entries.
+let tmdbDiscoverStatus={loaded:0,attempted:false,error:null};
+async function tmdbExpandCatalogue(){
+ if(!tmdbKey()||tmdbDiscoverStatus.attempted)return;
+ tmdbDiscoverStatus.attempted=true;
+ const plans=[['movie','Cinéma & Séries','popularity.desc',null,6],['tv','Cinéma & Séries','popularity.desc',null,6],['tv','Anime & Manga','popularity.desc',16,8],['movie','Anime & Manga','popularity.desc',16,5]];
+ const known=new Set(IMAGE_CULTE_BANK.map(x=>x.type+'-'+x.id));
+ for(const [type,theme,sort,genre,pages] of plans)for(let page=1;page<=pages;page++){
+  try{const u=new URL('https://api.themoviedb.org/3/discover/'+type);u.searchParams.set('api_key',tmdbKey());u.searchParams.set('sort_by',sort);u.searchParams.set('page',page);u.searchParams.set('include_adult','false');u.searchParams.set('vote_count.gte','80');if(genre)u.searchParams.set('with_genres',genre);if(theme==='Anime & Manga')u.searchParams.set('with_original_language','ja');
+   const data=await tmdbJson(u.toString());for(const x of data.results||[]){const id=Number(x.id),work=x.title||x.name;if(!id||!work||known.has(type+'-'+id))continue;known.add(type+'-'+id);IMAGE_CULTE_BANK.push({work,type,id,theme,dynamic:true});tmdbDiscoverStatus.loaded++}
+  }catch(e){tmdbDiscoverStatus.error=e.message}
+ }
+}
 const tmdbSceneCache=new Map(),tmdbScenePending=new Map(),tmdbSceneBad=new Map();
 let tmdbWarmIndex=0,tmdbWarmRunning=false;
 const tmdbAttribution='Images : TMDB (The Movie Database). Ce produit utilise l’API TMDB mais n’est ni approuvé ni certifié par TMDB.';
 function tmdbKey(){return String(process.env.TMDB_API_KEY||'').trim()}
 async function tmdbJson(url){const response=await fetch(url,{headers:{accept:'application/json'},signal:AbortSignal.timeout(9000)});if(!response.ok)throw Error('TMDB API HTTP '+response.status);return response.json()}
-async function tmdbLoadScene(entry){
- if(tmdbSceneCache.has(entry.id+'-'+entry.type))return tmdbSceneCache.get(entry.id+'-'+entry.type);
- const key=entry.id+'-'+entry.type;if(tmdbScenePending.has(key))return tmdbScenePending.get(key);
+async function tmdbLoadScene(entry,difficulty='moyen'){
+ const key=entry.id+'-'+entry.type+'-'+difficulty;
+ if(tmdbSceneCache.has(key))return tmdbSceneCache.get(key);
+ if(tmdbScenePending.has(key))return tmdbScenePending.get(key);
  if(tmdbSceneBad.get(key)>Date.now())return null;
  const promise=(async()=>{try{
   const api=tmdbKey();if(!api)return null;
-  const base='https://api.themoviedb.org/3/'+entry.type+'/'+entry.id+'/images?api_key='+encodeURIComponent(api)+'&include_image_language=null,en';
-  const data=await tmdbJson(base);
-  // Backdrops are actual horizontal images from the work, not posters, logos or portraits.
-  // Prefer less popular frames over the first promotional image; avoid text-bearing backdrops.
-  const candidates=(data.backdrops||[]).filter(x=>x.file_path&&x.width>=900&&x.height>=450&&x.aspect_ratio>1.3&&x.aspect_ratio<2.8&&x.iso_639_1==null);
-  if(!candidates.length)return null;
-  const chosen=candidates.slice(0,Math.min(candidates.length,25)).sort((a,b)=>(a.vote_count||0)-(b.vote_count||0));
-  const start=Math.min(chosen.length-1,Math.floor(chosen.length*.3));
-  for(const pic of [...chosen.slice(start),...chosen.slice(0,start)]){
-   try{const url='https://image.tmdb.org/t/p/w780'+pic.file_path;const ir=await fetch(url,{signal:AbortSignal.timeout(8500)});if(!ir.ok)continue;const ct=ir.headers.get('content-type')||'';if(!ct.startsWith('image/'))continue;const buffer=Buffer.from(await ir.arrayBuffer());if(buffer.length<4000||buffer.length>4000000)continue;
-    const item={buffer,ct,entry,tmdbPath:pic.file_path};tmdbSceneCache.set(key,item);return item;
-   }catch(e){}
+  const sources=[];
+  // Difficult TV/anime rounds: episode stills instead of recognizable promotional backdrops.
+  if(difficulty==='dur'&&entry.type==='tv'){
+   for(const ep of [5,7,3,9])sources.push('https://api.themoviedb.org/3/tv/'+entry.id+'/season/1/episode/'+ep+'/images?api_key='+encodeURIComponent(api)+'&include_image_language=null,en');
+  }
+  sources.push('https://api.themoviedb.org/3/'+entry.type+'/'+entry.id+'/images?api_key='+encodeURIComponent(api)+'&include_image_language=null,en');
+  for(const url of sources){
+   let data;try{data=await tmdbJson(url)}catch(e){continue}
+   const episode=url.includes('/episode/');
+   let pics=(episode?(data.stills||[]):(data.backdrops||[])).filter(x=>x.file_path&&x.width>=750&&x.height>=400&&x.aspect_ratio>1.3&&x.aspect_ratio<2.8&&x.iso_639_1==null);
+   // Hard: lower-rated, less reused frames. Never take posters, logos, or top-voted hero shots.
+   pics=pics.sort((a,b)=>(a.vote_count||0)-(b.vote_count||0));
+   if(difficulty==='dur'&&!episode&&pics.length>6)pics=pics.slice(0,Math.max(3,Math.ceil(pics.length*.45)));
+   else if(difficulty!=='dur')pics=pics.sort((a,b)=>(b.vote_count||0)-(a.vote_count||0));
+   const downloaded=[];for(const pic of pics.slice(0,18)){
+    try{const ir=await fetch('https://image.tmdb.org/t/p/w780'+pic.file_path,{signal:AbortSignal.timeout(8500)});if(!ir.ok)continue;const ct=ir.headers.get('content-type')||'';if(!ct.startsWith('image/'))continue;const buffer=Buffer.from(await ir.arrayBuffer());if(buffer.length<4000||buffer.length>4000000)continue;
+     const item={buffer,ct,entry,tmdbPath:pic.file_path,episodeStill:episode,difficulty};downloaded.push(item);if(downloaded.length>=5)break;
+    }catch(e){}
+   }
+   if(downloaded.length){tmdbSceneCache.set(key,downloaded);return downloaded}
   }
  }catch(e){console.warn('TMDB Image Culte',entry.work,e.message)}
  tmdbSceneBad.set(key,Date.now()+3*60*1000);return null
  })();tmdbScenePending.set(key,promise);try{return await promise}finally{tmdbScenePending.delete(key)}
 }
-function tmdbWarmScenes(){if(tmdbWarmRunning||!tmdbKey())return;tmdbWarmRunning=true;(async()=>{while(tmdbWarmIndex<IMAGE_CULTE_BANK.length){const batch=IMAGE_CULTE_BANK.slice(tmdbWarmIndex,tmdbWarmIndex+3);tmdbWarmIndex+=3;await Promise.allSettled(batch.map(tmdbLoadScene));await new Promise(r=>setTimeout(r,250))}tmdbWarmRunning=false})().catch(e=>{console.warn('TMDB warm',e.message);tmdbWarmRunning=false})}
+function tmdbWarmScenes(){if(tmdbWarmRunning||!tmdbKey())return;tmdbWarmRunning=true;(async()=>{while(tmdbWarmIndex<IMAGE_CULTE_BANK.length){const batch=IMAGE_CULTE_BANK.slice(tmdbWarmIndex,tmdbWarmIndex+3);tmdbWarmIndex+=3;await Promise.allSettled(batch.map(x=>tmdbLoadScene(x,'moyen')));await new Promise(r=>setTimeout(r,250))}tmdbWarmRunning=false})().catch(e=>{console.warn('TMDB warm',e.message);tmdbWarmRunning=false})}
+function pickImageEffect(difficulty){
+ const variants=difficulty==='moyen'?['soft-blur','desaturate','hue','crop','pixel-soft','pixel-soft']:difficulty==='extra-dur'?['pixel-extreme','pixel-extreme','pixel-strong','pixel-strong','strong-blur','invert','crop','pixel-extreme']:['strong-blur','hue','crop','pixel-strong','pixel-strong','invert','pixel-extreme'];
+ return variants[Math.floor(Math.random()*variants.length)];
+}
 async function imageCulteRound(r){
  const selected=r.settings.themes||[];let pool=IMAGE_CULTE_BANK.filter(x=>selected.includes(x.theme));if(!pool.length)pool=IMAGE_CULTE_BANK;
- r.imageCulteSeen=r.imageCulteSeen||new Set();let ready=pool.filter(x=>tmdbSceneCache.has(x.id+'-'+x.type)&&!r.imageCulteSeen.has(x.id+'-'+x.type));
- if(!ready.length){const shuffled=[...pool].sort(()=>Math.random()-.5);for(const entry of shuffled.slice(0,9)){if(r.imageCulteSeen.has(entry.id+'-'+entry.type))continue;const scene=await tmdbLoadScene(entry);if(scene){ready=[entry];break}}}
- if(!ready.length){r.imageCulteSeen.clear();ready=pool.filter(x=>tmdbSceneCache.has(x.id+'-'+x.type));}
- if(!ready.length){return {game:'Image culte',q:'⚠️ Aucune image disponible pour le moment. Vérifie TMDB_API_KEY dans Render, puis relance une partie.',a:[],image:null,imageCulteUnavailable:true,theme:'Images',difficulty:'simple',points:0}}
- const z=ready[Math.floor(Math.random()*ready.length)];r.imageCulteSeen.add(z.id+'-'+z.type);
- const decPool=pool.filter(x=>x.work!==z.work).sort(()=>Math.random()-.5);const dec=[...new Set(decPool.map(x=>x.work))].slice(0,3);if(dec.length<3)dec.push(...IMAGE_CULTE_BANK.filter(x=>x.work!==z.work&&!dec.includes(x.work)).map(x=>x.work).slice(0,3-dec.length));
- const a=[z.work,...dec].sort(()=>Math.random()-.5);
- return {game:'Image culte',q:'🎬 De quelle œuvre vient cette scène ?',a,c:a.indexOf(z.work),image:'/tmdb-scene/'+z.type+'/'+z.id,theme:z.theme,difficulty:'dur',points:1000,imageCulte:true,tmdbAttribution};
+ r.imageCulteSeen=r.imageCulteSeen||new Set();r.imageCulteWorkSeen=r.imageCulteWorkSeen||new Set();
+ const difficulty=['moyen','dur','dur','extra-dur'][(Math.max(1,r.gameRound)-1)%4],assetDifficulty=difficulty==='extra-dur'?'dur':difficulty,key=x=>x.id+'-'+x.type+'-'+assetDifficulty;
+ // Alternate themes across the full selected catalogue, not only what happened to warm first.
+ const themes=[...new Set(pool.map(x=>x.theme))],theme=chooseTheme(r,'imageThemes',themes);
+ const prioritized=[...pool.filter(x=>x.theme===theme),...pool.filter(x=>x.theme!==theme)].sort((a,b)=>Number(r.imageCulteWorkSeen.has(a.type+'-'+a.id))-Number(r.imageCulteWorkSeen.has(b.type+'-'+b.id)));
+ let candidates=[];
+ for(const entry of prioritized.slice(0,Math.min(prioritized.length,16))){
+  let scenes=tmdbSceneCache.get(key(entry));if(!scenes)scenes=await tmdbLoadScene(entry,assetDifficulty);
+  if(!Array.isArray(scenes))continue;
+  const unseenScenes=scenes.filter(pic=>!r.imageCulteSeen.has(pic.tmdbPath));if(unseenScenes.length)candidates.push({entry,pic:unseenScenes[Math.floor(Math.random()*unseenScenes.length)]});
+  if(candidates.length>=Math.min(24,pool.length))break;
+ }
+ if(!candidates.length){r.imageCulteSeen.clear();r.imageCulteWorkSeen.clear();for(const entry of prioritized){let scenes=tmdbSceneCache.get(key(entry))||await tmdbLoadScene(entry,assetDifficulty);if(Array.isArray(scenes)&&scenes.length)candidates.push({entry,pic:scenes[Math.floor(Math.random()*scenes.length)]});if(candidates.length>=Math.min(24,pool.length))break}}
+ if(!candidates.length)return {game:'Image culte',q:'⚠️ Aucune image TMDB disponible. Vérifie la clé API et relance.',a:[],image:null,imageCulteUnavailable:true,theme:'Images',difficulty:'simple',points:0};
+ const available=candidates.filter(x=>x.entry.theme===theme);const choicePool=available.length?available:candidates;
+ const unseen=choicePool.filter(x=>!r.imageCulteWorkSeen.has(x.entry.type+'-'+x.entry.id));const picked=(unseen.length?unseen:choicePool)[Math.floor(Math.random()*(unseen.length?unseen:choicePool).length)];
+ const z=picked.entry,pic=picked.pic;r.imageCulteSeen.add(pic.tmdbPath);r.imageCulteWorkSeen.add(z.type+'-'+z.id);
+ const dec=imageCulteDecoys(z,pool),a=[z.work,...dec].sort(()=>Math.random()-.5);
+ return {game:'Image culte',q:'🎬 Reconnais cette scène difficile : de quelle œuvre vient-elle ?',a,c:a.indexOf(z.work),image:'/tmdb-scene/'+z.type+'/'+z.id+'/'+assetDifficulty+'?file='+encodeURIComponent(pic.tmdbPath),theme:z.theme,difficulty,points:difficultyPoints(difficulty),imageCulte:true,imageEffect:pickImageEffect(difficulty),tmdbAttribution};
 }
+// Comparaison souple pour les réponses écrites (accents, ponctuation, petites fautes).
+function normalizeClipTitle(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/&/g,' and ').replace(/[^a-z0-9]+/g,' ').replace(/\b(le|la|les|the|a|an|un|une|de|du|des|of)\b/g,' ').replace(/\s+/g,' ').trim()}
+function clipEditDistance(a,b){const prev=Array.from({length:b.length+1},(_,i)=>i);for(let i=1;i<=a.length;i++){let last=prev[0];prev[0]=i;for(let j=1;j<=b.length;j++){const old=prev[j];prev[j]=Math.min(prev[j]+1,prev[j-1]+1,last+(a[i-1]===b[j-1]?0:1));last=old}}return prev[b.length]}
+function clipAnswerMatches(input,answer,aliases=[]){const a=normalizeClipTitle(input);if(a.length<2)return false;return [answer,...aliases].some(t=>{const b=normalizeClipTitle(t);if(!b)return false;if(a===b)return true;const d=clipEditDistance(a,b);const limit=b.length<6?1:b.length<12?2:b.length<22?3:4;return d<=limit&&a.length>=Math.max(3,Math.floor(b.length*.72))})}
+// V5.69: accept the localized French TMDB title as well as the original and common French names.
+const CLIP_FR_TITLES={
+ 'Interstellar':['Interstellaire'], 'The Dark Knight':['Le Chevalier noir'],
+ 'The Dark Knight Rises':['Le Chevalier noir : La Légende renaît'],
+ 'The Shawshank Redemption':['Les Évadés'], 'The Green Mile':['La Ligne verte'],
+ 'The Lord of the Rings: The Fellowship of the Ring':['Le Seigneur des anneaux : La Communauté de l’anneau'],
+ 'The Lord of the Rings: The Two Towers':['Le Seigneur des anneaux : Les Deux Tours'],
+ 'The Lord of the Rings: The Return of the King':['Le Seigneur des anneaux : Le Retour du roi'],
+ 'Harry Potter and the Philosopher’s Stone':['Harry Potter à l’école des sorciers'],
+ 'Harry Potter and the Sorcerer’s Stone':['Harry Potter à l’école des sorciers'],
+ 'Spirited Away':['Le Voyage de Chihiro'], 'Princess Mononoke':['Princesse Mononoké'],
+ 'Howl’s Moving Castle':['Le Château ambulant'], 'My Neighbor Totoro':['Mon voisin Totoro'],
+ 'A Silent Voice':['Silent Voice'],
+ 'Death Note':['DN'], 'Fullmetal Alchemist: Brotherhood':['FMAB','FMA Brotherhood'], 'Jujutsu Kaisen':['JJK'], 'Demon Slayer':['KNY','Kimetsu no Yaiba'], 'My Hero Academia':['MHA','BNHA'], 'One Piece':['OP'], 'Dragon Ball Z':['DBZ'], 'Dragon Ball Super':['DBS'], 'Hunter x Hunter':['HXH','H x H'], 'Neon Genesis Evangelion':['NGE'], 'Code Geass':['CG'], 'Sword Art Online':['SAO'], 'JoJo’s Bizarre Adventure':['JJBA','JoJo'], 'JoJo’s Bizarre Adventure: Stardust Crusaders':['JJBA','JoJo'], 'Attack on Titan':['L’Attaque des Titans','SNK','Shingeki no Kyojin','AOT'], 'Money Heist':['La Casa de Papel'], 'The Walking Dead':['The Walking Dead'],
+ 'The Wolf of Wall Street':['Le Loup de Wall Street'], 'The Prestige':['Le Prestige'],
+ 'The Sixth Sense':['Sixième Sens'], 'The Godfather':['Le Parrain'],
+ 'Pirates of the Caribbean: The Curse of the Black Pearl':['Pirates des Caraïbes : La Malédiction du Black Pearl'],
+ 'Avengers: Endgame':['Avengers : Phase finale']
+};
+// Short fandom names are accepted only as exact normalized aliases, never by fuzzy distance.
+const CLIP_ABBREVIATIONS={
+ 'attack on titan':['SNK','AOT'], 'l attaque des titans':['SNK','AOT'],
+ 'jujutsu kaisen':['JJK'], 'demon slayer':['KNY'], 'kimetsu no yaiba':['KNY'],
+ 'my hero academia':['MHA','BNHA'], 'boku no hero academia':['MHA','BNHA'],
+ 'fullmetal alchemist brotherhood':['FMAB'], 'fullmetal alchemist':['FMA'],
+ 'dragon ball z':['DBZ'], 'dragon ball super':['DBS'], 'hunter x hunter':['HXH'],
+ 'sword art online':['SAO'], 'neon genesis evangelion':['NGE'],
+ 'jojos bizarre adventure':['JJBA'], 'one piece':['OP']
+};
+function clipAbbreviations(entry,names){return [...new Set([entry.work,...names].flatMap(n=>CLIP_ABBREVIATIONS[normalizeClipTitle(n)]||[]))]}
+const clipFrenchTitleCache=new Map();
+async function clipFrenchAliases(entry){
+ const k=entry.type+'-'+entry.id;
+ if(clipFrenchTitleCache.has(k))return clipFrenchTitleCache.get(k);
+ const manual=CLIP_FR_TITLES[entry.work]||[];
+ let names=[...manual];
+ if(tmdbKey())try{
+  const u='https://api.themoviedb.org/3/'+entry.type+'/'+entry.id+'?api_key='+encodeURIComponent(tmdbKey())+'&language=fr-FR';
+  const j=await tmdbJson(u);const french=entry.type==='movie'?j.title:j.name;
+  if(typeof french==='string'&&french.trim())names.push(french.trim());
+ }catch(e){console.warn('Ciné Extrait titre FR',entry.work,e.message)}
+ names=[...new Set(names.filter(Boolean))];clipFrenchTitleCache.set(k,names);return names;
+}
+// Ciné Extrait: official YouTube trailers referenced by TMDB. Never downloads copyrighted video.
+// clip cache initialized below
+const cineCatalogStatus={verified:{'Cinéma & Séries':0,'Anime & Manga':0},checked:0,checking:false};
+async function cineVerifyCatalog(){
+ if(cineCatalogStatus.checking||!tmdbKey())return;
+ cineCatalogStatus.checking=true;
+ // Check distinct works; metadata is verified, but actual YouTube playback is not guaranteed.
+ const groups=['Cinéma & Séries','Anime & Manga'];
+ for(const theme of groups){
+  const candidates=IMAGE_CULTE_BANK.filter(x=>x.theme===theme).sort(()=>Math.random()-.5);
+  for(const entry of candidates){
+   if(cineCatalogStatus.verified[theme]>=65)break;
+   const clips=await tmdbOfficialClips(entry);cineCatalogStatus.checked++;
+   if(clips.length)cineCatalogStatus.verified[theme]++;
+   if(cineCatalogStatus.checked%10===0)await new Promise(r=>setTimeout(r,150));
+  }
+ }
+ cineCatalogStatus.checking=false;
+}
+const clipVideoCache=new Map();
+async function tmdbOfficialClips(entry){
+ const k=entry.type+'-'+entry.id;if(clipVideoCache.has(k))return clipVideoCache.get(k);
+ try{const u='https://api.themoviedb.org/3/'+entry.type+'/'+entry.id+'/videos?api_key='+encodeURIComponent(tmdbKey())+'&language=en-US';const j=await tmdbJson(u);
+  const clips=(j.results||[]).filter(x=>x.site==='YouTube'&&/^[A-Za-z0-9_-]{11}$/.test(x.key)&&x.official===true&&['Trailer','Teaser','Clip'].includes(x.type));
+  if(clips.length){clips.sort((a,b)=>Number(b.type==='Clip')-Number(a.type==='Clip'));clipVideoCache.set(k,clips);return clips}
+ }catch(e){console.warn('Ciné Extrait',entry.work,e.message)}
+ clipVideoCache.set(k,[]);return [];
+}
+async function cineExtraitRound(r){
+ const selected=r.settings.themes||[],all=IMAGE_CULTE_BANK.filter(x=>selected.includes(x.theme)&&['Cinéma & Séries','Anime & Manga'].includes(x.theme));
+ const pool=all.length?all:IMAGE_CULTE_BANK.filter(x=>['Cinéma & Séries','Anime & Manga'].includes(x.theme));
+ r.clipSeen=r.clipSeen||new Set();r.clipWorkSeen=r.clipWorkSeen||new Set();
+ const difficulty=['simple','moyen','dur'][(Math.max(1,r.gameRound)-1)%3],seconds={simple:8,moyen:5,dur:3}[difficulty];
+ const themes=[...new Set(pool.map(x=>x.theme))],theme=chooseTheme(r,'clipThemes',themes);
+ const ordered=[...pool].sort((a,b)=>Number(b.theme===theme)-Number(a.theme===theme)||Number(r.clipWorkSeen.has(a.type+'-'+a.id))-Number(r.clipWorkSeen.has(b.type+'-'+b.id))||Math.random()-.5);
+ for(const entry of ordered.slice(0,Math.min(100,ordered.length))){
+  const clips=await tmdbOfficialClips(entry);const fresh=clips.filter(x=>!r.clipSeen.has(entry.type+'-'+entry.id+'-'+x.key));if(!fresh.length)continue;
+  const z=fresh[Math.floor(Math.random()*fresh.length)];r.clipSeen.add(entry.type+'-'+entry.id+'-'+z.key);r.clipWorkSeen.add(entry.type+'-'+entry.id);
+  const dec=imageCulteDecoys(entry,pool);if(dec.length!==3)continue;
+  const a=[entry.work,...dec].sort(()=>Math.random()-.5);
+  const localizedAliases=await clipFrenchAliases(entry);
+  // Seek past the opening logo; the player validates video length before playback.
+  // Random seed: browser repositions within the actual video's safe middle after duration check.
+  const start=25+Math.floor(Math.random()*65);
+  return {game:'Ciné Extrait',q:'🎞️ Devine le film, la série ou l’anime avec cet extrait de bande-annonce officielle',a:[],c:0,clipAnswer:entry.work,clipAliases:[...(entry.aliases||[]),...localizedAliases,...clipAbbreviations(entry,localizedAliases)],theme:entry.theme,difficulty,points:difficultyPoints(difficulty),clip:true,clipSeconds:seconds,excerptId:'clip-'+entry.type+'-'+entry.id+'-'+z.key,video:z.key,start,end:start+seconds,sourceLabel:'Extrait officiel'};
+ }
+ return {game:'Ciné Extrait',q:'⚠️ Aucune bande-annonce officielle accessible trouvée. Vérifie TMDB ou relance.',a:[],clip:true,clipUnavailable:true,theme:'Cinéma & Séries',points:0};
+}
+// V5.65: questions d'opinion conçues pour comparer des choix de même nature.
+const TMC_OPINION_VARIANTS={
+ 'Anime & Manga':[
+  ['Qui est le plus fort selon toi ?',['Goku','Saitama','Gojo','Sukuna']],
+  ['Qui est le plus stratège selon toi ?',['Light Yagami','Lelouch','Shikamaru','Aizen']],
+  ['Qui a le plus de flow ?',['Gojo','Itachi','Levi','Toji']],
+  ['Qui a le meilleur développement ?',['Eren','Thorfinn','Kaneki','Vegeta']],
+  ['Quel anime a la meilleure bande-son ?',['Attack on Titan','Naruto','Bleach','Demon Slayer']],
+  ['Quel anime a les meilleurs openings ?',['Naruto','Bleach','Jujutsu Kaisen','Tokyo Ghoul']],
+  ['Quel anime a les meilleures scènes de combat ?',['Jujutsu Kaisen','Demon Slayer','Attack on Titan','One Punch Man']],
+  ['Quel personnage a la meilleure entrée ?',['Madara','Gojo','Aizen','Escanor']],
+  ['Quel personnage secondaire mérite son propre anime ?',['Levi','Itachi','Shanks','Toji']],
+  ['Quel antagoniste est le plus marquant ?',['Madara','Aizen','Meruem','Johan Liebert']],
+  ['Quel anime possède le meilleur scénario ?',['Death Note','Attack on Titan','Fullmetal Alchemist','Steins;Gate']],
+  ['Quel personnage est le plus sous-estimé ?',['Rock Lee','Kuwabara','Koby','Tien']],
+  ['Quel anime a le meilleur dernier arc ?',['Fullmetal Alchemist','Code Geass','Attack on Titan','Gintama']],
+  ['Quel personnage a le meilleur charisme ?',['Sukuna','Doflamingo','Madara','Aizen']],
+  ['Quel duo est le plus culte ?',['Naruto et Sasuke','Gon et Killua','Goku et Vegeta','Luffy et Zoro']],
+  ['Quel anime a le meilleur univers ?',['One Piece','Hunter x Hunter','Naruto','Made in Abyss']],
+ ],
+ 'Cinéma & Séries':[
+  ['Quel film est le plus culte pour toi ?',['The Dark Knight','Titanic','Pulp Fiction','Interstellar']],
+  ['Quel film a la meilleure bande originale ?',['Interstellar','Inception','Gladiator','Pirates des Caraïbes']],
+  ['Quelle série a la meilleure bande-son ?',['Stranger Things','Game of Thrones','Peaky Blinders','Dark']],
+  ['Quel personnage a le plus de flow ?',['Thomas Shelby','John Wick','Tony Stark','Jack Sparrow']],
+  ['Quel personnage est le plus stratège ?',['Walter White','Michael Scofield','Tyrion Lannister','Sherlock Holmes']],
+  ['Quel personnage a le meilleur développement ?',['Walter White','Jesse Pinkman','Zuko','Jaime Lannister']],
+  ['Quel film a la meilleure fin ?',['Inception','Shutter Island','Fight Club','The Prestige']],
+  ['Quelle série a le meilleur premier épisode ?',['Lost','Breaking Bad','The Last of Us','Game of Thrones']],
+  ['Quel méchant est le plus marquant ?',['Joker','Dark Vador','Thanos','Hannibal Lecter']],
+  ['Quel film a les meilleures scènes d’action ?',['John Wick','Mad Max: Fury Road','Mission: Impossible','The Raid']],
+  ['Quel univers aimerais-tu explorer ?',['Star Wars','Harry Potter','Le Seigneur des anneaux','Avatar']],
+  ['Quel personnage secondaire mérite un spin-off ?',['Saul Goodman','Daryl Dixon','Gus Fring','Brienne de Torth']],
+  ['Quelle série a le meilleur casting ?',['Breaking Bad','Game of Thrones','The Wire','Succession']],
+  ['Quel film reverrais-tu dix fois ?',['Interstellar','The Dark Knight','Gladiator','Le Seigneur des anneaux']],
+  ['Quelle série a le plus de scènes cultes ?',['Breaking Bad','The Office','Game of Thrones','Peaky Blinders']],
+ ],
+ 'Jeux vidéo':[
+  ['Quel personnage a le plus de flow ?',['Kratos','Dante','Vergil','Sephiroth']],
+  ['Quel jeu a la meilleure bande-son ?',['Final Fantasy VII','The Witcher 3','Elden Ring','Persona 5']],
+  ['Quel héros est le plus fort selon toi ?',['Kratos','Doom Slayer','Asura','Kirby']],
+  ['Quel jeu possède le meilleur scénario ?',['Red Dead Redemption 2','The Last of Us','BioShock','Detroit: Become Human']],
+  ['Quel jeu a le meilleur monde ouvert ?',['GTA V','Red Dead Redemption 2','Elden Ring','The Witcher 3']],
+  ['Quel méchant est le plus culte ?',['Vaas','Sephiroth','GLaDOS','Bowser']],
+  ['Quel jeu a les meilleurs boss ?',['Elden Ring','Sekiro','Dark Souls III','God of War']],
+  ['Quel jeu est le plus nostalgique ?',['Minecraft','GTA San Andreas','Mario Kart Wii','Pokémon Diamant']],
+  ['Quel personnage a le meilleur développement ?',['Arthur Morgan','Kratos','Joel','Geralt']],
+ ],
+ 'Musique':[
+  ['Quel artiste a le plus de flow ?',['Ninho','SCH','Damso','Gazo']],
+  ['Quel artiste a les meilleurs refrains ?',['The Weeknd','Drake','Hamza','Tayc']],
+  ['Quel artiste a les meilleurs clips ?',['Travis Scott','The Weeknd','Kendrick Lamar','SCH']],
+  ['Quel artiste a le meilleur univers musical ?',['PNL','The Weeknd','Daft Punk','Travis Scott']],
+  ['Quel album est le plus culte ?',['Deux frères','Dans la légende','Ipséité','Trône']],
+  ['Quel artiste préfères-tu en concert ?',['Beyoncé','Travis Scott','The Weeknd','Bad Bunny']],
+  ['Quel artiste a les meilleures instrumentales ?',['Kanye West','Travis Scott','PNL','Metro Boomin']],
+  ['Quel artiste a les meilleures collaborations ?',['Drake','DJ Khaled','Future','Ninho']],
+ ],
+ 'Football':[
+  ['Qui est le plus fort techniquement selon toi ?',['Messi','Neymar','Ronaldinho','Zidane']],
+  ['Qui a le plus de flow sur le terrain ?',['Ronaldinho','Neymar','Vinícius Jr','Mbappé']],
+  ['Qui a la meilleure vision du jeu ?',['Messi','De Bruyne','Modrić','Xavi']],
+  ['Quel joueur est le plus clutch ?',['Cristiano Ronaldo','Mbappé','Benzema','Messi']],
+  ['Quel joueur a les meilleures frappes ?',['Cristiano Ronaldo','Roberto Carlos','Gerrard','Juninho']],
+  ['Quel club a l’ambiance la plus impressionnante ?',['Liverpool','Dortmund','Galatasaray','Marseille']],
+  ['Quel joueur est le plus sous-estimé ?',['Griezmann','Bernardo Silva','Rodri','Di María']],
+  ['Quel match est le plus culte ?',['France–Argentine 2022','Barça–PSG 2017','Liverpool–Milan 2005','Brésil–Allemagne 2014']],
+ ],
+ 'Dessins animés':[
+  ['Quel dessin animé a la meilleure bande-son ?',['Le Roi Lion','Spider-Verse','Shrek','Coco']],
+  ['Quel méchant est le plus culte ?',['Scar','Hadès','Jafar','Lord Farquaad']],
+  ['Quel personnage a le plus de flow ?',['Le Chat Potté','Kuzco','Jack Frost','Miles Morales']],
+  ['Quel dessin animé a le meilleur humour ?',['Shrek','Madagascar','Les Simpson','Bob l’éponge']],
+  ['Quel film d’animation a la meilleure fin ?',['Toy Story 3','Coco','Vice-Versa','Le Géant de fer']],
+ ],
+ 'Sport':[
+  ['Quel sportif a le plus de mental ?',['Michael Jordan','Rafael Nadal','Kobe Bryant','Cristiano Ronaldo']],
+  ['Quel sportif a le plus de charisme ?',['Muhammad Ali','Conor McGregor','Usain Bolt','Lewis Hamilton']],
+  ['Quel sportif a le meilleur style ?',['Stephen Curry','Neymar','Lewis Hamilton','Serena Williams']],
+  ['Quel duel est le plus culte ?',['Messi–Ronaldo','Federer–Nadal','Ali–Frazier','Senna–Prost']],
+ ],
+ 'Internet & Réseaux':[
+  ['Quel créateur a le meilleur concept vidéo ?',['Squeezie','MrBeast','Inoxtag','Amixem']],
+  ['Quel réseau a le meilleur humour ?',['TikTok','YouTube','Instagram','X']],
+  ['Quel format préfères-tu ?',['Vlogs','Défis','Documentaires','Lives']],
+  ['Quel créateur a le plus de flow ?',['Squeezie','Inoxtag','Kai Cenat','IShowSpeed']],
+ ]
+};
+for(const [theme,entries] of Object.entries(TMC_OPINION_VARIANTS)){
+ TMC_THEME_BANK[theme]=TMC_THEME_BANK[theme]||[];
+ TMC_THEME_BANK[theme].push(...entries.map(([q,a])=>({q,a})));
+}
+
+const TMC_PREMIUM={
+ 'Anime & Manga':[
+ ['Quel anime a la meilleure bande-son ?', ['Attack on Titan','Naruto','Bleach','Made in Abyss']],
+ ['Quel personnage a le plus de flow ?', ['Gojo','Itachi','Levi','Aizen']],
+ ['Quel stratège choisirais-tu pour monter un plan impossible ?', ['Lelouch','Light Yagami','Shikamaru','Erwin Smith']],
+ ['Quel rival a le meilleur développement ?', ['Sasuke','Vegeta','Bakugo','Killua']],
+ ['Quel antagoniste a la meilleure écriture ?', ['Johan Liebert','Meruem','Pain','Griffith']],
+ ['Quel anime possède le meilleur premier épisode ?', ['Attack on Titan','Death Note','The Promised Neverland','Oshi no Ko']],
+ ['Quel personnage secondaire mériterait son propre anime ?', ['Levi','Kakashi','Toji','Shanks']],
+ ['Quel combat regarderais-tu une nouvelle fois ?', ['Levi contre Beast Titan','Naruto contre Pain','Gojo contre Toji','Ichigo contre Ulquiorra']],
+ ['Quel anime a le meilleur opening ?', ['Tokyo Ghoul','Attack on Titan','Fullmetal Alchemist Brotherhood','Demon Slayer']],
+ ['Quel personnage te semble le plus sous-estimé ?', ['Rock Lee','Reigen','Jean Kirstein','Kuwabara']],
+ ['Quel univers serait le plus dangereux à vivre ?', ['Berserk','Attack on Titan','Jujutsu Kaisen','Chainsaw Man']],
+ ['Quel personnage est le plus intimidant sans parler ?', ['Madara','Aizen','Toji','Sukuna']],
+ ['Quel anime a la fin la plus marquante ?', ['Code Geass','Attack on Titan','Death Note','Steins;Gate']],
+ ['Quel mentor aimerais-tu avoir ?', ['Kakashi','Urahara','Jiraya','Gojo']],
+ ['Quel duo fonctionne le mieux ?', ['Gon et Killua','Naruto et Sasuke','Edward et Alphonse','Denji et Power']],
+ ['Quel anime possède les meilleures scènes émotionnelles ?', ['Violet Evergarden','Your Lie in April','Clannad After Story','A Silent Voice']],
+ ['Quel méchant aurait pu être le héros de sa propre histoire ?', ['Pain','Meruem','Itachi','Geto']],
+ ['Quel personnage a la meilleure entrée en scène ?', ['Madara','Gojo','Levi','Escanor']],
+ ['Quel arc narratif préfères-tu ?', ['Marineford','Shibuya','Chimera Ant','Pain']],
+ ['Quel anime mériterait un remake moderne ?', ['Berserk','Tokyo Ghoul','Soul Eater','Claymore']]
+ ],
+ 'Cinéma & Séries':[
+ ['Quelle série possède la meilleure bande originale ?', ['Dark','Stranger Things','Game of Thrones','Peaky Blinders']],
+ ['Quel film possède la meilleure bande originale ?', ['Interstellar','Inception','Gladiator','Pirates des Caraïbes']],
+ ['Quel personnage de série a le meilleur développement ?', ['Walter White','Jesse Pinkman','Jimmy McGill','Jaime Lannister']],
+ ['Quel personnage secondaire vole la vedette ?', ['Saul Goodman','Steve Harrington','Tyrion Lannister','Omar Little']],
+ ['Quel antagoniste de série est le plus mémorable ?', ['Gus Fring','Homelander','Ramsay Bolton','Lalo Salamanca']],
+ ['Quelle série a le meilleur épisode pilote ?', ['Lost','Breaking Bad','The Last of Us','Mr. Robot']],
+ ['Quel film a le retournement final le plus marquant ?', ['Fight Club','Shutter Island','The Prestige','Sixième Sens']],
+ ['Quel film a la meilleure scène d’introduction ?', ['The Dark Knight','Inglourious Basterds','Drive','Scream']],
+ ['Quel détective de fiction choisirais-tu pour résoudre un crime ?', ['Sherlock Holmes','Rust Cohle','Benoit Blanc','Columbo']],
+ ['Quel univers de film aimerais-tu explorer ?', ['Harry Potter','Star Wars','Le Seigneur des anneaux','Avatar']],
+ ['Quel film possède les meilleurs dialogues ?', ['Pulp Fiction','The Social Network','Inglourious Basterds','The Dark Knight']],
+ ['Quelle série a les meilleurs retournements ?', ['Dark','Mr. Robot','Lost','Game of Thrones']],
+ ['Quel duo de série fonctionne le mieux ?', ['Walter et Jesse','Joel et Ellie','Sherlock et Watson','Jake et Boyle']],
+ ['Quel film a la meilleure photographie ?', ['Blade Runner 2049','Dune','The Batman','1917']],
+ ['Quel personnage de cinéma a le plus de charisme ?', ['Jack Sparrow','Tony Stark','John Wick','Hans Landa']],
+ ['Quelle série te donnerait envie de tout revoir ?', ['Breaking Bad','Dark','The Wire','Better Call Saul']],
+ ['Quel film de science-fiction a le meilleur univers ?', ['Interstellar','Dune','Blade Runner 2049','The Matrix']],
+ ['Quel film a la scène de combat la plus marquante ?', ['John Wick 4','The Raid','The Dark Knight','Kill Bill']],
+ ['Quel méchant de cinéma est le mieux écrit ?', ['Joker','Darth Vader','Hans Landa','Thanos']],
+ ['Quelle série a le meilleur dernier épisode ?', ['Breaking Bad','Better Call Saul','The Good Place','Mr. Robot']]
+ ]
+};
+// V5.69: Tu me connais ? uses only curated, theme-specific opinion questions.
+// Majority provides a large bank of genuinely comparable answers; reject vague/placeholder questions.
+const TMC_REJECT_QUESTIONS=/^(lequel|laquelle|lesquels|qui préfères-tu|quel est ton préféré|que préfères-tu)\s*\??$|choix [a-d]|option [1-4]/i;
+const TMC_REJECT_ANSWERS=/^(choix\s*[a-d]|option\s*[1-4]|premier|deuxième|troisième|quatrième|[a-d])$/i;
+function validTmcOpinion(x){return x&&typeof x.q==='string'&&x.q.length>=25&&x.q.length<=175&&Array.isArray(x.a)&&x.a.length===4&&new Set(x.a).size===4&&!TMC_REJECT_QUESTIONS.test(x.q)&&x.a.every(a=>typeof a==='string'&&a.length>1&&!TMC_REJECT_ANSWERS.test(a));}
+const TMC_CURATED={};
+for(const theme of new Set([...Object.keys(MAJORITY_VARIANTS),...Object.keys(TMC_PREMIUM)])){
+ const candidates=[...(TMC_PREMIUM[theme]||[]).map(([q,a])=>({q,a})),...(MAJORITY_VARIANTS[theme]||[])];
+ const seen=new Set();TMC_CURATED[theme]=candidates.filter(x=>{if(!validTmcOpinion(x))return false;const k=x.q.toLowerCase().trim()+'|'+x.a.join('|').toLowerCase();if(seen.has(k))return false;seen.add(k);return true});
+}
+// Petit Bac : même lettre et catégories pour tous, validation exclusivement par l'hôte.
+const BAC_CATEGORIES=['Anime, série ou film','Personne publique','Fruit ou légume','Métier'];
+const BAC_LETTERS='ABCDEFGHIJKLMNOPRSTV';
+function bacRound(r){r.bacAnswers={};r.bacJudgements={};r.bacPhase='write';r.bacLetterBag=r.bacLetterBag||[];if(!r.bacLetterBag.length)r.bacLetterBag=BAC_LETTERS.split('').sort(()=>Math.random()-.5);const letter=r.bacLetterBag.pop();return {game:'Petit Bac',q:'✍️ PETIT BAC — Lettre '+letter,letter,categories:BAC_CATEGORIES,phase:'write',theme:'Culture générale',points:1000};}
+function bacPublic(r){const ids=Object.keys(r.players);return {game:'Petit Bac',q:r.current.q,letter:r.current.letter,categories:BAC_CATEGORIES,phase:r.bacPhase,players:ids.map(id=>({id,name:r.players[id].name,submitted:!!r.bacAnswers[id],answers:r.bacPhase==='review'?r.bacAnswers[id]:undefined,judgements:r.bacPhase==='review'?r.bacJudgements[id]:undefined})),host:r.host};}
 function makeRound(r,g){
  let c={game:g};
  if(g==='Quiz Battle'){let x=question(r);c={game:g,q:x.q,a:x.a,c:x.c,image:x.image||null,theme:x.theme,difficulty:x.difficulty||'simple',points:({simple:250,moyen:500,dur:1000}[x.difficulty]||250)}}
- else if(g==='Tu me connais ?'){let ps=Object.values(r.players),target=ps[(r.gameRound-1)%ps.length];r.secretChoice=null;r.guesses={};let pool=[];for(const t of r.settings.themes||[])for(const x of (TMC_THEME_BANK[t]||[]))pool.push({t,x});if(!pool.length)for(const [t,a] of Object.entries(TMC_THEME_BANK))for(const x of a)pool.push({t,x});let av=[...new Set(pool.map(o=>o.t))],tt=chooseTheme(r,'allGames',av),tp=pool.filter(o=>o.t===tt),z=unusedPick(r,'tmcTheme:'+tt,tp);c={game:g,phase:'choose',target:target.id,targetName:target.name,q:`🎯 Question sur ${target.name} : ${z.x.q}`,a:z.x.a}}
- else if(g==='Majorité'){let mq=unusedPick(r,'majority',MAJORITY_BANK);c={game:g,q:mq.q,a:mq.a}}
+ else if(g==='Tu me connais ?'){let ps=Object.values(r.players),target=ps[(r.gameRound-1)%ps.length];r.secretChoice=null;r.guesses={};let selected=(r.settings.themes||[]).filter(t=>(TMC_CURATED[t]||[]).length);if(!selected.length)selected=Object.keys(TMC_CURATED).filter(t=>TMC_CURATED[t].length);const tt=chooseTheme(r,'tmcThemes',selected),z=unusedPick(r,'tmcCurated:'+tt,TMC_CURATED[tt]);c={game:g,phase:'choose',target:target.id,targetName:target.name,q:`🎯 Question sur ${target.name} : ${z.q}`,a:z.a,theme:tt}}
+ else if(g==='Petit Bac'){c=bacRound(r)}
+ else if(g==='Majorité'){let selected=(r.settings.themes||[]).filter(t=>(MAJORITY_VARIANTS[t]||[]).length);if(!selected.length)selected=Object.keys(MAJORITY_VARIANTS);let theme=chooseTheme(r,'majorityThemes',selected),mq=unusedPick(r,'majority:'+theme,MAJORITY_VARIANTS[theme]);c={game:g,q:mq.q,a:mq.a,theme}}
  else if(g==='La Bombe'){let z=themedPick(r,'bomb');c={game:g,q:z.value,theme:z.theme,typedBomb:true,points:500}}
  else if(g==="L’Imposteur"){let z=themedPick(r,'impostor'),w=z.value,ps=Object.values(r.players),imp=ps[Math.floor(Math.random()*ps.length)];r.secret={imp:imp.id,n:w[0],o:w[1]};r.impostorId=imp.id;r.normalWord=w[0];c={game:g,q:`Thème : ${z.theme} — Décris ton mot sans le dire, puis trouvez l’imposteur !`,theme:z.theme,oral:true}}
  else if(g==='Duel'){
@@ -679,12 +1006,12 @@ function makeRound(r,g){
  return c;
 }
 
-function roundSeconds(c){if(!c)return 0;if(c.game==='Blind Test')return 10;if(c.game==='Mot interdit')return 30;if(c.game==='Trouve l’intrus')return 20;if(['Quiz Battle','Qui est-ce ?','Image culte','Duel','La Bombe'].includes(c.game))return 10;return 0}
+function roundSeconds(c){if(!c)return 0;if(c.game==='Blind Test'||c.game==='Ciné Extrait')return 10;if(c.game==='Mot interdit')return 30;if(c.game==='Trouve l’intrus')return 20;if(['Quiz Battle','Qui est-ce ?','Image culte','Duel','La Bombe'].includes(c.game))return 10;return 0}
 function armRoundTimer(r){
  if(r._roundTimer)clearTimeout(r._roundTimer);const sec=roundSeconds(r.current);if(!sec)return;
  const token=(r._timerToken=(r._timerToken||0)+1);
  r._roundTimer=setTimeout(()=>{if(!rooms[r.code]||token!==r._timerToken||r._advancing)return;const g=r.current?.game;
-  if(['Quiz Battle','Qui est-ce ?','Image culte','Blind Test','Trouve l’intrus'].includes(g)){const ids=Object.keys(r.players);r.answers=r.answers||{};for(const id of ids)if(r.answers[id]==null)r.answers[id]=-999;io.to(r.code).emit('roundReveal',{answer:r.current.a?.[r.current.c]||'',why:r.current.why||'',timeout:true});r._advancing=true;setTimeout(()=>next(r),1800);return}
+  if(['Quiz Battle','Qui est-ce ?','Image culte','Blind Test','Ciné Extrait','Trouve l’intrus'].includes(g)){const ids=Object.keys(r.players);r.answers=r.answers||{};for(const id of ids)if(r.answers[id]==null)r.answers[id]=-999;io.to(r.code).emit('roundReveal',{answer:r.current.game==='Ciné Extrait'?r.current.clipAnswer:(r.current.a?.[r.current.c]||''),why:r.current.why||'',timeout:true});r._advancing=true;setTimeout(()=>next(r),1800);return}
   io.to(r.code).emit('timerExpired',{game:g});
  },sec*1000);
 }
@@ -708,9 +1035,9 @@ async function next(r){
    limit=gameLimit(r)
  }
  r.gameRound++;r.round++;r.answers={};r.answerOrder=[];r.guesses={};r.oralDecisions={};r.bombAnswers={};r.impostorVotes={};r._advancing=false;
- const g=r.settings.games[r.gameIndex],c=g==='Image culte'?await imageCulteRound(r):makeRound(r,g);r.current=c;r._blindPlaybackStarted=c?.game==='Blind Test'?false:true;
- io.to(r.code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:limit,gameIndex:r.gameIndex,current:c});
- if(!c.imageCulteUnavailable)armRoundTimer(r);
+ const g=r.settings.games[r.gameIndex],c=g==='Image culte'?await imageCulteRound(r):g==='Ciné Extrait'?await cineExtraitRound(r):makeRound(r,g);r.current=c;r._clipStarted=false;r._clipEnded=false;r._blindPlaybackStarted=c?.game==='Blind Test'?false:true;
+ io.to(r.code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:limit,gameIndex:r.gameIndex,current:g==='Petit Bac'?bacPublic(r):publicRound(c)});
+ if(!c.imageCulteUnavailable&&!c.clipUnavailable&&g!=='Ciné Extrait')armRoundTimer(r);
  if(g==="L’Imposteur")for(const p of Object.values(r.players))io.to(p.id).emit('secret',{word:p.id===r.secret.imp?r.secret.o:r.secret.n});
  emit(r);
 }
@@ -723,6 +1050,11 @@ function scheduleNextIfAll(r){
 }
 io.on('connection',(s)=>{
  const socket=s;
+ s.on('clipPlaybackStarted',({code,excerptId}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Ciné Extrait'||r.current.excerptId!==excerptId||r._clipStarted)return;r._clipStarted=true});
+ s.on('clipPlaybackEnded',({code,excerptId}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Ciné Extrait'||r.current.excerptId!==excerptId||!r._clipStarted||r._clipEnded)return;r._clipEnded=true;armRoundTimer(r)});
+ s.on('clipPlaybackError',async({code,excerptId}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Ciné Extrait'||r.current.excerptId!==excerptId||r._clipReplacing)return;r._clipReplacing=true;
+  try{const c=await cineExtraitRound(r);r.current=c;r._clipStarted=false;r._clipEnded=false;r.answers={};r.answerOrder=[];r._advancing=false;io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:publicRound(c)})}finally{r._clipReplacing=false}
+ });
  s.on('blindPlaybackError',({code,excerptId,reason}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Blind Test'||r.current?.excerptId!==excerptId)return;r.badBlind=r.badBlind||new Set();if(r.badBlind.has(excerptId))return;r.badBlind.add(excerptId);r.blindSeen=r.blindSeen||new Set();r.blindSeen.add(excerptId);r.current=blindRound(r);r.answers={};r.answerOrder=[];r._advancing=false;io.to(code).emit('blindReplaced',{bad:excerptId,reason:reason||'playback'});io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:r.current});armRoundTimer(r)});
 
 
@@ -754,6 +1086,10 @@ io.on('connection',(s)=>{
  s.on('start',(payload,cb)=>{const c=typeof payload==='string'?payload:payload?.code,hostKey=typeof payload==='object'?payload?.hostKey:null;let r=rooms[c];
  if(r&&r.host!==s.id&&hostKey&&r.hostKey&&String(hostKey)===String(r.hostKey)){const old=r.players[r.host];if(old){delete r.players[r.host];r.players[s.id]={...old,id:s.id}}r.host=s.id;s.join(c)}
  if(!r||r.host!==s.id)return cb&&cb({ok:false,reason:'HOST_SESSION_LOST'});if(!r.settings.games?.length)return cb&&cb({ok:false,reason:'NO_GAMES'});r.round=0;r.gameIndex=0;r.gameRound=0;r.used=r.used||{};r.total=totalRounds(r);Object.values(r.players).forEach(p=>p.score=0);cb&&cb({ok:true});next(r)});
+ s.on('bacSubmit',({code,answers}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Petit Bac'||r.bacPhase!=='write'||!r.players[s.id]||r.bacAnswers[s.id])return;if(!Array.isArray(answers)||answers.length!==4)return;r.bacAnswers[s.id]=answers.map(a=>String(a||'').trim().slice(0,90));io.to(code).emit('bacState',bacPublic(r));});
+ s.on('bacReview',({code}={})=>{const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Petit Bac'||r.bacPhase!=='write')return;r.bacPhase='review';io.to(code).emit('bacState',bacPublic(r));});
+ s.on('bacJudge',({code,playerId,category,valid}={})=>{const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Petit Bac'||r.bacPhase!=='review'||!r.bacAnswers[playerId]||!Number.isInteger(category)||category<0||category>=4||typeof valid!=='boolean')return;r.bacJudgements[playerId]=r.bacJudgements[playerId]||{};const old=r.bacJudgements[playerId][category];if(old===valid)return;if(old===true)r.players[playerId].score-=250;if(valid)r.players[playerId].score+=250;r.bacJudgements[playerId][category]=valid;io.to(code).emit('bacState',bacPublic(r));emit(r);});
+ s.on('bacNext',({code}={})=>{const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Petit Bac'||r.bacPhase!=='review')return;r._advancing=true;next(r);});
  s.on('answer',x=>{
  let r=rooms[x.code];if(!r||!r.players[s.id]||r.answers?.[s.id]!=null)return;
  r.answers=r.answers||{};
@@ -779,6 +1115,7 @@ io.on('connection',(s)=>{
    setTimeout(()=>{r.gameIndex++;r.gameRound=0;if(r.gameIndex>=r.settings.games.length)io.to(r.code).emit('finished',view(r));else next(r)},2200);
    return;
  }
+ if(r.current?.game==='Ciné Extrait')return;
  r.answerOrder=r.answerOrder||[];
  if(!r.answerOrder.includes(s.id))r.answerOrder.push(s.id);
  r.answers[s.id]=+x.value;
@@ -794,7 +1131,7 @@ io.on('connection',(s)=>{
    }
    return;
  }
- const scored=['Quiz Battle','Trouve l’intrus','Qui est-ce ?','Image culte','Blind Test'].includes(r.current.game);
+ const scored=['Quiz Battle','Trouve l’intrus','Qui est-ce ?','Image culte','Blind Test','Ciné Extrait'].includes(r.current.game);
  const correct=scored && +x.value===r.current.c;
  const rank=Math.max(1,r.answerOrder.indexOf(s.id)+1);
  const pts=correct?speedPoints((r.current.points||500),rank):0;
@@ -808,6 +1145,13 @@ io.on('connection',(s)=>{
    r._advancing=true;setTimeout(()=>next(r),1800);
  }
 });
+ s.on('clipTypedAnswer',x=>{const r=rooms[x?.code];if(!r||r.current?.game!=='Ciné Extrait'||!r._clipEnded||r._advancing||!r.players[s.id]||r.answers?.[s.id]!=null)return;
+  const input=String(x.text||'').slice(0,100),correct=clipAnswerMatches(input,r.current.clipAnswer,r.current.clipAliases);r.answers[s.id]=correct?1:0;r.answerOrder=r.answerOrder||[];r.answerOrder.push(s.id);
+  const pts=correct?speedPoints(r.current.points||500,r.answerOrder.length):0;if(pts)r.players[s.id].score+=pts;
+  io.to(s.id).emit('answerFeedback',{correct,points:pts,correctAnswer:r.current.clipAnswer});emit(r);
+  const ids=Object.keys(r.players);io.to(r.code).emit('answerProgress',{done:Object.keys(r.answers).length,total:ids.length});
+  if(ids.every(id=>r.answers[id]!=null)){if(r._roundTimer)clearTimeout(r._roundTimer);io.to(r.code).emit('roundReveal',{answer:r.current.clipAnswer});r._advancing=true;setTimeout(()=>next(r),1800)}
+ });
  s.on('secretChoice',x=>{let r=rooms[x.code];if(!r||r.current.game!=='Tu me connais ?'||r.current.target!==s.id||r.current.phase!=='choose')return;r.secretChoice=+x.value;r.current.phase='guess';io.to(r.code).emit('tmcGuess',{q:r.current.q,a:r.current.a,target:r.current.target,targetName:r.current.targetName})});
  s.on('tmcGuess',x=>{
  let r=rooms[x.code];if(!r||r.current.game!=='Tu me connais ?'||r.current.phase!=='guess'||s.id===r.current.target||r.guesses[s.id]!=null)return;
@@ -922,8 +1266,9 @@ s.on('blindHistory',ids=>{const r=Object.values(rooms).find(x=>x&&x.players&&Obj
 s.on('disconnect',()=>{for(const c in rooms){let r=rooms[c];if(r.players[s.id]){delete r.players[s.id];if(!Object.keys(r.players).length)delete rooms[c];else{if(r.host===s.id)r.host=Object.keys(r.players)[0];emit(r)}}}})
 });
 
-app.get('/tmdb-scene/:type/:id',(req,res)=>{const type=req.params.type,id=Number(req.params.id);if(!['movie','tv'].includes(type)||!Number.isSafeInteger(id))return res.status(400).end();const hit=tmdbSceneCache.get(id+'-'+type);if(!hit)return res.status(404).end();res.set('Content-Type',hit.ct);res.set('Cache-Control','public,max-age=3600');res.send(hit.buffer)});
-app.get('/image-culte-status',(req,res)=>res.json({tmdbConfigured:!!tmdbKey(),ready:tmdbSceneCache.size,total:IMAGE_CULTE_BANK.length,pending:tmdbScenePending.size}));
-if(tmdbKey()){setTimeout(tmdbWarmScenes,500)}else{console.warn('Image Culte: TMDB_API_KEY manquante dans Render Environment')}
-server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.63 lancé'));
+app.get('/tmdb-scene/:type/:id/:difficulty',(req,res)=>{const type=req.params.type,id=Number(req.params.id);if(!['movie','tv'].includes(type)||!Number.isSafeInteger(id))return res.status(400).end();const difficulty=['simple','moyen','dur'].includes(req.params.difficulty)?req.params.difficulty:'moyen';const hits=tmdbSceneCache.get(id+'-'+type+'-'+difficulty);const hit=Array.isArray(hits)?hits.find(x=>x.tmdbPath===req.query.file):null;if(!hit)return res.status(404).end();res.set('Content-Type',hit.ct);res.set('Cache-Control','public,max-age=3600');res.send(hit.buffer)});
+app.get('/cine-extrait-status',(req,res)=>res.json({tmdbConfigured:!!tmdbKey(),...cineCatalogStatus,notice:'Vérification des métadonnées TMDB seulement ; lecture YouTube non garantie.'}));
+app.get('/image-culte-status',(req,res)=>res.json({tmdbConfigured:!!tmdbKey(),ready:tmdbSceneCache.size,total:IMAGE_CULTE_BANK.length,discovered:tmdbDiscoverStatus.loaded,discoveryError:tmdbDiscoverStatus.error,pending:tmdbScenePending.size}));
+if(tmdbKey()){setTimeout(async()=>{await tmdbExpandCatalogue();cineVerifyCatalog().catch(e=>console.warn('Ciné catalogue',e.message));tmdbWarmScenes()},500)}else{console.warn('Image Culte: TMDB_API_KEY manquante dans Render Environment')}
+server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.72 lancé'));
 const HARD_EXTRA={"Culture générale": [{"q": "Quel traité de 1648 est associé à la fin de la guerre de Trente Ans ?", "a": ["Westphalie", "Utrecht", "Versailles", "Tordesillas"], "c": 0, "difficulty": "dur"}, {"q": "Quel élément chimique porte le numéro atomique 74 ?", "a": ["Tungstène", "Osmium", "Iridium", "Hafnium"], "c": 0, "difficulty": "dur"}, {"q": "Quelle dynastie chinoise a précédé immédiatement les Ming ?", "a": ["Yuan", "Song", "Qing", "Tang"], "c": 0, "difficulty": "dur"}, {"q": "Quel philosophe a écrit Critique de la raison pure ?", "a": ["Kant", "Hegel", "Spinoza", "Leibniz"], "c": 0, "difficulty": "dur"}], "Football": [{"q": "Quel club a remporté la première Coupe d’Europe des clubs champions en 1956 ?", "a": ["Real Madrid", "Benfica", "Milan", "Reims"], "c": 0, "difficulty": "dur"}, {"q": "Quel gardien a remporté le Ballon d’Or 1963 ?", "a": ["Lev Yachine", "Dino Zoff", "Gordon Banks", "Sepp Maier"], "c": 0, "difficulty": "dur"}, {"q": "Quel pays a remporté l’Euro 1992 après avoir été repêché tardivement ?", "a": ["Danemark", "Suède", "Pays-Bas", "Allemagne"], "c": 0, "difficulty": "dur"}], "Anime & Manga": [{"q": "Dans Hunter × Hunter, quel type de Nen est associé à Kurapika lorsque ses yeux deviennent écarlates ?", "a": ["Spécialisation", "Matérialisation", "Renforcement", "Manipulation"], "c": 0, "difficulty": "dur"}, {"q": "Dans Fullmetal Alchemist, quel principe est présenté comme fondamental à l’alchimie au début de l’œuvre ?", "a": ["Échange équivalent", "Transmutation absolue", "Résonance vitale", "Cercle parfait"], "c": 0, "difficulty": "dur"}, {"q": "Dans Bleach, comment se nomme l’étape supérieure de libération d’un Zanpakutō ?", "a": ["Bankai", "Resurrección", "Shikai", "Vollständig"], "c": 0, "difficulty": "dur"}], "Mathématiques": [{"q": "Quelle est la dérivée de ln(x²+1) ?", "a": ["2x/(x²+1)", "1/(x²+1)", "2/(x²+1)", "ln(2x)"], "c": 0, "difficulty": "dur"}, {"q": "Combien vaut la somme des angles intérieurs d’un dodécagone ?", "a": ["1800°", "1620°", "1980°", "2160°"], "c": 0, "difficulty": "dur"}, {"q": "Si log₂(x)=7, combien vaut x ?", "a": ["128", "64", "256", "49"], "c": 0, "difficulty": "dur"}]};for(const [t,a] of Object.entries(HARD_EXTRA)){DB[t]=DB[t]||[];DB[t].push(...a)}

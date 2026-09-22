@@ -1,0 +1,5 @@
+Party Arena V5.73 — Petit Bac et Image Culte renforcé
+- Petit Bac : quatre catégories (anime/série/film, personne publique, fruit/légume, métier), même lettre pour tous, 250 points par réponse validée par l'hôte, correction réversible, validation puis manche suivante par l'hôte.
+- Image Culte : rotation moyen/dur/dur/extra-dur ; pas de manches simples ; effets systématiques, pixelisation extrême 10 blocs horizontaux possible, 16 blocs en forte pixelisation.
+- Tests locaux : node --check serveur, compilation du script navigateur, 18 lettres distinctes et confidentialité des réponses avant validation.
+- Non vérifié : jeu complet sur Render, images TMDB réellement chargées et rendu navigateur multi-appareils.

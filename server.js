@@ -691,30 +691,30 @@ async function tmdbLoadScene(entry,difficulty='moyen'){
 }
 function tmdbWarmScenes(){if(tmdbWarmRunning||!tmdbKey())return;tmdbWarmRunning=true;(async()=>{while(tmdbWarmIndex<IMAGE_CULTE_BANK.length){const batch=IMAGE_CULTE_BANK.slice(tmdbWarmIndex,tmdbWarmIndex+3);tmdbWarmIndex+=3;await Promise.allSettled(batch.map(x=>tmdbLoadScene(x,'moyen')));await new Promise(r=>setTimeout(r,250))}tmdbWarmRunning=false})().catch(e=>{console.warn('TMDB warm',e.message);tmdbWarmRunning=false})}
 function pickImageEffect(difficulty){
- const variants=difficulty==='simple'?['none','none','none','soft-blur','desaturate']:difficulty==='moyen'?['none','soft-blur','desaturate','hue','crop','pixel-soft']:['strong-blur','desaturate','hue','crop','pixel-soft','pixel-strong','pixel-strong','invert'];
+ const variants=difficulty==='moyen'?['soft-blur','desaturate','hue','crop','pixel-soft','pixel-soft']:difficulty==='extra-dur'?['pixel-extreme','pixel-extreme','pixel-strong','pixel-strong','strong-blur','invert','crop','pixel-extreme']:['strong-blur','hue','crop','pixel-strong','pixel-strong','invert','pixel-extreme'];
  return variants[Math.floor(Math.random()*variants.length)];
 }
 async function imageCulteRound(r){
  const selected=r.settings.themes||[];let pool=IMAGE_CULTE_BANK.filter(x=>selected.includes(x.theme));if(!pool.length)pool=IMAGE_CULTE_BANK;
  r.imageCulteSeen=r.imageCulteSeen||new Set();r.imageCulteWorkSeen=r.imageCulteWorkSeen||new Set();
- const difficulty=['simple','moyen','dur'][(Math.max(1,r.gameRound)-1)%3],key=x=>x.id+'-'+x.type+'-'+difficulty;
+ const difficulty=['moyen','dur','dur','extra-dur'][(Math.max(1,r.gameRound)-1)%4],assetDifficulty=difficulty==='extra-dur'?'dur':difficulty,key=x=>x.id+'-'+x.type+'-'+assetDifficulty;
  // Alternate themes across the full selected catalogue, not only what happened to warm first.
  const themes=[...new Set(pool.map(x=>x.theme))],theme=chooseTheme(r,'imageThemes',themes);
  const prioritized=[...pool.filter(x=>x.theme===theme),...pool.filter(x=>x.theme!==theme)].sort((a,b)=>Number(r.imageCulteWorkSeen.has(a.type+'-'+a.id))-Number(r.imageCulteWorkSeen.has(b.type+'-'+b.id)));
  let candidates=[];
  for(const entry of prioritized.slice(0,Math.min(prioritized.length,16))){
-  let scenes=tmdbSceneCache.get(key(entry));if(!scenes)scenes=await tmdbLoadScene(entry,difficulty);
+  let scenes=tmdbSceneCache.get(key(entry));if(!scenes)scenes=await tmdbLoadScene(entry,assetDifficulty);
   if(!Array.isArray(scenes))continue;
   const unseenScenes=scenes.filter(pic=>!r.imageCulteSeen.has(pic.tmdbPath));if(unseenScenes.length)candidates.push({entry,pic:unseenScenes[Math.floor(Math.random()*unseenScenes.length)]});
   if(candidates.length>=Math.min(24,pool.length))break;
  }
- if(!candidates.length){r.imageCulteSeen.clear();r.imageCulteWorkSeen.clear();for(const entry of prioritized){let scenes=tmdbSceneCache.get(key(entry))||await tmdbLoadScene(entry,difficulty);if(Array.isArray(scenes)&&scenes.length)candidates.push({entry,pic:scenes[Math.floor(Math.random()*scenes.length)]});if(candidates.length>=Math.min(24,pool.length))break}}
+ if(!candidates.length){r.imageCulteSeen.clear();r.imageCulteWorkSeen.clear();for(const entry of prioritized){let scenes=tmdbSceneCache.get(key(entry))||await tmdbLoadScene(entry,assetDifficulty);if(Array.isArray(scenes)&&scenes.length)candidates.push({entry,pic:scenes[Math.floor(Math.random()*scenes.length)]});if(candidates.length>=Math.min(24,pool.length))break}}
  if(!candidates.length)return {game:'Image culte',q:'⚠️ Aucune image TMDB disponible. Vérifie la clé API et relance.',a:[],image:null,imageCulteUnavailable:true,theme:'Images',difficulty:'simple',points:0};
  const available=candidates.filter(x=>x.entry.theme===theme);const choicePool=available.length?available:candidates;
  const unseen=choicePool.filter(x=>!r.imageCulteWorkSeen.has(x.entry.type+'-'+x.entry.id));const picked=(unseen.length?unseen:choicePool)[Math.floor(Math.random()*(unseen.length?unseen:choicePool).length)];
  const z=picked.entry,pic=picked.pic;r.imageCulteSeen.add(pic.tmdbPath);r.imageCulteWorkSeen.add(z.type+'-'+z.id);
  const dec=imageCulteDecoys(z,pool),a=[z.work,...dec].sort(()=>Math.random()-.5);
- return {game:'Image culte',q:difficulty==='dur'?'🎬 PLAN DIFFICILE — De quelle œuvre vient cette scène ?':'🎬 De quelle œuvre vient cette scène ?',a,c:a.indexOf(z.work),image:'/tmdb-scene/'+z.type+'/'+z.id+'/'+difficulty+'?file='+encodeURIComponent(pic.tmdbPath),theme:z.theme,difficulty,points:difficultyPoints(difficulty),imageCulte:true,imageEffect:pickImageEffect(difficulty),tmdbAttribution};
+ return {game:'Image culte',q:'🎬 Reconnais cette scène difficile : de quelle œuvre vient-elle ?',a,c:a.indexOf(z.work),image:'/tmdb-scene/'+z.type+'/'+z.id+'/'+assetDifficulty+'?file='+encodeURIComponent(pic.tmdbPath),theme:z.theme,difficulty,points:difficultyPoints(difficulty),imageCulte:true,imageEffect:pickImageEffect(difficulty),tmdbAttribution};
 }
 // Comparaison souple pour les réponses écrites (accents, ponctuation, petites fautes).
 function normalizeClipTitle(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/&/g,' and ').replace(/[^a-z0-9]+/g,' ').replace(/\b(le|la|les|the|a|an|un|une|de|du|des|of)\b/g,' ').replace(/\s+/g,' ').trim()}
@@ -960,10 +960,16 @@ for(const theme of new Set([...Object.keys(MAJORITY_VARIANTS),...Object.keys(TMC
  const candidates=[...(TMC_PREMIUM[theme]||[]).map(([q,a])=>({q,a})),...(MAJORITY_VARIANTS[theme]||[])];
  const seen=new Set();TMC_CURATED[theme]=candidates.filter(x=>{if(!validTmcOpinion(x))return false;const k=x.q.toLowerCase().trim()+'|'+x.a.join('|').toLowerCase();if(seen.has(k))return false;seen.add(k);return true});
 }
+// Petit Bac : même lettre et catégories pour tous, validation exclusivement par l'hôte.
+const BAC_CATEGORIES=['Anime, série ou film','Personne publique','Fruit ou légume','Métier'];
+const BAC_LETTERS='ABCDEFGHIJKLMNOPRSTV';
+function bacRound(r){r.bacAnswers={};r.bacJudgements={};r.bacPhase='write';r.bacLetterBag=r.bacLetterBag||[];if(!r.bacLetterBag.length)r.bacLetterBag=BAC_LETTERS.split('').sort(()=>Math.random()-.5);const letter=r.bacLetterBag.pop();return {game:'Petit Bac',q:'✍️ PETIT BAC — Lettre '+letter,letter,categories:BAC_CATEGORIES,phase:'write',theme:'Culture générale',points:1000};}
+function bacPublic(r){const ids=Object.keys(r.players);return {game:'Petit Bac',q:r.current.q,letter:r.current.letter,categories:BAC_CATEGORIES,phase:r.bacPhase,players:ids.map(id=>({id,name:r.players[id].name,submitted:!!r.bacAnswers[id],answers:r.bacPhase==='review'?r.bacAnswers[id]:undefined,judgements:r.bacPhase==='review'?r.bacJudgements[id]:undefined})),host:r.host};}
 function makeRound(r,g){
  let c={game:g};
  if(g==='Quiz Battle'){let x=question(r);c={game:g,q:x.q,a:x.a,c:x.c,image:x.image||null,theme:x.theme,difficulty:x.difficulty||'simple',points:({simple:250,moyen:500,dur:1000}[x.difficulty]||250)}}
  else if(g==='Tu me connais ?'){let ps=Object.values(r.players),target=ps[(r.gameRound-1)%ps.length];r.secretChoice=null;r.guesses={};let selected=(r.settings.themes||[]).filter(t=>(TMC_CURATED[t]||[]).length);if(!selected.length)selected=Object.keys(TMC_CURATED).filter(t=>TMC_CURATED[t].length);const tt=chooseTheme(r,'tmcThemes',selected),z=unusedPick(r,'tmcCurated:'+tt,TMC_CURATED[tt]);c={game:g,phase:'choose',target:target.id,targetName:target.name,q:`🎯 Question sur ${target.name} : ${z.q}`,a:z.a,theme:tt}}
+ else if(g==='Petit Bac'){c=bacRound(r)}
  else if(g==='Majorité'){let selected=(r.settings.themes||[]).filter(t=>(MAJORITY_VARIANTS[t]||[]).length);if(!selected.length)selected=Object.keys(MAJORITY_VARIANTS);let theme=chooseTheme(r,'majorityThemes',selected),mq=unusedPick(r,'majority:'+theme,MAJORITY_VARIANTS[theme]);c={game:g,q:mq.q,a:mq.a,theme}}
  else if(g==='La Bombe'){let z=themedPick(r,'bomb');c={game:g,q:z.value,theme:z.theme,typedBomb:true,points:500}}
  else if(g==="L’Imposteur"){let z=themedPick(r,'impostor'),w=z.value,ps=Object.values(r.players),imp=ps[Math.floor(Math.random()*ps.length)];r.secret={imp:imp.id,n:w[0],o:w[1]};r.impostorId=imp.id;r.normalWord=w[0];c={game:g,q:`Thème : ${z.theme} — Décris ton mot sans le dire, puis trouvez l’imposteur !`,theme:z.theme,oral:true}}
@@ -1030,7 +1036,7 @@ async function next(r){
  }
  r.gameRound++;r.round++;r.answers={};r.answerOrder=[];r.guesses={};r.oralDecisions={};r.bombAnswers={};r.impostorVotes={};r._advancing=false;
  const g=r.settings.games[r.gameIndex],c=g==='Image culte'?await imageCulteRound(r):g==='Ciné Extrait'?await cineExtraitRound(r):makeRound(r,g);r.current=c;r._clipStarted=false;r._clipEnded=false;r._blindPlaybackStarted=c?.game==='Blind Test'?false:true;
- io.to(r.code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:limit,gameIndex:r.gameIndex,current:publicRound(c)});
+ io.to(r.code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:limit,gameIndex:r.gameIndex,current:g==='Petit Bac'?bacPublic(r):publicRound(c)});
  if(!c.imageCulteUnavailable&&!c.clipUnavailable&&g!=='Ciné Extrait')armRoundTimer(r);
  if(g==="L’Imposteur")for(const p of Object.values(r.players))io.to(p.id).emit('secret',{word:p.id===r.secret.imp?r.secret.o:r.secret.n});
  emit(r);
@@ -1080,6 +1086,10 @@ io.on('connection',(s)=>{
  s.on('start',(payload,cb)=>{const c=typeof payload==='string'?payload:payload?.code,hostKey=typeof payload==='object'?payload?.hostKey:null;let r=rooms[c];
  if(r&&r.host!==s.id&&hostKey&&r.hostKey&&String(hostKey)===String(r.hostKey)){const old=r.players[r.host];if(old){delete r.players[r.host];r.players[s.id]={...old,id:s.id}}r.host=s.id;s.join(c)}
  if(!r||r.host!==s.id)return cb&&cb({ok:false,reason:'HOST_SESSION_LOST'});if(!r.settings.games?.length)return cb&&cb({ok:false,reason:'NO_GAMES'});r.round=0;r.gameIndex=0;r.gameRound=0;r.used=r.used||{};r.total=totalRounds(r);Object.values(r.players).forEach(p=>p.score=0);cb&&cb({ok:true});next(r)});
+ s.on('bacSubmit',({code,answers}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Petit Bac'||r.bacPhase!=='write'||!r.players[s.id]||r.bacAnswers[s.id])return;if(!Array.isArray(answers)||answers.length!==4)return;r.bacAnswers[s.id]=answers.map(a=>String(a||'').trim().slice(0,90));io.to(code).emit('bacState',bacPublic(r));});
+ s.on('bacReview',({code}={})=>{const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Petit Bac'||r.bacPhase!=='write')return;r.bacPhase='review';io.to(code).emit('bacState',bacPublic(r));});
+ s.on('bacJudge',({code,playerId,category,valid}={})=>{const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Petit Bac'||r.bacPhase!=='review'||!r.bacAnswers[playerId]||!Number.isInteger(category)||category<0||category>=4||typeof valid!=='boolean')return;r.bacJudgements[playerId]=r.bacJudgements[playerId]||{};const old=r.bacJudgements[playerId][category];if(old===valid)return;if(old===true)r.players[playerId].score-=250;if(valid)r.players[playerId].score+=250;r.bacJudgements[playerId][category]=valid;io.to(code).emit('bacState',bacPublic(r));emit(r);});
+ s.on('bacNext',({code}={})=>{const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Petit Bac'||r.bacPhase!=='review')return;r._advancing=true;next(r);});
  s.on('answer',x=>{
  let r=rooms[x.code];if(!r||!r.players[s.id]||r.answers?.[s.id]!=null)return;
  r.answers=r.answers||{};

@@ -136,13 +136,13 @@ function applyImageCulteEffect(effect){
  const filters={'soft-blur':'blur(3px)','strong-blur':'blur(8px)','desaturate':'grayscale(1) contrast(1.35)','hue':'hue-rotate(145deg) saturate(1.8)','invert':'invert(.85) hue-rotate(100deg)'};
  if(filters[effect])img.style.filter=filters[effect];
  if(effect==='crop'){img.style.clipPath='inset(15% 19% 15% 19%)';img.style.transform='scale(1.15)'}
- if(effect==='pixel-soft'||effect==='pixel-strong'){
+ if(['pixel-soft','pixel-strong','pixel-extreme'].includes(effect)){
   // Pixelation uses the original same-origin TMDB image. No floating rectangle or overlay.
   if(!img.complete||!img.naturalWidth||img.dataset.pixelDone==='1')return;
   try{
    const w=img.naturalWidth,h=img.naturalHeight;
    const small=document.createElement('canvas');
-   const blocks=effect==='pixel-strong'?18:46;
+   const blocks=effect==='pixel-extreme'?10:effect==='pixel-strong'?16:40;
    small.width=blocks;small.height=Math.max(1,Math.round(blocks*h/w));
    const ctx=small.getContext('2d');ctx.imageSmoothingEnabled=true;ctx.drawImage(img,0,0,small.width,small.height);
    const out=document.createElement('canvas');out.width=Math.min(w,960);out.height=Math.max(1,Math.round(out.width*h/w));
@@ -152,7 +152,7 @@ function applyImageCulteEffect(effect){
  }
 }
 const hostKey=localStorage.getItem('partyArenaHostKey')||(()=>{const k=(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random());localStorage.setItem('partyArenaHostKey',k);return k})();
-const s=io(),GL=['Quiz Battle','Tu me connais ?','Majorité','La Bombe',"L’Imposteur",'Duel','Mot interdit','Défi surprise','Trouve l’intrus','Qui est-ce ?','Image culte','Blind Test','Ciné Extrait'],TL=['Culture générale','Football','Sport','Cinéma & Séries','Anime & Manga','Musique','Jeux vidéo','Dessins animés','Internet & Réseaux','Mathématiques','Images'];let room,me,state,cg=new Set(['Quiz Battle']),ct=new Set(['Culture générale']);
+const s=io(),GL=['Quiz Battle','Tu me connais ?','Majorité','La Bombe',"L’Imposteur",'Duel','Mot interdit','Défi surprise','Trouve l’intrus','Qui est-ce ?','Image culte','Blind Test','Ciné Extrait','Petit Bac'],TL=['Culture générale','Football','Sport','Cinéma & Séries','Anime & Manga','Musique','Jeux vidéo','Dessins animés','Internet & Réseaux','Mathématiques','Images'];let room,me,state,cg=new Set(['Quiz Battle']),ct=new Set(['Culture générale']);
 let gameRounds={'Quiz Battle':5};
 s.on('connect',()=>{const e=document.getElementById('socketStatus');if(e)e.textContent='🟢 Serveur connecté'});s.on('connect_error',()=>{const e=document.getElementById('socketStatus');if(e)e.textContent='🔴 Serveur non connecté — réessaie dans quelques secondes'});
 
@@ -292,6 +292,7 @@ s.on('connect',()=>{try{s.emit('blindHistory',JSON.parse(localStorage.getItem('p
 s.on('round',x=>{if(x.current?.game==='Ciné Extrait')startRoundTimer(0);if(clipPlayer){try{clipPlayer.destroy()}catch(e){}clipPlayer=null}clearTimeout(clipWatch);startRoundTimer(timerForGame(x.current.game));if(x.current&&x.current.game==='Blind Test'&&x.current.excerptId){try{let a=JSON.parse(localStorage.getItem('partyArenaBlindSeen')||'[]');if(!a.includes(x.current.excerptId)){a.push(x.current.excerptId);if(a.length>5000)a=a.slice(-5000);localStorage.setItem('partyArenaBlindSeen',JSON.stringify(a));}}catch(e){}}const ac=document.getElementById('answerCount');if(ac)ac.textContent='Réponses : 0/0';const rf=document.getElementById('roundFeedback');if(rf)rf.innerHTML='';
 const jb=[...document.querySelectorAll('button')].find(b=>b.textContent==='Lancement…');if(jb){jb.disabled=false;jb.textContent='▶ JOUER'};lobby.classList.add('hide');play.classList.remove('hide');secret.classList.add('hide');rl.textContent=`${x.current.game} — Manche ${x.gameRound}/${x.gameTotal}`;gl.textContent=x.current.game;tl.textContent=x.current.theme||'';q.innerHTML=(x.current.q||'')+(x.current.difficulty?` <span class="pill">🎯 ${x.current.difficulty.toUpperCase()} • ${x.current.points} pts</span>`:'');
 if(x.current.game==='Qui est-ce ?' && me===state?.host){award.innerHTML=`<button onclick="s.emit('rerollWho',{code:room})">🔄 CHANGER L’IMAGE / QUESTION</button>`;}
+if(x.current.game==='Petit Bac'){renderBac(x.current);return;}
 if(x.current.typedBomb){
  answers.innerHTML=`<div class="card"><h2>💣 LA BOMBE</h2><p>${x.current.q}</p><input id="bombInput" type="text" autocomplete="off" maxlength="80" placeholder="ÉCRIS TA RÉPONSE ICI..." style="display:block;width:100%;box-sizing:border-box;padding:18px;margin:16px 0;font-size:20px;border:2px solid #fff;border-radius:14px;background:#fff;color:#111"><button id="bombSend" onclick="sendBomb()">📨 ENVOYER</button><div id="bombStatus"></div></div>`;
  hc.classList.toggle('hide',me!==state?.host);
@@ -440,6 +441,16 @@ render();s.on('allAnswered',()=>{answers.innerHTML='<div class="card">✅ Tout l
 
 
 
+let bacState=null;
+function bacEscape(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function renderBac(b){bacState=b;img.classList.add('hide');document.getElementById('tmdbCredit').classList.add('hide');q.textContent='✍️ PETIT BAC — LETTRE '+b.letter;const mine=b.players.find(p=>p.id===me);if(b.phase==='write'){
+ answers.innerHTML=`<div class="card"><h2>Lettre : ${bacEscape(b.letter)}</h2><p>Chaque réponse doit commencer par cette lettre. L'hôte validera les propositions.</p>${b.categories.map((cat,i)=>`<label style="display:block;margin:14px 0"><b>${bacEscape(cat)}</b><input class="bacInput" data-bac="${i}" maxlength="90" ${mine?.submitted?'disabled':''} placeholder="Réponse en ${bacEscape(b.letter)}…" style="display:block;width:100%;box-sizing:border-box;padding:13px;border-radius:10px;background:white;color:#111" value="${bacEscape(mine?.answers?.[i]||'')}"></label>`).join('')}<button ${mine?.submitted?'disabled':''} onclick="bacSend()">${mine?.submitted?'🔒 Réponses envoyées':'📨 ENVOYER MES 4 RÉPONSES'}</button><p id="bacProgress">${b.players.filter(p=>p.submitted).length}/${b.players.length} joueurs ont envoyé leurs réponses.</p></div>`;
+ }else{answers.innerHTML=`<div class="card"><h2>👑 Validation par l'hôte — ${bacEscape(b.letter)}</h2>${b.players.map(p=>`<div class="card"><h3>${bacEscape(p.name)} ${p.submitted?'':'(aucune réponse)'}</h3>${b.categories.map((cat,i)=>`<div style="margin:10px 0"><b>${bacEscape(cat)}</b> : ${bacEscape(p.answers?.[i]||'—')} ${me===b.host&&p.answers?.[i]?`<button onclick="bacJudge('${p.id}',${i},true)" style="background:${p.judgements?.[i]===true?'#167c43':''}">✅</button> <button onclick="bacJudge('${p.id}',${i},false)">❌</button>`:p.judgements?.[i]===true?'✅ Validée':p.judgements?.[i]===false?'❌ Refusée':'⏳'}</div>`).join('')}</div>`).join('')}</div>`;}
+ hc.classList.toggle('hide',me!==b.host);if(me===b.host)award.innerHTML=b.phase==='write'?'<button onclick="bacReview()">👑 TERMINER ET VALIDER LES RÉPONSES</button>':'<button onclick="bacNext()">➡️ MANCHE SUIVANTE</button>';}
+function bacReview(){s.emit("bacReview",{code:room})}function bacNext(){s.emit("bacNext",{code:room})}
+function bacSend(){const values=[...document.querySelectorAll('.bacInput')].map(el=>el.value.trim());if(values.length!==4)return;s.emit('bacSubmit',{code:room,answers:values});}
+function bacJudge(playerId,category,valid){s.emit('bacJudge',{code:room,playerId,category,valid});}
+s.on('bacState',b=>{if(b.phase==='write'&&bacState?.phase==='write'&&!b.players.find(p=>p.id===me)?.submitted){bacState=b;const progress=document.getElementById('bacProgress');if(progress)progress.textContent=b.players.filter(p=>p.submitted).length+'/'+b.players.length+' joueurs ont envoyé leurs réponses.';return;}renderBac(b)});
 function renderPersistentHostControls(x){
  const z=document.getElementById('persistentHostControls'); if(!z)return;
  z.innerHTML='';
