@@ -1,0 +1,6 @@
+V5.39 — TESTS
+- Syntaxe serveur/client : OK.
+- Blind Test : 4 choix uniques vérifiés; banque de faux choix >= 50 par grande catégorie; 100 manches simulées en Musique ont produit une forte variété de faux choix.
+- Vidéo Blind Test : iframe déplacée hors écran, 1×1, opacity 0, controls 0. Aucun visuel vidéo n'est présenté.
+- Mot interdit : chrono serveur/client 20 secondes.
+- Mot interdit : chaque thème nettoyé testé pour vérifier que tabooWord, forbiddenWord et l'énoncé contiennent bien le mot demandé.

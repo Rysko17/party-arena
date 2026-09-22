@@ -1,0 +1,7 @@
+PARTY ARENA V5.40 — TESTS
+- Syntaxe serveur : OK
+- Syntaxe client : OK
+- Qui est-ce : banque photo réelle portée de 28 à 52 entrées, ratio photo/rébus réglé à ~85/15 quand des photos existent.
+- Trouve l'intrus : chrono 20 s vérifié; difficultés simple/moyen/dur vérifiées; barème 250/500/1000 vérifié.
+- Mot interdit : mode exactement 3 mots; personnages/personnes interdisent explicitement toute description physique; ajout de personnages secondaires / moins évidents.
+- Limite : les images distantes Wikimedia peuvent devenir indisponibles ou être renommées. Le fallback rébus reste utile dans ce cas.

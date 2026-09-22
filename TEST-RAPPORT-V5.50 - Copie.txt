@@ -1,0 +1,20 @@
+V5.50
+NOUVEAU JEU : IMAGE CULTE
+- Ajout au sélecteur des jeux.
+- Une image d'une œuvre est affichée; 4 titres cohérents; il faut identifier l'œuvre.
+- 10 secondes, difficulté dure, 1000 points + scoring de rapidité.
+- Anti-répétition de room via unusedPick.
+- Première banque active : 10 visuels libres/public-domain orientés cinéma/dessin animé.
+- Architecture prévue pour Anime & Manga / Cinéma & Séries / Dessins animés.
+IMPORTANT COPYRIGHT : les captures d'écran de films/séries/animes modernes ne peuvent pas être copiées arbitrairement depuis Internet. La banque active utilise donc des visuels librement réutilisables/public-domain. Pour des œuvres modernes, il faut utiliser des images dont les droits/conditions permettent l'intégration ou une source officielle autorisant l'embed.
+
+BLIND TEST
+- V5.49 conservée : 8 secondes audio, passages plus difficiles, 160 segments actifs, anti-répétition.
+- L'augmentation massive de vrais extraits nécessite le sourcing/contrôle des timestamps et des embeds. Ne pas compter les catalogues non sourcés comme jouables.
+
+TESTS
+- Nouveau jeu : 10 manches simulées, 4 choix uniques, bonne réponse valide, image URL valide au niveau format.
+- Timer Image culte : 10 s.
+- Régression Blind : 160 segments.
+- Syntaxe serveur/client : OK.
+- Pas de test navigateur/Render ni validation réseau de chaque image distante.

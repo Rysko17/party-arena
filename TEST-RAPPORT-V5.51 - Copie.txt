@@ -1,0 +1,7 @@
+V5.51 — CORRECTIF LANCEMENT / RECONNEXION
+Symptôme : « Erreur lors de l’enregistrement des réglages » au clic sur JOUER.
+Cause corrigée : après une reconnexion Socket.IO/Render, l'identifiant socket du navigateur change alors que la room conserve l'ancien ID de l'hôte. Le lobby peut rester affiché mais le serveur refuse alors settings.
+Correction : clé d'hôte stable en localStorage. create/settings/start transmettent cette clé; le serveur réassocie la room au nouveau socket du même navigateur et préserve le joueur.
+Les erreurs settings/start renvoient aussi un code reason visible.
+Test : création -> réglages -> nouvel ID socket -> récupération hôte -> réglages -> start : PASS.
+Syntaxe serveur/client : PASS.

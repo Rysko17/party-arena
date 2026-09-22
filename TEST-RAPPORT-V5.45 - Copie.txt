@@ -1,0 +1,11 @@
+V5.45 — BLIND MEGA BANK
+- 80 extraits jouables configurés au total.
+- Musique : 55 extraits jouables (forte hausse grâce à des mixes YouTube dont les tracklists/timestamps ont été vérifiés sur le web).
+- Anime : 10 jouables.
+- Cinéma/Séries : 10 jouables.
+- Dessins animés : 5 jouables.
+- Catalogue d'expansion supplémentaire : 315 cibles Anime/Cinéma/Séries/Rap/R&B/etc. à sourcer.
+- Tous les couples video@start actifs sont uniques.
+- Chrono Blind Test : 12 secondes.
+- Syntaxe serveur/client : OK.
+IMPORTANT : le catalogue à sourcer n'est pas compté comme jouable. TikTok et SoundCloud ont des lecteurs/API d'intégration, mais ils ne sont pas activés dans cette version car le client actuel du jeu est conçu autour du lecteur YouTube. Aucun faux identifiant n'a été inventé.

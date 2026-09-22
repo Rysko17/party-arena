@@ -1,0 +1,17 @@
+V5.46
+- Banque Blind Test doublée dans chaque thème actif :
+  Anime & Manga 10 -> 20 extraits
+  Cinéma & Séries 10 -> 20 extraits
+  Musique 55 -> 110 extraits
+  Dessins animés 5 -> 10 extraits
+  TOTAL 80 -> 160 segments de 10 secondes.
+- Chaque deuxième segment commence 12 secondes après le premier : l'identifiant exact video@start est donc différent.
+- Anti-répétition renforcé : historique Blind Test stocké dans localStorage du navigateur (jusqu'à 5000 IDs) et envoyé au serveur; la room fusionne cet historique avec son historique courant.
+- Recommencer une partie dans le même navigateur conserve donc l'historique.
+- Syntaxe serveur/client : OK; 160 identifiants exacts uniques testés.
+
+LIMITES IMPORTANTES :
+1. 160 extraits uniques ne peuvent mathématiquement PAS garantir 70 parties complètes si chaque partie contient plusieurs manches Blind Test. Exemple : 70 parties × 5 manches = 350 extraits nécessaires.
+2. La persistance localStorage fonctionne sur le même navigateur/appareil. Effacer les données du navigateur, changer de navigateur/appareil ou utiliser un autre hôte repart avec un autre historique.
+3. Le deuxième passage d'une source est un segment différent, mais peut être la même chanson.
+4. Pour une garantie de 70 parties à 20 manches Blind Test sans répétition, il faut au moins 1400 segments jouables réellement sourcés.

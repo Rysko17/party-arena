@@ -1,0 +1,10 @@
+V5.60 — BLIND HARD MIX
+Objectif: rendre le Blind Test nettement moins simple sans fabriquer de nouveaux morceaux.
+Modifications dynamiques:
+- difficile: x0.80, x0.85, x1.15, x1.20, extrait mélangé (sauts non chronologiques), ou découpage/stutter.
+- moyen: x0.90, x1.10 ou découpage; 80% de chance d'une modification.
+- simple: original.
+Les transformations s'appliquent à la lecture des vraies sources existantes: elles n'augmentent donc pas artificiellement la taille de banque.
+Le système PLAYING/fallback V5.57 et le crash fix V5.59 sont conservés.
+Tests: serveur/client syntaxe PASS; simulation 600 rounds PASS; modes normal/speed/scramble/stutter tous rencontrés.
+Limite: les lecteurs YouTube n'acceptent que certaines vitesses; le code revient à 1x si une vitesse n'est pas proposée. Scramble/stutter utilisent seekTo et restent applicables.

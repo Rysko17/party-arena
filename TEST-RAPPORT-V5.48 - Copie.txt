@@ -1,0 +1,17 @@
+V5.48 — CORRECTIF RENDER
+Erreur Render reproduite :
+TypeError: rooms.values is not a function or its return value is not iterable
+server.js ligne 732, événement blindHistory.
+
+Cause :
+rooms est un objet JavaScript simple dans Party Arena, pas une Map.
+Le code V5.46/V5.47 utilisait [...rooms.values()], ce qui faisait planter Node dès que le navigateur envoyait blindHistory.
+
+Correction :
+Object.values(rooms).find(...)
+
+Tests :
+- test de régression blindHistory avec room + joueur : OK, 3 IDs importés.
+- node --check server.js : OK.
+- syntaxe JavaScript client : OK.
+- Le catalogue V5.47 et l'anti-répétition sont conservés.

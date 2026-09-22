@@ -1,0 +1,6 @@
+V5.42
+- Catalogue cible : 400 entrées uniques, test automatique OK.
+- Le faux système V5.41 qui créait 420 passages en décalant les mêmes vidéos a été supprimé.
+- Le jeu n'active que les sources vidéo réellement renseignées et conserve l'anti-répétition.
+- Syntaxe serveur/client : OK.
+IMPORTANT : 400 entrées sont maintenant planifiées dans le catalogue, mais elles ne sont PAS toutes jouables. Il reste à sourcer et vérifier individuellement les vidéos intégrables. Aucun faux ID YouTube n'a été inventé.
