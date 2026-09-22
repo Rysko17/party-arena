@@ -77,6 +77,26 @@ function playBlindSource(){
  // Dailymotion is accepted in the schema, but requires a configured Player ID to use the official Web SDK.
  blindSourceFail('UNSUPPORTED_'+provider.toUpperCase());
 }
+function playBlindDeezer(src){
+ const p=document.getElementById('blindPlayer'),b=document.getElementById('blindPlay');
+ if(!p||!src.url||!/^https:\/\//.test(src.url)){blindSourceFail('DEEZER_URL');return}
+ const token=++blindPlayToken;
+ try{if(blindYTPlayer?.destroy)blindYTPlayer.destroy()}catch(_){}
+ p.innerHTML='';const audio=document.createElement('audio');audio.preload='auto';audio.controls=false;p.appendChild(audio);
+ let started=false,finished=false;const m=window.__blindMod||{mode:'normal'},start=Math.min(20,Math.max(0,Number(src.start)||0));
+ const rate=Number(blindRate)||1;audio.playbackRate=Math.max(.5,Math.min(2,rate));
+ function fail(reason){if(token!==blindPlayToken||finished)return;finished=true;try{audio.pause()}catch(_){}blindSourceFail(reason)}
+ audio.onerror=()=>fail('DEEZER_AUDIO_ERROR');
+ blindGuard=setTimeout(()=>{if(!started)fail('DEEZER_TIMEOUT')},9000);
+ audio.onloadedmetadata=()=>{if(token!==blindPlayToken||finished)return;if(!Number.isFinite(audio.duration)||audio.duration<start+8){fail('DEEZER_DURATION');return}audio.currentTime=start;audio.play().catch(()=>fail('DEEZER_AUTOPLAY'))};
+ audio.onplaying=()=>{if(started||token!==blindPlayToken||finished)return;started=true;clearTimeout(blindGuard);s.emit('blindPlaybackStarted',{code:room,excerptId:blindExcerptId});if(b)b.textContent='🔊 EXTRAIT EN COURS';
+  // Short jumps simulate the harder modes. Actual reverse/pitch-shift requires licensed audio processing.
+  const offsets=m.mode==='reverse-order'?[6,4.5,3,1.5,0]:m.mode==='chaos'?[5,.4,3.6,1,6.2]:m.mode==='scramble'?[5,1,4,2]:m.mode==='micro'?[.2,3.5,6]:m.mode==='stutter'?[0,2,1,4,3]:null;
+  if(offsets){let k=0;try{audio.currentTime=start+offsets[k++]}catch(_){}blindJumpTimer=setInterval(()=>{if(token!==blindPlayToken||finished||k>=offsets.length){clearInterval(blindJumpTimer);return}try{audio.currentTime=start+offsets[k++]}catch(_){}},m.mode==='micro'?750:1400)}
+  blindStop=setTimeout(()=>{finished=true;clearInterval(blindJumpTimer);audio.pause()},8000);
+ };
+ audio.src=src.url;audio.load();
+}
 function playBlindSoundCloud(src){
  const p=document.getElementById('blindPlayer'),b=document.getElementById('blindPlay');if(!p||!window.SC||!SC.Widget){blindSourceFail('SC_API');return}
  const url=src.url;if(!url){blindSourceFail('SC_URL');return}

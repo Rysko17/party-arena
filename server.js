@@ -568,6 +568,46 @@ function normalizeBlindSources(){
 }
 normalizeBlindSources();
 
+// Deezer public catalogue: no API key. Preview use is opt-in because availability
+// does not grant redistribution, game or audio-transformation rights.
+const DEEZER_PREVIEWS_ENABLED=process.env.DEEZER_PREVIEWS_ENABLED==='true';
+const deezerState={queries:0,tracks:0,errors:0,lastError:null,ready:false};
+const DEEZER_ARTISTS=['Stromae','Aya Nakamura','Gims','Ninho','Damso','SCH','PNL','Orelsan','Nekfeu','Booba','Jul','Tiakola','Dadju','The Weeknd','Rihanna','Beyoncé','Drake','Eminem','Kendrick Lamar','Travis Scott','SZA','Billie Eilish','Dua Lipa','Michael Jackson','Daft Punk','Bruno Mars','Adele','Imagine Dragons','Ed Sheeran','Taylor Swift'];
+const deezerIds=new Set();
+async function loadDeezerArtist(artist){
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),6500);
+ try{
+  const response=await fetch('https://api.deezer.com/search/artist?q='+encodeURIComponent(artist)+'&limit=4',{signal:controller.signal});
+  if(!response.ok)throw Error('HTTP '+response.status);
+  const found=await response.json();
+  const exact=(found.data||[]).find(x=>String(x.name||'').toLowerCase()===artist.toLowerCase());
+  if(!exact?.id)return;
+  const r=await fetch('https://api.deezer.com/artist/'+exact.id+'/top?limit=12',{signal:controller.signal});
+  if(!r.ok)throw Error('HTTP '+r.status);
+  const data=await r.json();
+  for(const track of (data.data||[])){
+   if(!track.id||!track.preview||!track.title||!track.artist?.name||deezerIds.has(track.id))continue;
+   if(!/^https:\/\/[^\s]+$/i.test(track.preview))continue;
+   // The artist endpoint can include collaborations. Keep the credited artist.
+   const name=track.artist.name+' — '+(track.title_short||track.title);
+   deezerIds.add(track.id);
+   BLIND_DOUBLE_BANK['Musique'].push({title:name,genre:'deezer-musique',excerptId:'deezer:'+track.id,
+    sources:[{provider:'deezer',url:track.preview,start:Math.floor(Math.random()*18),end:30}],deezer:true});
+   deezerState.tracks++;
+  }
+  deezerState.queries++;
+ }catch(e){deezerState.errors++;deezerState.lastError=String(e.message).slice(0,120)}
+ finally{clearTimeout(timer)}
+}
+async function warmDeezer(){
+ if(!DEEZER_PREVIEWS_ENABLED){deezerState.ready=true;return}
+ for(const artist of DEEZER_ARTISTS){await loadDeezerArtist(artist);await new Promise(resolve=>setTimeout(resolve,500))}
+ deezerState.ready=true;
+}
+app.get('/deezer-status',(req,res)=>res.json({enabled:DEEZER_PREVIEWS_ENABLED,configuredWithoutKey:true,...deezerState,note:'Les extraits Deezer nécessitent des droits de diffusion pour votre usage.'}));
+setTimeout(()=>warmDeezer().catch(e=>{deezerState.lastError=String(e.message);deezerState.ready=true}),2500);
+
+
 
 function blindRound(r){
  let themes=(r.settings.themes||[]).filter(t=>BLIND_DOUBLE_BANK[t]?.length);
@@ -584,7 +624,7 @@ function blindRound(r){
  const z=fresh[0];if(!r.blindSeen)r.blindSeen=new Set();r.blindSeen.add(z.excerptId);
  const difficulty=['simple','moyen','dur','extra-dur'][(Math.max(1,r.gameRound)-1)%4];
  const sameGenre=z.genre?pool.filter(x=>x.genre===z.genre&&x.title!==z.title).map(x=>x.title):[];
- const sameSource=pool.filter(x=>x.video===z.video&&x.title!==z.title).map(x=>x.title);
+ const sameSource=pool.filter(x=>z.video&&x.video===z.video&&x.title!==z.title).map(x=>x.title);
  const playable=[...new Set([...sameSource,...sameGenre,...pool.filter(x=>x.title!==z.title).map(x=>x.title)])];
  const decoys=[...new Set([...sameSource,...sameGenre,...blindDecoyPool(t,z.title),...playable,...(BLIND_DECOYS[t]||[])])].filter(x=>x!==z.title);
  const want=difficulty==='extra-dur'?5:difficulty==='dur'?5:difficulty==='moyen'?4:3,wrong=[];while(wrong.length<want&&decoys.length){const i=Math.floor(Math.random()*Math.min(decoys.length,Math.max(1,sameSource.length+sameGenre.length+4)));wrong.push(decoys.splice(i,1)[0])}
@@ -597,7 +637,7 @@ function blindRound(r){
  const extremeMods=[{mode:'reverse-order',rate:1},{mode:'reverse-order',rate:.75},{mode:'pitch',rate:.5},{mode:'pitch',rate:2},{mode:'chaos',rate:1.5},{mode:'micro',rate:.75},{mode:'scramble',rate:2}];
  const blindMod=difficulty==='extra-dur'?extremeMods[Math.floor(Math.random()*extremeMods.length)]:difficulty==='dur'?hardMods[Math.floor(Math.random()*hardMods.length)]:difficulty==='moyen'?(Math.random()<.8?mediumMods[Math.floor(Math.random()*mediumMods.length)]:{mode:'normal',rate:1}):{mode:'normal',rate:1};
  const playbackRate=blindMod.rate||1;
- return {game:'Blind Test',q:'🎧 BLIND TEST — écoute les 8 secondes',a,c:a.indexOf(z.title),theme:t,blind:true,video:z.video,start:z.start,end:z.start+8,excerptId:z.excerptId,difficulty,points:difficultyPoints(difficulty),playbackRate,blindMod,sources:z.sources||[{provider:'youtube',id:z.video,start:z.start,end:z.start+8}]};
+ return {game:'Blind Test',q:'🎧 BLIND TEST — écoute les 8 secondes',a,c:a.indexOf(z.title),theme:t,blind:true,video:z.video||null,start:z.start||0,end:(z.start||0)+8,excerptId:z.excerptId,difficulty,points:difficultyPoints(difficulty),playbackRate,blindMod,sources:z.sources||[{provider:'youtube',id:z.video,start:z.start,end:z.start+8}]};
 }
 
 function difficultyPoints(d){return ({simple:250,moyen:500,dur:1000,'extra-dur':1500}[d]||500)}
@@ -1191,7 +1231,7 @@ async function next(r){
  r.gameRound++;r.round++;r.answers={};r.answerOrder=[];r.guesses={};r.oralDecisions={};r.bombAnswers={};r.impostorVotes={};r._advancing=false;
  const g=r.settings.games[r.gameIndex],c=g==='Image culte'?await imageCulteRound(r):g==='Ciné Extrait'?await cineExtraitRound(r):g==='Qui est-ce ?'?(await pickWhoWithPhoto(r).then(z=>z?{game:g,q:z.q,a:z.a,c:z.c,theme:z.theme,whoRebus:false,whoPhoto:true,image:z.image||null,duoImages:z.duoImages||null,difficulty:z.difficulty||'dur',points:difficultyPoints(z.difficulty||'dur')}:unavailableWhoRound())):makeRound(r,g);r.current=c;r._clipStarted=false;r._clipEnded=false;r._blindPlaybackStarted=c?.game==='Blind Test'?false:true;
  io.to(r.code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:limit,gameIndex:r.gameIndex,current:g==='Petit Bac'?bacPublic(r):publicRound(c)});
- if(c.whoImageUnavailable){r._advancing=true;setTimeout(()=>next(r),1800)}else if(!c.imageCulteUnavailable&&!c.clipUnavailable&&g!=='Ciné Extrait')armRoundTimer(r);
+ if(c.whoImageUnavailable){r._advancing=true;setTimeout(()=>next(r),1800)}else if(!c.imageCulteUnavailable&&!c.clipUnavailable&&g!=='Ciné Extrait'&&g!=='Blind Test')armRoundTimer(r);
  if(g==="L’Imposteur")for(const p of Object.values(r.players))io.to(p.id).emit('secret',{word:p.id===r.secret.imp?r.secret.o:r.secret.n});
  emit(r);
 }
@@ -1209,7 +1249,8 @@ io.on('connection',(s)=>{
  s.on('clipPlaybackError',async({code,excerptId}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Ciné Extrait'||r.current.excerptId!==excerptId||r._clipReplacing)return;r._clipReplacing=true;
   try{const c=await cineExtraitRound(r);r.current=c;r._clipStarted=false;r._clipEnded=false;r.answers={};r.answerOrder=[];r._advancing=false;io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:publicRound(c)})}finally{r._clipReplacing=false}
  });
- s.on('blindPlaybackError',({code,excerptId,reason}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Blind Test'||r.current?.excerptId!==excerptId)return;r.badBlind=r.badBlind||new Set();if(r.badBlind.has(excerptId))return;r.badBlind.add(excerptId);r.blindSeen=r.blindSeen||new Set();r.blindSeen.add(excerptId);r.current=blindRound(r);r.answers={};r.answerOrder=[];r._advancing=false;io.to(code).emit('blindReplaced',{bad:excerptId,reason:reason||'playback'});io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:publicRound(r.current)});armRoundTimer(r)});
+ s.on('blindPlaybackStarted',({code,excerptId}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Blind Test'||r.current.excerptId!==excerptId||r._blindPlaybackStarted)return;r._blindPlaybackStarted=true;armRoundTimer(r)});
+ s.on('blindPlaybackError',({code,excerptId,reason}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Blind Test'||r.current?.excerptId!==excerptId)return;r.badBlind=r.badBlind||new Set();if(r.badBlind.has(excerptId))return;r.badBlind.add(excerptId);r.blindSeen=r.blindSeen||new Set();r.blindSeen.add(excerptId);r.current=blindRound(r);r._blindPlaybackStarted=false;r.answers={};r.answerOrder=[];r._advancing=false;io.to(code).emit('blindReplaced',{bad:excerptId,reason:reason||'playback'});io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:publicRound(r.current)})});
 
 
  socket.on('rerollWho',async({code}={})=>{

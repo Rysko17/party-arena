@@ -1,0 +1,9 @@
+PARTY ARENA V5.81 — DEEZER (22 septembre 2026)
+- Ajout d'une banque musicale dynamique via l'API publique Deezer, sans clé API.
+- 30 artistes recherchés au démarrage, 12 titres populaires maximum par artiste, uniquement si une URL preview existe. La quantité réelle dépend de Deezer et de la disponibilité des previews.
+- Ajout d'un lecteur HTML Audio 8 s pour les previews Deezer, avec vitesse variable et fragments mélangés, sans promettre une inversion réelle du son.
+- Titres Deezer intégrés au thème Musique, avec propositions de réponses; l'ancien catalogue YouTube reste disponible.
+- Correctif : le chrono Blind Test commence après la lecture effective, et non avant.
+- Route /deezer-status pour contrôler le chargement.
+- Pour éviter toute utilisation non autorisée, activer DEEZER_PREVIEWS_ENABLED=true sur Render uniquement si vous disposez des droits nécessaires pour diffuser les extraits dans votre jeu. Aucune clé Deezer nécessaire.
+- Vérifications locales de syntaxe Node et JavaScript client effectuées. Les réponses de l'API, les droits et la lecture sur Render ne sont pas vérifiés.
