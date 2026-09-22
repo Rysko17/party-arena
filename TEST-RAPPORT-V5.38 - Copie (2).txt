@@ -1,0 +1,8 @@
+V5.38 TESTS
+- Syntaxe serveur : OK
+- Syntaxe client : OK
+- 2 420 générations de manches (11 jeux × 11 thèmes × 20) : OK
+- Chronos vérifiés : Blind Test 20 s ; Quiz Battle / Qui est-ce / Duel / La Bombe / Mot interdit 10 s.
+- Mot interdit structuré et vérifié sur les thèmes disposant de la banque nettoyée.
+- Blind Test : iframe vidéo cachée (1×1, opacity 0, controls 0), déclenchement par clic.
+Limite : disponibilité des vidéos YouTube dépend toujours de YouTube.

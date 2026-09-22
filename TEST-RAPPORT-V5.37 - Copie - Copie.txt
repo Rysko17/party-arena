@@ -1,0 +1,25 @@
+PARTY ARENA V5.37 — RAPPORT DE TEST
+
+TESTS RÉUSSIS
+- Syntaxe Node server.js : OK
+- Syntaxe JavaScript navigateur : OK
+- Génération automatique : 3 025 manches testées sur 11 jeux × 11 thèmes × 25 manches : OK
+- Création de salle simulée : OK
+- 3 joueurs rejoignent la même salle : OK
+- Paramètres hôte + lancement : OK
+- L'Imposteur : lancement, ouverture du vote, votes des 3 joueurs, détection de l'imposteur, phase de devinette du mot : OK
+- Défi surprise : doublons exacts détectés pendant le test puis corrigés; banque finale dédupliquée.
+- Blind Test : lecteur déclenché par clic utilisateur, segment start/end de 10 secondes dans les données.
+- Duel : barème de difficulté réellement utilisé pour le score.
+- Mot interdit : mot à deviner + mot interdit + origine affichés.
+- Anti-répétition : mémoire par salle + mémoire globale du processus serveur.
+
+BANQUES
+- Défi surprise : environ 134 à 142 défis uniques par thème grâce aux nouvelles combinaisons.
+- Quiz Battle : banques existantes + nouvelles questions difficiles.
+- Blind Test : 30 entrées actuelles (10 Anime/Manga, 10 Cinéma/Séries, 10 Musique).
+
+LIMITES DES TESTS
+- L'environnement de test n'a pas pu installer les dépendances npm depuis Internet. Le test multijoueur a donc utilisé une simulation Socket.IO du serveur, pas trois vrais navigateurs.
+- Les vidéos YouTube du Blind Test dépendent toujours de YouTube (vidéo disponible, intégration autorisée, réseau). Le clic utilisateur réduit le problème d'autoplay, mais une vidéo supprimée/bloquée peut encore ne pas jouer.
+- Il n'y a PAS encore assez de contenu éditorial réellement distinct pour garantir 1 000 parties complètes sans aucune répétition dans chaque combinaison jeu/thème. Le moteur évite les répétitions jusqu'à épuisement de chaque banque. Promettre 1 000 parties totalement uniques à ce stade serait faux.

@@ -1,0 +1,9 @@
+V5.44 — HARD MODE
+- Blind Test : temps de réponse réduit à 12 secondes; extrait audio reste 10 secondes.
+- Faux choix : groupes cohérents ajoutés (rap FR contre rap FR, rap US contre rap US, pop contre pop, shonen contre shonen, séries contre séries, dessins animés de familles proches, etc.).
+- Qui est-ce : banque photo portée à 116 entrées.
+- Qui est-ce : faux choix choisis dans le même thème et, si possible, le même niveau de difficulté.
+- Rotation Qui est-ce : 60 manches simulées, aucune répétition consécutive de thème et aucun rébus lorsque les thèmes photo sont disponibles.
+- Blind Test : tous les groupes cohérents testés avec au moins 3 faux choix possibles.
+- Syntaxe serveur/client : OK.
+Limite inchangée : la taille du catalogue Blind Test est supérieure au nombre de sources audio réellement vérifiées et jouables; aucun faux ID vidéo n'est inventé.

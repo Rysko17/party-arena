@@ -1,0 +1,5 @@
+V5.41 — TESTS RÉUSSIS
+- Mot interdit : 30 s.
+- Qui est-ce : 76 photos dans la banque. 80 tirages sur les thèmes disposant de photos = 80 photos, 0 rébus.
+- Blind Test : 420 segments de 10 s avec identifiants distincts (140 par thème).
+ATTENTION : ce sont 420 segments différents, pas 420 chansons différentes : plusieurs passages peuvent venir d'une même source YouTube. La disponibilité réelle de chaque passage dépend de YouTube.

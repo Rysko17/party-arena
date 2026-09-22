@@ -1,0 +1,14 @@
+V5.52 — BLIND TEST ORDRE ALÉATOIRE
+- Suppression du choix de starter dépendant d'un ordre récurrent.
+- À chaque manche Blind Test : thème tiré aléatoirement parmi les thèmes sélectionnés.
+- Si plusieurs thèmes sont disponibles, le même thème n'est pas repris immédiatement.
+- La liste des extraits encore jamais vus est mélangée avec Fisher-Yates avant sélection.
+- L'anti-répétition V5.46+ reste actif.
+- Les choix QCM restent eux aussi mélangés.
+
+TEST AUTOMATISÉ :
+100 nouvelles parties simulées, 10 manches Blind chacune.
+Résultat : 100/100 séquences de 10 manches différentes.
+50 starters différents sur les 100 simulations.
+IMPORTANT : avec 160 extraits actifs, il est impossible de garantir mathématiquement 100 starters tous différents tout en conservant un vrai tirage aléatoire. Le test garantit l'absence d'ordre fixe, pas l'absence absolue de collision aléatoire entre parties.
+Syntaxe serveur/client : OK.

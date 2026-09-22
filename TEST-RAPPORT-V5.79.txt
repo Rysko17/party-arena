@@ -1,0 +1,8 @@
+PARTY ARENA V5.79 — QUI EST-CE ? BARÈME ÉCRIT
+
+Solo : nom de famille ou nom complet = 125 % des points de la manche ; prénom seul identifiable = 100 % ; erreur = 0.
+Duo : un seul prénom ou nom reconnu = 50 % des points ; les deux identités reconnues, dans n'importe quel ordre = 100 % ; erreur = 0.
+Le bonus de 25 % ne s'applique pas au duo. Les petites fautes et les accents sont tolérés.
+Les points sont calculés après le bonus de vitesse existant. Monuments : barème normal.
+
+Vérifications locales : node --check server.js OK ; analyse syntaxique JavaScript client OK ; 11 tests de réponses et barèmes OK. Tests multijoueurs sur Render non effectués.

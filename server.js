@@ -2,7 +2,7 @@ const express=require('express'),http=require('http'),{Server}=require('socket.i
 const app=express(),server=http.createServer(app),io=new Server(server),GLOBAL_USED={},DB=JSON.parse(fs.readFileSync(path.join(__dirname,'questions.json'),'utf8')),rooms={};
 app.use(express.static(path.join(__dirname,'public')));
 function code(){let s='',a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';for(let i=0;i<4;i++)s+=a[Math.floor(Math.random()*a.length)];return s}
-function publicRound(c){if(!c||c.game!=='Ciné Extrait')return c;const {clipAnswer,clipAliases,c:correctIndex,...safe}=c;return safe}
+function publicRound(c){if(!c)return c;if(c.game==='Ciné Extrait'){const {clipAnswer,clipAliases,c:correctIndex,...safe}=c;return safe}if(c.game==='Qui est-ce ?'){const {c:correctIndex,...safe}=c;return {...safe,a:undefined}}return c}
 function view(r){return{code:r.code,host:r.host,players:Object.values(r.players).map(p=>({id:p.id,name:p.name,score:p.score})),settings:r.settings,round:r.round,total:r.total,state:r.state,gameIndex:r.gameIndex,gameRound:r.gameRound}}
 function emit(r){io.to(r.code).emit('room',view(r))}
 function question(r){
@@ -793,6 +793,53 @@ async function imageCulteRound(r){
  const dec=imageCulteDecoys(z,pool),a=[z.work,...dec].sort(()=>Math.random()-.5);
  return {game:'Image culte',q:'🎬 Reconnais cette scène difficile : de quelle œuvre vient-elle ?',a,c:a.indexOf(z.work),image:'/tmdb-scene/'+z.type+'/'+z.id+'/'+assetDifficulty+'?file='+encodeURIComponent(pic.tmdbPath),theme:z.theme,difficulty,points:difficultyPoints(difficulty),imageCulte:true,imageEffect:pickImageEffect(difficulty),tmdbAttribution};
 }
+// Qui est-ce ? : noms complets ou noms de famille, avec tolérance aux petites fautes.
+// Pour un duo, les deux identités sont obligatoires (ordre indifférent).
+function whoNormalize(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’']/g,' ').replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim()}
+function whoNameMatches(input,full,allowSurname=true){
+ const a=whoNormalize(input),b=whoNormalize(full);if(!a||!b)return false;
+ const variants=[b];const words=b.split(' ');
+ if(allowSurname&&words.length>1){variants.push(words[words.length-1]);if(words.length>2)variants.push(words.slice(1).join(' '));}
+ return variants.some(v=>{if(a===v)return true;if(a.length<4||v.length<4)return false;
+  const d=clipEditDistance(a,v),max=v.length<5?1:v.length<13?2:Math.min(3,Math.floor(v.length*.18));
+  return Math.abs(a.length-v.length)<=max&&d<=max&&a.length>=Math.floor(v.length*.75);
+ });
+}
+// Le nom de famille (ou le nom complet) donne un bonus de 25 %.
+// Un prénom seul identifiable donne les points normaux ; pour un duo, une
+// seule identité reconnue donne 50 % des points de la manche.
+function whoPersonResult(input,full){
+ const words=whoNormalize(full).split(' ').filter(Boolean),value=whoNormalize(input);
+ if(!value)return 'none';
+ if(whoNameMatches(input,full,true))return 'surname';
+ // Le prénom seul n'est accepté que s'il est assez distinctif.
+ if(words.length>1&&words[0].length>=4&&whoNameMatches(input,words[0],false))return 'first';
+ return 'none';
+}
+function whoScoreResult(input,answer,duo=false,monument=false){
+ if(!duo){
+  if(monument)return {correct:whoNameMatches(input,answer,false),multiplier:1,detail:'monument'};
+  const type=whoPersonResult(input,answer);
+  return {correct:type!=='none',multiplier:type==='surname'?1.25:type==='first'?1:0,detail:type};
+ }
+ const names=String(answer).split(' + ');if(names.length!==2)return {correct:false,multiplier:0,detail:'none'};
+ const parts=String(input||'').split(/\s*(?:\+|&|\bet\b|\band\b|,|\/)\s*/i).filter(Boolean);
+ let candidates=parts.length===2?[parts]:[];
+ const tokens=whoNormalize(input).split(' ').filter(Boolean);
+ if(tokens.length>=2)for(let i=1;i<tokens.length;i++)candidates.push([tokens.slice(0,i).join(' '),tokens.slice(i).join(' ')]);
+ // Une seule personne reconnue, même si le joueur n'a pas mis de séparateur.
+ candidates.push([input,'']);
+ if(parts.length===2){candidates.push([parts[0],''],[parts[1],'']);}
+ let best={correct:false,multiplier:0,detail:'none'};
+ for(const pair of candidates)for(const order of [names,[names[1],names[0]]]){
+  const left=whoPersonResult(pair[0],order[0]),right=whoPersonResult(pair[1],order[1]);
+  const count=Number(left!=='none')+Number(right!=='none');
+  const multiplier=count===2?1:count===1?.5:0;
+  if(multiplier>best.multiplier)best={correct:count>0,multiplier,detail:count===2?'duo':count===1?'half':'none'};
+ }
+ return best;
+}
+function whoAnswerMatches(input,answer,duo=false){return whoScoreResult(input,answer,duo).correct;}
 // Comparaison souple pour les réponses écrites (accents, ponctuation, petites fautes).
 function normalizeClipTitle(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/&/g,' and ').replace(/[^a-z0-9]+/g,' ').replace(/\b(le|la|les|the|a|an|un|une|de|du|des|of)\b/g,' ').replace(/\s+/g,' ').trim()}
 function clipEditDistance(a,b){const prev=Array.from({length:b.length+1},(_,i)=>i);for(let i=1;i<=a.length;i++){let last=prev[0];prev[0]=i;for(let j=1;j<=b.length;j++){const old=prev[j];prev[j]=Math.min(prev[j]+1,prev[j-1]+1,last+(a[i-1]===b[j-1]?0:1));last=old}}return prev[b.length]}
@@ -1133,13 +1180,13 @@ io.on('connection',(s)=>{
  s.on('clipPlaybackError',async({code,excerptId}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Ciné Extrait'||r.current.excerptId!==excerptId||r._clipReplacing)return;r._clipReplacing=true;
   try{const c=await cineExtraitRound(r);r.current=c;r._clipStarted=false;r._clipEnded=false;r.answers={};r.answerOrder=[];r._advancing=false;io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:publicRound(c)})}finally{r._clipReplacing=false}
  });
- s.on('blindPlaybackError',({code,excerptId,reason}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Blind Test'||r.current?.excerptId!==excerptId)return;r.badBlind=r.badBlind||new Set();if(r.badBlind.has(excerptId))return;r.badBlind.add(excerptId);r.blindSeen=r.blindSeen||new Set();r.blindSeen.add(excerptId);r.current=blindRound(r);r.answers={};r.answerOrder=[];r._advancing=false;io.to(code).emit('blindReplaced',{bad:excerptId,reason:reason||'playback'});io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:r.current});armRoundTimer(r)});
+ s.on('blindPlaybackError',({code,excerptId,reason}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Blind Test'||r.current?.excerptId!==excerptId)return;r.badBlind=r.badBlind||new Set();if(r.badBlind.has(excerptId))return;r.badBlind.add(excerptId);r.blindSeen=r.blindSeen||new Set();r.blindSeen.add(excerptId);r.current=blindRound(r);r.answers={};r.answerOrder=[];r._advancing=false;io.to(code).emit('blindReplaced',{bad:excerptId,reason:reason||'playback'});io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:publicRound(r.current)});armRoundTimer(r)});
 
 
  socket.on('rerollWho',({code}={})=>{
  const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Qui est-ce ?')return;
  const z=pickWhoMixed(r);r.current={game:'Qui est-ce ?',q:z.q,a:z.a,c:z.c,theme:z.theme,whoRebus:!!z.whoRebus,whoPhoto:!!z.whoPhoto,image:z.image||null,duoImages:z.duoImages||null,difficulty:z.difficulty||'dur',points:difficultyPoints(z.difficulty||'dur')};r.answers={};
- io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:r.current});
+ io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:publicRound(r.current)});
 });
  socket.on('rerollImpostor',({code}={})=>{
    const r=rooms[code]; if(!r||r.host!==socket.id||!r.current||r.current.game!=="L’Imposteur")return;
@@ -1193,7 +1240,7 @@ io.on('connection',(s)=>{
    setTimeout(()=>{r.gameIndex++;r.gameRound=0;if(r.gameIndex>=r.settings.games.length)io.to(r.code).emit('finished',view(r));else next(r)},2200);
    return;
  }
- if(r.current?.game==='Ciné Extrait')return;
+ if(r.current?.game==='Ciné Extrait'||r.current?.game==='Qui est-ce ?')return;
  r.answerOrder=r.answerOrder||[];
  if(!r.answerOrder.includes(s.id))r.answerOrder.push(s.id);
  r.answers[s.id]=+x.value;
@@ -1223,6 +1270,16 @@ io.on('connection',(s)=>{
    r._advancing=true;setTimeout(()=>next(r),1800);
  }
 });
+ s.on('whoTypedAnswer',x=>{const r=rooms[x?.code];if(!r||r.current?.game!=='Qui est-ce ?'||r._advancing||!r.players[s.id]||r.answers?.[s.id]!=null)return;
+  const input=String(x.text||'').trim().slice(0,100);if(!input)return;
+  const answer=r.current.a?.[r.current.c]||'',monument=/monument/i.test(r.current.q||'');
+  const result=whoScoreResult(input,answer,!!r.current.duoImages,monument),correct=result.correct;
+  r.answers=r.answers||{};r.answers[s.id]=correct?1:0;r.answerOrder=r.answerOrder||[];r.answerOrder.push(s.id);
+  const pts=correct?Math.round(speedPoints(r.current.points||500,r.answerOrder.length)*result.multiplier):0;if(pts)r.players[s.id].score+=pts;
+  io.to(s.id).emit('answerFeedback',{correct,points:pts,partial:result.detail==='half',bonus:result.detail==='surname',correctAnswer:answer});emit(r);
+  const ids=Object.keys(r.players);io.to(r.code).emit('answerProgress',{done:Object.keys(r.answers).length,total:ids.length});
+  if(ids.every(id=>r.answers[id]!=null)){if(r._roundTimer)clearTimeout(r._roundTimer);io.to(r.code).emit('roundReveal',{answer});r._advancing=true;setTimeout(()=>next(r),1800)}
+ });
  s.on('clipTypedAnswer',x=>{const r=rooms[x?.code];if(!r||r.current?.game!=='Ciné Extrait'||!r._clipEnded||r._advancing||!r.players[s.id]||r.answers?.[s.id]!=null)return;
   const input=String(x.text||'').slice(0,100),correct=clipAnswerMatches(input,r.current.clipAnswer,r.current.clipAliases);r.answers[s.id]=correct?1:0;r.answerOrder=r.answerOrder||[];r.answerOrder.push(s.id);
   const pts=correct?speedPoints(r.current.points||500,r.answerOrder.length):0;if(pts)r.players[s.id].score+=pts;

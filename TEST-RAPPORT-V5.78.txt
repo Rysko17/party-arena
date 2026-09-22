@@ -1,0 +1,8 @@
+PARTY ARENA V5.78 — QUI EST-CE ? RÉPONSES ÉCRITES
+- Réponse libre pour portraits de sportifs, célébrités, personnages d'anime, monuments et rébus.
+- Nom complet ou nom de famille accepté avec accents et petites fautes tolérés.
+- Duo demi-visages : écrire les deux noms, dans n'importe quel ordre, séparés par +, et, &, ou espace (deux noms simples).
+- Vérification côté serveur, réponse correcte retirée des données de la manche envoyées aux clients.
+- Chrono et barème conservés. Les autres jeux ne changent pas.
+- Tests locaux : syntaxe serveur et client, cas positifs et négatifs de réponses écrites.
+- Non vérifié sur le Render distant en conditions multijoueurs.

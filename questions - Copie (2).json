@@ -1,0 +1,5311 @@
+{
+  "Culture générale": [
+    {
+      "q": "Quelle planète est surnommée la planète rouge ?",
+      "a": [
+        "Mars",
+        "Vénus",
+        "Jupiter",
+        "Mercure"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel est le plus grand océan ?",
+      "a": [
+        "Atlantique",
+        "Indien",
+        "Pacifique",
+        "Arctique"
+      ],
+      "c": 2,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien de côtés possède un hexagone ?",
+      "a": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel est le plus grand océan du monde ?",
+      "a": [
+        "Pacifique",
+        "Atlantique",
+        "Indien",
+        "Arctique"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel gaz les humains respirent-ils principalement pour vivre ?",
+      "a": [
+        "Oxygène",
+        "Hélium",
+        "Hydrogène",
+        "Néon"
+      ],
+      "c": 0,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Combien de côtés possède un hexagone ?",
+      "a": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "c": 1,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel est le plus grand mammifère ?",
+      "a": [
+        "Éléphant",
+        "Baleine bleue",
+        "Girafe",
+        "Rhinocéros"
+      ],
+      "c": 1,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quelle est la capitale de l’Espagne ?",
+      "a": [
+        "Madrid",
+        "Barcelone",
+        "Séville",
+        "Valence"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel métal a pour symbole Fe ?",
+      "a": [
+        "Fer",
+        "Or",
+        "Argent",
+        "Cuivre"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien y a-t-il de minutes dans 2 heures ?",
+      "a": [
+        "100",
+        "110",
+        "120",
+        "140"
+      ],
+      "c": 2,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quel continent contient le Brésil ?",
+      "a": [
+        "Europe",
+        "Afrique",
+        "Amérique du Sud",
+        "Asie"
+      ],
+      "c": 2,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel organe pompe le sang ?",
+      "a": [
+        "Poumon",
+        "Cœur",
+        "Foie",
+        "Rein"
+      ],
+      "c": 1,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quelle langue est principalement parlée au Brésil ?",
+      "a": [
+        "Espagnol",
+        "Portugais",
+        "Français",
+        "Italien"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel est le satellite naturel de la Terre ?",
+      "a": [
+        "Mars",
+        "Lune",
+        "Soleil",
+        "Vénus"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien de jours compte une année bissextile ?",
+      "a": [
+        "365",
+        "366",
+        "364",
+        "367"
+      ],
+      "c": 1,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quelle est la capitale de l’Italie ?",
+      "a": [
+        "Milan",
+        "Rome",
+        "Naples",
+        "Turin"
+      ],
+      "c": 1,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel animal est le plus rapide sur terre ?",
+      "a": [
+        "Guépard",
+        "Lion",
+        "Cheval",
+        "Loup"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quelle planète possède des anneaux très visibles ?",
+      "a": [
+        "Mars",
+        "Saturne",
+        "Mercure",
+        "Vénus"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel pays possède les pyramides de Gizeh ?",
+      "a": [
+        "Égypte",
+        "Maroc",
+        "Mexique",
+        "Inde"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel instrument mesure la température ?",
+      "a": [
+        "Baromètre",
+        "Thermomètre",
+        "Chronomètre",
+        "Altimètre"
+      ],
+      "c": 1,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Combien font 12 × 12 ?",
+      "a": [
+        "124",
+        "132",
+        "144",
+        "154"
+      ],
+      "c": 2,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel est le plus long fleuve de France ?",
+      "a": [
+        "Loire",
+        "Seine",
+        "Rhône",
+        "Garonne"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quelle couleur obtient-on en mélangeant bleu et jaune ?",
+      "a": [
+        "Orange",
+        "Vert",
+        "Violet",
+        "Rouge"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Allemagne ?",
+      "a": [
+        "Berlin",
+        "Paris",
+        "Rome",
+        "Madrid"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Portugal ?",
+      "a": [
+        "Paris",
+        "Rome",
+        "Madrid",
+        "Lisbonne"
+      ],
+      "c": 3,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Belgique ?",
+      "a": [
+        "Rome",
+        "Madrid",
+        "Bruxelles",
+        "Paris"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Pays-Bas ?",
+      "a": [
+        "Madrid",
+        "Amsterdam",
+        "Paris",
+        "Rome"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Grèce ?",
+      "a": [
+        "Athènes",
+        "Paris",
+        "Rome",
+        "Madrid"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Irlande ?",
+      "a": [
+        "Paris",
+        "Rome",
+        "Madrid",
+        "Dublin"
+      ],
+      "c": 3,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Autriche ?",
+      "a": [
+        "Rome",
+        "Madrid",
+        "Vienne",
+        "Paris"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Suisse ?",
+      "a": [
+        "Madrid",
+        "Berne",
+        "Paris",
+        "Rome"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Suède ?",
+      "a": [
+        "Stockholm",
+        "Paris",
+        "Rome",
+        "Madrid"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Norvège ?",
+      "a": [
+        "Paris",
+        "Rome",
+        "Madrid",
+        "Oslo"
+      ],
+      "c": 3,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Danemark ?",
+      "a": [
+        "Rome",
+        "Madrid",
+        "Copenhague",
+        "Paris"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Finlande ?",
+      "a": [
+        "Madrid",
+        "Helsinki",
+        "Paris",
+        "Rome"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Pologne ?",
+      "a": [
+        "Varsovie",
+        "Paris",
+        "Rome",
+        "Madrid"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Canada ?",
+      "a": [
+        "Paris",
+        "Rome",
+        "Madrid",
+        "Ottawa"
+      ],
+      "c": 3,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Australie ?",
+      "a": [
+        "Rome",
+        "Madrid",
+        "Canberra",
+        "Paris"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Japon ?",
+      "a": [
+        "Madrid",
+        "Tokyo",
+        "Paris",
+        "Rome"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Corée du Sud ?",
+      "a": [
+        "Séoul",
+        "Paris",
+        "Rome",
+        "Madrid"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Argentine ?",
+      "a": [
+        "Paris",
+        "Rome",
+        "Madrid",
+        "Buenos Aires"
+      ],
+      "c": 3,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Mexique ?",
+      "a": [
+        "Rome",
+        "Madrid",
+        "Mexico",
+        "Paris"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la capitale de Thaïlande ?",
+      "a": [
+        "Madrid",
+        "Bangkok",
+        "Paris",
+        "Rome"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 2 × 2 ?",
+      "a": [
+        "4",
+        "6",
+        "2",
+        "6"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 3 × 3 ?",
+      "a": [
+        "9",
+        "12",
+        "6",
+        "11"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 4 × 4 ?",
+      "a": [
+        "16",
+        "20",
+        "12",
+        "18"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 5 × 5 ?",
+      "a": [
+        "25",
+        "30",
+        "20",
+        "27"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 6 × 6 ?",
+      "a": [
+        "36",
+        "42",
+        "30",
+        "38"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 7 × 7 ?",
+      "a": [
+        "49",
+        "56",
+        "42",
+        "51"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 8 × 8 ?",
+      "a": [
+        "64",
+        "72",
+        "56",
+        "66"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 9 × 9 ?",
+      "a": [
+        "81",
+        "90",
+        "72",
+        "83"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 10 × 10 ?",
+      "a": [
+        "100",
+        "110",
+        "90",
+        "102"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 11 × 11 ?",
+      "a": [
+        "121",
+        "132",
+        "110",
+        "123"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 12 × 12 ?",
+      "a": [
+        "144",
+        "156",
+        "132",
+        "146"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 13 × 13 ?",
+      "a": [
+        "169",
+        "182",
+        "156",
+        "171"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 14 × 14 ?",
+      "a": [
+        "196",
+        "210",
+        "182",
+        "198"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 15 × 15 ?",
+      "a": [
+        "225",
+        "240",
+        "210",
+        "227"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 16 × 16 ?",
+      "a": [
+        "256",
+        "272",
+        "240",
+        "258"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 17 × 17 ?",
+      "a": [
+        "289",
+        "306",
+        "272",
+        "291"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 18 × 18 ?",
+      "a": [
+        "324",
+        "342",
+        "306",
+        "326"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 19 × 19 ?",
+      "a": [
+        "361",
+        "380",
+        "342",
+        "363"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 20 × 20 ?",
+      "a": [
+        "400",
+        "420",
+        "380",
+        "402"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 21 × 21 ?",
+      "a": [
+        "441",
+        "462",
+        "420",
+        "443"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel monument apparaît sur cette image ?",
+      "a": [
+        "Tour Eiffel",
+        "Colisée",
+        "Big Ben",
+        "Taj Mahal"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Tour%20Eiffel%20Wikimedia%20Commons.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Culture générale"
+    },
+    {
+      "q": "Quel monument apparaît sur cette image ?",
+      "a": [
+        "Colisée",
+        "Tour Eiffel",
+        "Pyramides de Gizeh",
+        "Sagrada Família"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Colosseo%202020.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Culture générale"
+    },
+    {
+      "q": "Quel monument apparaît sur cette image ?",
+      "a": [
+        "Taj Mahal",
+        "Louvre",
+        "Big Ben",
+        "Arc de Triomphe"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Taj%20Mahal%2C%20Agra%2C%20India%20edit3.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Culture générale"
+    },
+    {
+      "q": "Quel animal apparaît sur cette image ?",
+      "a": [
+        "Lion",
+        "Tigre",
+        "Guépard",
+        "Léopard"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Lion%20waiting%20in%20Namibia.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Culture générale"
+    },
+    {
+      "q": "Quel animal apparaît sur cette image ?",
+      "a": [
+        "Panda géant",
+        "Koala",
+        "Ours brun",
+        "Panda roux"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Giant%20Panda%202004-03-2.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Culture générale"
+    }
+  ],
+  "Football": [
+    {
+      "q": "Combien de joueurs une équipe aligne-t-elle normalement ?",
+      "a": [
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "c": 2,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quelle compétition oppose les sélections européennes ?",
+      "a": [
+        "Euro",
+        "Copa América",
+        "CAN",
+        "Libertadores"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Trois buts du même joueur forment un…",
+      "a": [
+        "Triplé",
+        "Doublé",
+        "Ace",
+        "Set"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien de minutes dure normalement un match sans prolongation ?",
+      "a": [
+        "80",
+        "90",
+        "100",
+        "120"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel joueur peut utiliser ses mains dans sa surface ?",
+      "a": [
+        "Défenseur",
+        "Gardien",
+        "Milieu",
+        "Attaquant"
+      ],
+      "c": 1,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quel carton signifie une expulsion ?",
+      "a": [
+        "Vert",
+        "Bleu",
+        "Jaune",
+        "Rouge"
+      ],
+      "c": 3,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien vaut un but ?",
+      "a": [
+        "1",
+        "2",
+        "3",
+        "5"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel pays a remporté la Coupe du monde 2018 ?",
+      "a": [
+        "France",
+        "Croatie",
+        "Brésil",
+        "Argentine"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel pays a remporté la Coupe du monde 2022 ?",
+      "a": [
+        "France",
+        "Argentine",
+        "Espagne",
+        "Allemagne"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Dans quel club joue-t-on au Parc des Princes ?",
+      "a": [
+        "OM",
+        "PSG",
+        "OL",
+        "Monaco"
+      ],
+      "c": 1,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quel club joue au Santiago Bernabéu ?",
+      "a": [
+        "FC Barcelone",
+        "Real Madrid",
+        "Atlético Madrid",
+        "Séville"
+      ],
+      "c": 1,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel club joue à Anfield ?",
+      "a": [
+        "Chelsea",
+        "Liverpool",
+        "Arsenal",
+        "Everton"
+      ],
+      "c": 1,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Que signifie VAR ?",
+      "a": [
+        "Assistance vidéo à l’arbitrage",
+        "Vitesse arbitrale rapide",
+        "Validation automatique du résultat",
+        "Vision avancée du referee"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien de points rapporte une victoire en championnat ?",
+      "a": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Comment appelle-t-on trois buts d’un même joueur dans un match ?",
+      "a": [
+        "Triplé",
+        "Doublé",
+        "Carré",
+        "Grand chelem"
+      ],
+      "c": 0,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quel poste joue principalement devant le but adverse ?",
+      "a": [
+        "Gardien",
+        "Attaquant",
+        "Arbitre",
+        "Défenseur central"
+      ],
+      "c": 1,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quelle compétition oppose les meilleures sélections européennes ?",
+      "a": [
+        "Euro",
+        "Copa América",
+        "CAN",
+        "Ligue des champions"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel pays accueille traditionnellement Wembley ?",
+      "a": [
+        "France",
+        "Angleterre",
+        "Italie",
+        "Portugal"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Qui est représenté sur cette image ?",
+      "a": [
+        "Kylian Mbappé",
+        "Erling Haaland",
+        "Vinícius Júnior",
+        "Jude Bellingham"
+      ],
+      "c": 0,
+      "image": "/assets/quiz/football/mbappe.jpg",
+      "difficulty": "moyen",
+      "requiresAsset": true
+    },
+    {
+      "q": "Qui est représenté sur cette image ?",
+      "a": [
+        "Lionel Messi",
+        "Cristiano Ronaldo",
+        "Neymar",
+        "Antoine Griezmann"
+      ],
+      "c": 0,
+      "image": "/assets/quiz/football/messi.jpg",
+      "difficulty": "moyen",
+      "requiresAsset": true
+    }
+  ],
+  "Cinéma & Séries": [
+    {
+      "q": "Qui dirige artistiquement le tournage d’un film ?",
+      "a": [
+        "Réalisateur",
+        "Monteur",
+        "Cascadeur",
+        "Exploitant"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Comment appelle-t-on un épisode test d’une série ?",
+      "a": [
+        "Pilote",
+        "Finale",
+        "Trailer",
+        "Remake"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Dans Harry Potter, quelle école fréquente Harry ?",
+      "a": [
+        "Poudlard",
+        "Narnia",
+        "Nevermore",
+        "Xavier"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel super-héros est Bruce Wayne ?",
+      "a": [
+        "Superman",
+        "Batman",
+        "Iron Man",
+        "Thor"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel super-héros est Peter Parker ?",
+      "a": [
+        "Spider-Man",
+        "Hulk",
+        "Flash",
+        "Aquaman"
+      ],
+      "c": 0,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Dans Titanic, comment s’appelle le personnage joué par Leonardo DiCaprio ?",
+      "a": [
+        "Jack",
+        "John",
+        "James",
+        "Jake"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Dans Stranger Things, quelle ville fictive est au centre de l’histoire ?",
+      "a": [
+        "Hawkins",
+        "Riverdale",
+        "Gotham",
+        "Springfield"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel objet permet de filmer une scène ?",
+      "a": [
+        "Caméra",
+        "Micro-ondes",
+        "Projecteur uniquement",
+        "Console"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Dans Star Wars, quelle arme utilisent les Jedi ?",
+      "a": [
+        "Sabre laser",
+        "Arc",
+        "Marteau",
+        "Trident"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel personnage dit souvent « Je s’appelle Groot » ?",
+      "a": [
+        "Rocket",
+        "Groot",
+        "Thanos",
+        "Loki"
+      ],
+      "c": 1,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Dans Avengers, quel héros manie Mjolnir ?",
+      "a": [
+        "Thor",
+        "Hulk",
+        "Hawkeye",
+        "Ant-Man"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel genre cherche principalement à faire peur ?",
+      "a": [
+        "Comédie",
+        "Horreur",
+        "Documentaire",
+        "Musical"
+      ],
+      "c": 1,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Comment appelle-t-on la suite d’un film ?",
+      "a": [
+        "Sequel",
+        "Pilote",
+        "Trailer",
+        "Casting"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel métier assemble les plans après le tournage ?",
+      "a": [
+        "Monteur",
+        "Figurant",
+        "Costumier",
+        "Exploitant"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Dans La Casa de Papel, les braqueurs utilisent des noms de quoi ?",
+      "a": [
+        "Villes",
+        "Animaux",
+        "Planètes",
+        "Couleurs"
+      ],
+      "c": 0,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quel personnage est le capitaine du Black Pearl ?",
+      "a": [
+        "Jack Sparrow",
+        "Indiana Jones",
+        "Rocky",
+        "Neo"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel studio est associé à Toy Story ?",
+      "a": [
+        "Pixar",
+        "HBO",
+        "Netflix",
+        "Paramount+"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel est ce film ?",
+      "a": [
+        "Titanic",
+        "Avatar",
+        "Inception",
+        "Interstellar"
+      ],
+      "c": 0,
+      "image": "/assets/quiz/cinema/titanic.jpg",
+      "difficulty": "moyen",
+      "requiresAsset": true
+    },
+    {
+      "q": "Quel est ce film ?",
+      "a": [
+        "Harry Potter",
+        "Le Seigneur des anneaux",
+        "Star Wars",
+        "Narnia"
+      ],
+      "c": 0,
+      "image": "/assets/quiz/cinema/harry-potter.jpg",
+      "difficulty": "moyen",
+      "requiresAsset": true
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Avatar",
+        "Breaking Bad",
+        "Better Call Saul",
+        "The Big Bang Theory"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Titanic",
+        "Game of Thrones",
+        "Prison Break",
+        "Brooklyn Nine-Nine"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Inception",
+        "Stranger Things",
+        "Lost",
+        "Modern Family"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Interstellar",
+        "The Walking Dead",
+        "Dexter",
+        "The Simpsons"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "The Dark Knight",
+        "Peaky Blinders",
+        "Sherlock",
+        "South Park"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Gladiator",
+        "La Casa de Papel",
+        "Black Mirror",
+        "Family Guy"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Jurassic Park",
+        "Squid Game",
+        "Dark",
+        "Rick and Morty"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "The Matrix",
+        "Wednesday",
+        "Vikings",
+        "Narcos"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Forrest Gump",
+        "The Boys",
+        "Suits",
+        "Ozark"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Fight Club",
+        "The Last of Us",
+        "Friends",
+        "Mindhunter"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Pulp Fiction",
+        "House of the Dragon",
+        "The Office",
+        "True Detective"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "The Godfather",
+        "Better Call Saul",
+        "How I Met Your Mother",
+        "Fargo"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Scarface",
+        "Prison Break",
+        "The Big Bang Theory",
+        "Mr. Robot"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Rocky",
+        "Lost",
+        "Brooklyn Nine-Nine",
+        "Severance"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Creed",
+        "Dexter",
+        "Modern Family",
+        "The Bear"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Top Gun",
+        "Sherlock",
+        "The Simpsons",
+        "Euphoria"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Top Gun: Maverick",
+        "Black Mirror",
+        "South Park",
+        "Yellowstone"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Jaws",
+        "Dark",
+        "Family Guy",
+        "Arcane"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "E.T.",
+        "Vikings",
+        "Rick and Morty",
+        "Fallout"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Back to the Future",
+        "Suits",
+        "Narcos",
+        "The Witcher"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Terminator 2",
+        "Friends",
+        "Ozark",
+        "One Piece (live action)"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Alien",
+        "The Office",
+        "Mindhunter",
+        "Daredevil"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Predator",
+        "How I Met Your Mother",
+        "True Detective",
+        "Loki"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Die Hard",
+        "The Big Bang Theory",
+        "Fargo",
+        "WandaVision"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "John Wick",
+        "Brooklyn Nine-Nine",
+        "Mr. Robot",
+        "The Mandalorian"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Mad Max: Fury Road",
+        "Modern Family",
+        "Severance",
+        "Andor"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "The Revenant",
+        "The Simpsons",
+        "The Bear",
+        "Obi-Wan Kenobi"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Django Unchained",
+        "South Park",
+        "Euphoria",
+        "House"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "The Wolf of Wall Street",
+        "Family Guy",
+        "Yellowstone",
+        "Grey's Anatomy"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Shutter Island",
+        "Rick and Morty",
+        "Arcane",
+        "The Good Doctor"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Harry Potter",
+        "Narcos",
+        "Fallout",
+        "Dr. House"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "The Lord of the Rings",
+        "Ozark",
+        "The Witcher",
+        "Lucifer"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "The Hobbit",
+        "Mindhunter",
+        "One Piece (live action)",
+        "Supernatural"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Star Wars",
+        "True Detective",
+        "Daredevil",
+        "The Vampire Diaries"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Indiana Jones",
+        "Fargo",
+        "Loki",
+        "Teen Wolf"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Pirates of the Caribbean",
+        "Mr. Robot",
+        "WandaVision",
+        "Smallville"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Mission: Impossible",
+        "Severance",
+        "The Mandalorian",
+        "Arrow"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Fast & Furious",
+        "The Bear",
+        "Andor",
+        "Kaamelott"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "James Bond",
+        "Euphoria",
+        "Obi-Wan Kenobi",
+        "Lupin"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Transformers",
+        "Yellowstone",
+        "House",
+        "H"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Avengers",
+        "Arcane",
+        "Grey's Anatomy",
+        "Bref."
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Iron Man",
+        "Fallout",
+        "The Good Doctor",
+        "Validé"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Spider-Man",
+        "The Witcher",
+        "Dr. House",
+        "Dix pour cent"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Black Panther",
+        "One Piece (live action)",
+        "Lucifer",
+        "Engrenages"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Deadpool",
+        "Daredevil",
+        "Supernatural",
+        "Le Bureau des légendes"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Joker",
+        "Loki",
+        "The Vampire Diaries",
+        "Family Business"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "The Batman",
+        "WandaVision",
+        "Teen Wolf",
+        "Fiasco"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Superman",
+        "The Mandalorian",
+        "Smallville",
+        "Breaking Bad"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Guardians of the Galaxy",
+        "Andor",
+        "Arrow",
+        "Game of Thrones"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Doctor Strange",
+        "Obi-Wan Kenobi",
+        "Kaamelott",
+        "Stranger Things"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Toy Story",
+        "House",
+        "Lupin",
+        "The Walking Dead"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Shrek",
+        "Grey's Anatomy",
+        "H",
+        "Peaky Blinders"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "The Lion King",
+        "The Good Doctor",
+        "Bref.",
+        "La Casa de Papel"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Frozen",
+        "Dr. House",
+        "Validé",
+        "Squid Game"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Finding Nemo",
+        "Lucifer",
+        "Dix pour cent",
+        "Wednesday"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Ratatouille",
+        "Supernatural",
+        "Engrenages",
+        "The Boys"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Cars",
+        "The Vampire Diaries",
+        "Le Bureau des légendes",
+        "The Last of Us"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Coco",
+        "Teen Wolf",
+        "Family Business",
+        "House of the Dragon"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Up",
+        "Smallville",
+        "Fiasco",
+        "Better Call Saul"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Inside Out",
+        "Arrow",
+        "Breaking Bad",
+        "Prison Break"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "The Conjuring",
+        "Kaamelott",
+        "Game of Thrones",
+        "Lost"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "It",
+        "Lupin",
+        "Stranger Things",
+        "Dexter"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Scream",
+        "H",
+        "The Walking Dead",
+        "Sherlock"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Halloween",
+        "Bref.",
+        "Peaky Blinders",
+        "Black Mirror"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Saw",
+        "Validé",
+        "La Casa de Papel",
+        "Dark"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "A Nightmare on Elm Street",
+        "Dix pour cent",
+        "Squid Game",
+        "Vikings"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "The Exorcist",
+        "Engrenages",
+        "Wednesday",
+        "Suits"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Get Out",
+        "Le Bureau des légendes",
+        "The Boys",
+        "Friends"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "A Quiet Place",
+        "Family Business",
+        "The Last of Us",
+        "The Office"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "The Ring",
+        "Fiasco",
+        "House of the Dragon",
+        "How I Met Your Mother"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Intouchables",
+        "Breaking Bad",
+        "Better Call Saul",
+        "The Big Bang Theory"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "La Haine",
+        "Game of Thrones",
+        "Prison Break",
+        "Brooklyn Nine-Nine"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Astérix & Obélix : Mission Cléopâtre",
+        "Stranger Things",
+        "Lost",
+        "Modern Family"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Le Dîner de cons",
+        "The Walking Dead",
+        "Dexter",
+        "The Simpsons"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Taxi",
+        "Peaky Blinders",
+        "Sherlock",
+        "South Park"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "OSS 117",
+        "La Casa de Papel",
+        "Black Mirror",
+        "Family Guy"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Les Visiteurs",
+        "Squid Game",
+        "Dark",
+        "Rick and Morty"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Bienvenue chez les Ch'tis",
+        "Wednesday",
+        "Vikings",
+        "Narcos"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Léon",
+        "The Boys",
+        "Suits",
+        "Ozark"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est un film ?",
+      "a": [
+        "Le Fabuleux Destin d'Amélie Poulain",
+        "The Last of Us",
+        "Friends",
+        "Mindhunter"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Breaking Bad",
+        "Avatar",
+        "Rocky",
+        "Shutter Island"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Game of Thrones",
+        "Titanic",
+        "Creed",
+        "Harry Potter"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Stranger Things",
+        "Inception",
+        "Top Gun",
+        "The Lord of the Rings"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "The Walking Dead",
+        "Interstellar",
+        "Top Gun: Maverick",
+        "The Hobbit"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Peaky Blinders",
+        "The Dark Knight",
+        "Jaws",
+        "Star Wars"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "La Casa de Papel",
+        "Gladiator",
+        "E.T.",
+        "Indiana Jones"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Squid Game",
+        "Jurassic Park",
+        "Back to the Future",
+        "Pirates of the Caribbean"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Wednesday",
+        "The Matrix",
+        "Terminator 2",
+        "Mission: Impossible"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "The Boys",
+        "Forrest Gump",
+        "Alien",
+        "Fast & Furious"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "The Last of Us",
+        "Fight Club",
+        "Predator",
+        "James Bond"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "House of the Dragon",
+        "Pulp Fiction",
+        "Die Hard",
+        "Transformers"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Better Call Saul",
+        "The Godfather",
+        "John Wick",
+        "Avengers"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Prison Break",
+        "Scarface",
+        "Mad Max: Fury Road",
+        "Iron Man"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Lost",
+        "Rocky",
+        "The Revenant",
+        "Spider-Man"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Dexter",
+        "Creed",
+        "Django Unchained",
+        "Black Panther"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Sherlock",
+        "Top Gun",
+        "The Wolf of Wall Street",
+        "Deadpool"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Black Mirror",
+        "Top Gun: Maverick",
+        "Shutter Island",
+        "Joker"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Dark",
+        "Jaws",
+        "Harry Potter",
+        "The Batman"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Vikings",
+        "E.T.",
+        "The Lord of the Rings",
+        "Superman"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Suits",
+        "Back to the Future",
+        "The Hobbit",
+        "Guardians of the Galaxy"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Friends",
+        "Terminator 2",
+        "Star Wars",
+        "Doctor Strange"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "The Office",
+        "Alien",
+        "Indiana Jones",
+        "Toy Story"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "How I Met Your Mother",
+        "Predator",
+        "Pirates of the Caribbean",
+        "Shrek"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "The Big Bang Theory",
+        "Die Hard",
+        "Mission: Impossible",
+        "The Lion King"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Brooklyn Nine-Nine",
+        "John Wick",
+        "Fast & Furious",
+        "Frozen"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Modern Family",
+        "Mad Max: Fury Road",
+        "James Bond",
+        "Finding Nemo"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "The Simpsons",
+        "The Revenant",
+        "Transformers",
+        "Ratatouille"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "South Park",
+        "Django Unchained",
+        "Avengers",
+        "Cars"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Family Guy",
+        "The Wolf of Wall Street",
+        "Iron Man",
+        "Coco"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Rick and Morty",
+        "Shutter Island",
+        "Spider-Man",
+        "Up"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Narcos",
+        "Harry Potter",
+        "Black Panther",
+        "Inside Out"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Ozark",
+        "The Lord of the Rings",
+        "Deadpool",
+        "The Conjuring"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Mindhunter",
+        "The Hobbit",
+        "Joker",
+        "It"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "True Detective",
+        "Star Wars",
+        "The Batman",
+        "Scream"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Fargo",
+        "Indiana Jones",
+        "Superman",
+        "Halloween"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Mr. Robot",
+        "Pirates of the Caribbean",
+        "Guardians of the Galaxy",
+        "Saw"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Severance",
+        "Mission: Impossible",
+        "Doctor Strange",
+        "A Nightmare on Elm Street"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "The Bear",
+        "Fast & Furious",
+        "Toy Story",
+        "The Exorcist"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Euphoria",
+        "James Bond",
+        "Shrek",
+        "Get Out"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Yellowstone",
+        "Transformers",
+        "The Lion King",
+        "A Quiet Place"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Arcane",
+        "Avengers",
+        "Frozen",
+        "The Ring"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Fallout",
+        "Iron Man",
+        "Finding Nemo",
+        "Intouchables"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "The Witcher",
+        "Spider-Man",
+        "Ratatouille",
+        "La Haine"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "One Piece (live action)",
+        "Black Panther",
+        "Cars",
+        "Astérix & Obélix : Mission Cléopâtre"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Daredevil",
+        "Deadpool",
+        "Coco",
+        "Le Dîner de cons"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Loki",
+        "Joker",
+        "Up",
+        "Taxi"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "WandaVision",
+        "The Batman",
+        "Inside Out",
+        "OSS 117"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "The Mandalorian",
+        "Superman",
+        "The Conjuring",
+        "Les Visiteurs"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Andor",
+        "Guardians of the Galaxy",
+        "It",
+        "Bienvenue chez les Ch'tis"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Obi-Wan Kenobi",
+        "Doctor Strange",
+        "Scream",
+        "Léon"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "House",
+        "Toy Story",
+        "Halloween",
+        "Le Fabuleux Destin d'Amélie Poulain"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Grey's Anatomy",
+        "Shrek",
+        "Saw",
+        "Avatar"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "The Good Doctor",
+        "The Lion King",
+        "A Nightmare on Elm Street",
+        "Titanic"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Dr. House",
+        "Frozen",
+        "The Exorcist",
+        "Inception"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Lucifer",
+        "Finding Nemo",
+        "Get Out",
+        "Interstellar"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Supernatural",
+        "Ratatouille",
+        "A Quiet Place",
+        "The Dark Knight"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "The Vampire Diaries",
+        "Cars",
+        "The Ring",
+        "Gladiator"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Teen Wolf",
+        "Coco",
+        "Intouchables",
+        "Jurassic Park"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Smallville",
+        "Up",
+        "La Haine",
+        "The Matrix"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Arrow",
+        "Inside Out",
+        "Astérix & Obélix : Mission Cléopâtre",
+        "Forrest Gump"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Kaamelott",
+        "The Conjuring",
+        "Le Dîner de cons",
+        "Fight Club"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Lupin",
+        "It",
+        "Taxi",
+        "Pulp Fiction"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "H",
+        "Scream",
+        "OSS 117",
+        "The Godfather"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Bref.",
+        "Halloween",
+        "Les Visiteurs",
+        "Scarface"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Validé",
+        "Saw",
+        "Bienvenue chez les Ch'tis",
+        "Rocky"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Dix pour cent",
+        "A Nightmare on Elm Street",
+        "Léon",
+        "Creed"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Engrenages",
+        "The Exorcist",
+        "Le Fabuleux Destin d'Amélie Poulain",
+        "Top Gun"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Le Bureau des légendes",
+        "Get Out",
+        "Avatar",
+        "Top Gun: Maverick"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Family Business",
+        "A Quiet Place",
+        "Titanic",
+        "Jaws"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Lequel de ces titres est une série ?",
+      "a": [
+        "Fiasco",
+        "The Ring",
+        "Inception",
+        "E.T."
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    }
+  ],
+  "Anime & Manga": [
+    {
+      "q": "Dans Dragon Ball, quel est le prénom du héros ?",
+      "a": [
+        "Naruto",
+        "Goku",
+        "Luffy",
+        "Ichigo"
+      ],
+      "c": 1,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Dans Naruto, Kurama est représenté comme quoi ?",
+      "a": [
+        "Dragon",
+        "Renard",
+        "Loup",
+        "Serpent"
+      ],
+      "c": 1,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel est le rêve de Luffy dans One Piece ?",
+      "a": [
+        "Devenir Hokage",
+        "Devenir Roi des Pirates",
+        "Devenir chasseur",
+        "Trouver les Dragon Balls"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Dans Naruto, quel village est celui de Naruto ?",
+      "a": [
+        "Konoha",
+        "Suna",
+        "Kiri",
+        "Ame"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Dans Death Note, comment s’appelle le protagoniste qui trouve le carnet ?",
+      "a": [
+        "Light",
+        "L",
+        "Ryuk",
+        "Near"
+      ],
+      "c": 0,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Dans Attack on Titan, que combattent principalement les héros ?",
+      "a": [
+        "Titans",
+        "Robots",
+        "Vampires",
+        "Pirates"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Dans Demon Slayer, comment s’appelle le héros principal ?",
+      "a": [
+        "Tanjiro",
+        "Gojo",
+        "Eren",
+        "Edward"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Dans Jujutsu Kaisen, qui est connu pour ses Six Yeux ?",
+      "a": [
+        "Gojo",
+        "Yuji",
+        "Megumi",
+        "Nanami"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Dans Pokémon, quel Pokémon accompagne principalement Sacha ?",
+      "a": [
+        "Pikachu",
+        "Mewtwo",
+        "Dracaufeu",
+        "Évoli"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Dans Bleach, quel est le prénom du héros ?",
+      "a": [
+        "Ichigo",
+        "Itachi",
+        "Inosuke",
+        "Izuku"
+      ],
+      "c": 0,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Dans My Hero Academia, quel est le surnom d’Izuku Midoriya ?",
+      "a": [
+        "Deku",
+        "Kira",
+        "Zero",
+        "Ace"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Dans Dragon Ball, de quelle race est Goku ?",
+      "a": [
+        "Saiyan",
+        "Namek",
+        "Titan",
+        "Shinigami"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Dans Hunter x Hunter, quel est le prénom du meilleur ami de Gon ?",
+      "a": [
+        "Killua",
+        "Kurapika",
+        "Leorio",
+        "Hisoka"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Dans Fullmetal Alchemist, quel est le prénom du frère d’Alphonse ?",
+      "a": [
+        "Edward",
+        "Eren",
+        "Erwin",
+        "Envy"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Dans One Punch Man, comment s’appelle le héros chauve ?",
+      "a": [
+        "Saitama",
+        "Genos",
+        "Garou",
+        "King"
+      ],
+      "c": 0,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Dans Tokyo Ghoul, quel est le prénom de Kaneki ?",
+      "a": [
+        "Ken",
+        "Ren",
+        "Zen",
+        "Sen"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Dans Chainsaw Man, quel est le prénom du héros ?",
+      "a": [
+        "Denji",
+        "Aki",
+        "Power",
+        "Makima"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Dans Solo Leveling, quel est le nom du héros principal ?",
+      "a": [
+        "Sung Jinwoo",
+        "Tanjiro Kamado",
+        "Yuji Itadori",
+        "Eren Yeager"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Dans Blue Lock, quel sport est au centre de l’histoire ?",
+      "a": [
+        "Basket",
+        "Football",
+        "Tennis",
+        "Boxe"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Dans Haikyuu!!, quel sport est pratiqué ?",
+      "a": [
+        "Volley-ball",
+        "Football",
+        "Baseball",
+        "Rugby"
+      ],
+      "c": 0,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quel personnage est représenté par ce cosplay ?",
+      "a": [
+        "Ichigo Kurosaki",
+        "Naruto Uzumaki",
+        "Monkey D. Luffy",
+        "Goku"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Ichigo%20kurosaki%20cosplay.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Anime & Manga"
+    },
+    {
+      "q": "Quel personnage est représenté par ce cosplay ?",
+      "a": [
+        "Monkey D. Luffy",
+        "Ichigo Kurosaki",
+        "Sasuke Uchiha",
+        "Saitama"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Cosplay%20of%20Monkey%20D.%20Luffy.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Anime & Manga"
+    },
+    {
+      "q": "Qui est représenté sur cette image ?",
+      "a": [
+        "Ichigo Kurosaki",
+        "Naruto Uzumaki",
+        "Monkey D. Luffy",
+        "Goku"
+      ],
+      "c": 0,
+      "image": "/assets/quiz/anime/ichigo.jpg",
+      "difficulty": "moyen",
+      "requiresAsset": true
+    },
+    {
+      "q": "Qui est représenté sur cette image ?",
+      "a": [
+        "Naruto Uzumaki",
+        "Ichigo Kurosaki",
+        "Satoru Gojo",
+        "Tanjiro Kamado"
+      ],
+      "c": 0,
+      "image": "/assets/quiz/anime/naruto.jpg",
+      "difficulty": "moyen",
+      "requiresAsset": true
+    }
+  ],
+  "Musique": [
+    {
+      "q": "Quelle partie d’une chanson revient généralement plusieurs fois ?",
+      "a": [
+        "Refrain",
+        "Outro",
+        "Pont",
+        "Solo"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Que signifie BPM ?",
+      "a": [
+        "Battements par minute",
+        "Basses par mesure",
+        "Boucles par mix",
+        "Balance piste/master"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel instrument possède généralement 88 touches ?",
+      "a": [
+        "Piano",
+        "Guitare",
+        "Violon",
+        "Flûte"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel appareil est utilisé par un DJ pour mixer ?",
+      "a": [
+        "Platine/contrôleur",
+        "Télescope",
+        "Scanner",
+        "Imprimante"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Comment appelle-t-on la vitesse d’un morceau ?",
+      "a": [
+        "Tempo",
+        "Pixel",
+        "Cadre",
+        "Filtre"
+      ],
+      "c": 0,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quel instrument possède six cordes dans sa version standard ?",
+      "a": [
+        "Guitare",
+        "Piano",
+        "Trompette",
+        "Batterie"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel terme désigne une chanson sans voix principale ?",
+      "a": [
+        "Instrumental",
+        "Acapella",
+        "Podcast",
+        "Remix vocal"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel format audio est très répandu ?",
+      "a": [
+        "MP3",
+        "PNG",
+        "PDF",
+        "DOCX"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Comment appelle-t-on une nouvelle version d’un morceau créée par un DJ/producteur ?",
+      "a": [
+        "Remix",
+        "Casting",
+        "Episode",
+        "Patch"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel élément donne souvent le rythme principal en rap ?",
+      "a": [
+        "Beat",
+        "Sous-titre",
+        "Storyboard",
+        "Logo"
+      ],
+      "c": 0,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quel instrument fait partie des percussions ?",
+      "a": [
+        "Batterie",
+        "Violon",
+        "Clarinette",
+        "Harpe"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Comment appelle-t-on un album court de quelques titres ?",
+      "a": [
+        "EP",
+        "GPS",
+        "CPU",
+        "DLC"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel terme désigne les paroles d’une chanson ?",
+      "a": [
+        "Lyrics",
+        "Frames",
+        "Layers",
+        "Pixels"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel effet crée une sensation d’espace/écho ?",
+      "a": [
+        "Reverb",
+        "Crop",
+        "Zoom",
+        "Mask"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    }
+  ],
+  "Jeux vidéo": [
+    {
+      "q": "Dans Minecraft, quel outil sert surtout à miner la pierre ?",
+      "a": [
+        "Pioche",
+        "Arc",
+        "Canne",
+        "Cisailles"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "GTA est surtout connu pour quel type de monde ?",
+      "a": [
+        "Monde ouvert",
+        "Puzzle",
+        "Cartes",
+        "Rails"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel personnage est la mascotte principale de Nintendo ?",
+      "a": [
+        "Mario",
+        "Sonic",
+        "Kratos",
+        "Master Chief"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Dans Minecraft, quel ennemi vert explose ?",
+      "a": [
+        "Creeper",
+        "Zombie",
+        "Enderman",
+        "Squelette"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Dans Fortnite, quel genre domine ?",
+      "a": [
+        "Battle Royale",
+        "Jeu de course uniquement",
+        "Échecs",
+        "Simulation de train"
+      ],
+      "c": 0,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Dans GTA V, quelle ville fictive est principale ?",
+      "a": [
+        "Los Santos",
+        "Liberty City",
+        "Vice City",
+        "Night City"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel jeu met en scène Kratos ?",
+      "a": [
+        "God of War",
+        "FIFA",
+        "Minecraft",
+        "Zelda"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel hérisson bleu est une mascotte de Sega ?",
+      "a": [
+        "Sonic",
+        "Tails",
+        "Mario",
+        "Kirby"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Dans League of Legends, combien de joueurs composent normalement une équipe ?",
+      "a": [
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel jeu contient le mode Ultimate Team ?",
+      "a": [
+        "EA Sports FC",
+        "Minecraft",
+        "Valorant",
+        "Zelda"
+      ],
+      "c": 0,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Dans Pokémon, que fait-on principalement avec les Pokémon ?",
+      "a": [
+        "Les capturer et combattre",
+        "Construire des voitures",
+        "Jouer au football uniquement",
+        "Piloter des avions"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel jeu compétitif oppose attaquants et défenseurs avec des agents ?",
+      "a": [
+        "Valorant",
+        "Animal Crossing",
+        "The Sims",
+        "Mario Kart"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel studio est à l’origine de Minecraft ?",
+      "a": [
+        "Mojang",
+        "Rockstar",
+        "Valve",
+        "Ubisoft"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel objet emblématique de Zelda est souvent manié par Link ?",
+      "a": [
+        "Épée",
+        "Fusil laser",
+        "Batte",
+        "Raquette"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Dans Mario Kart, quel objet bleu est célèbre pour viser le premier ?",
+      "a": [
+        "Carapace bleue",
+        "Banane rouge",
+        "Étoile noire",
+        "Champignon violet"
+      ],
+      "c": 0,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quel jeu est centré sur des voitures jouant au football ?",
+      "a": [
+        "Rocket League",
+        "Gran Turismo",
+        "Need for Speed",
+        "Forza"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Dans Among Us, quel rôle élimine secrètement les autres ?",
+      "a": [
+        "Imposteur",
+        "Médecin",
+        "Gardien",
+        "Coach"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel personnage de jeu vidéo ce costume représente-t-il ?",
+      "a": [
+        "Mario",
+        "Sonic",
+        "Link",
+        "Kratos"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/50%20mario.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Jeux vidéo"
+    },
+    {
+      "q": "Qui est représenté sur cette image ?",
+      "a": [
+        "Mario",
+        "Sonic",
+        "Crash Bandicoot",
+        "Link"
+      ],
+      "c": 0,
+      "image": "/assets/quiz/games/mario.jpg",
+      "difficulty": "moyen",
+      "requiresAsset": true
+    },
+    {
+      "q": "Qui est représenté sur cette image ?",
+      "a": [
+        "Kratos",
+        "Geralt",
+        "Master Chief",
+        "Nathan Drake"
+      ],
+      "c": 0,
+      "image": "/assets/quiz/games/kratos.jpg",
+      "difficulty": "moyen",
+      "requiresAsset": true
+    }
+  ],
+  "Dessins animés": [
+    {
+      "q": "Quel animal est Mickey ?",
+      "a": [
+        "Souris",
+        "Canard",
+        "Chien",
+        "Lapin"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Tom poursuit généralement qui ?",
+      "a": [
+        "Jerry",
+        "Bugs",
+        "Daffy",
+        "Scooby"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel animal est Scooby-Doo ?",
+      "a": [
+        "Chien",
+        "Chat",
+        "Cheval",
+        "Ours"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Dans Bob l’éponge, où vit Bob ?",
+      "a": [
+        "Bikini Bottom",
+        "Springfield",
+        "Gotham",
+        "Paris"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel personnage poursuit souvent Bip Bip ?",
+      "a": [
+        "Coyote",
+        "Titi",
+        "Daffy",
+        "Bugs"
+      ],
+      "c": 0,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quel duo est composé d’un chat et d’une souris ?",
+      "a": [
+        "Tom et Jerry",
+        "Tic et Tac",
+        "Phinéas et Ferb",
+        "Rick et Morty"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel personnage vit dans un ananas sous la mer ?",
+      "a": [
+        "Bob l’éponge",
+        "Mickey",
+        "Garfield",
+        "Simba"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel canard Disney porte une marinière bleue ?",
+      "a": [
+        "Donald",
+        "Dingo",
+        "Pluto",
+        "Mickey"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Dans Les Simpson, comment s’appelle le père de famille ?",
+      "a": [
+        "Homer",
+        "Bart",
+        "Ned",
+        "Moe"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel personnage adore les lasagnes ?",
+      "a": [
+        "Garfield",
+        "Snoopy",
+        "Taz",
+        "Stitch"
+      ],
+      "c": 0,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Dans Pokémon, quel type de créature est Pikachu ?",
+      "a": [
+        "Pokémon",
+        "Digimon",
+        "Titan",
+        "Saiyan"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel personnage Disney est un lion ?",
+      "a": [
+        "Simba",
+        "Olaf",
+        "Stitch",
+        "Aladdin"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Dans South Park, combien d’enfants forment le groupe principal classique ?",
+      "a": [
+        "4",
+        "2",
+        "6",
+        "8"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel personnage est un ogre vert ?",
+      "a": [
+        "Shrek",
+        "Buzz",
+        "Woody",
+        "Po"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    }
+  ],
+  "Internet & Réseaux": [
+    {
+      "q": "Quel symbole précède un hashtag ?",
+      "a": [
+        "#",
+        "@",
+        "&",
+        "%"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Que signifie souvent DM ?",
+      "a": [
+        "Message privé/direct",
+        "Mode sombre",
+        "Donnée mobile",
+        "Double mention"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel symbole sert à mentionner un compte sur de nombreux réseaux ?",
+      "a": [
+        "@",
+        "#",
+        "€",
+        "&"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Que signifie DM sur les réseaux sociaux ?",
+      "a": [
+        "Message privé",
+        "Mode sombre",
+        "Donnée mobile",
+        "Double média"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel format est souvent utilisé pour une courte vidéo verticale ?",
+      "a": [
+        "9:16",
+        "16:9",
+        "4:3",
+        "21:9"
+      ],
+      "c": 0,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Comment appelle-t-on un contenu qui se propage très rapidement ?",
+      "a": [
+        "Viral",
+        "Hors-ligne",
+        "Compressé",
+        "Privé"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Que signifie « like » ?",
+      "a": [
+        "J’aime",
+        "Bloquer",
+        "Supprimer",
+        "Télécharger"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel terme désigne une diffusion vidéo en direct ?",
+      "a": [
+        "Live",
+        "Draft",
+        "Cache",
+        "Archive"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Qu’est-ce qu’un hashtag ?",
+      "a": [
+        "Mot-clé précédé de #",
+        "Mot de passe",
+        "Adresse IP",
+        "Filtre audio"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel terme désigne les personnes abonnées à un compte ?",
+      "a": [
+        "Followers/abonnés",
+        "Drivers",
+        "Pixels",
+        "Plugins"
+      ],
+      "c": 0,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Que signifie « POV » dans beaucoup de vidéos ?",
+      "a": [
+        "Point of view",
+        "Power of video",
+        "Private online voice",
+        "Post original viral"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel format est généralement utilisé pour une image compressée ?",
+      "a": [
+        "JPEG",
+        "MP3",
+        "WAV",
+        "EXE"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Qu’est-ce qu’un emoji ?",
+      "a": [
+        "Petit pictogramme numérique",
+        "Type de câble",
+        "Navigateur",
+        "Mot de passe"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Que fait le bouton partager ?",
+      "a": [
+        "Envoie/retransmet le contenu",
+        "Éteint le téléphone",
+        "Change le mot de passe",
+        "Supprime le compte"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    }
+  ],
+  "Images": [
+    {
+      "q": "Quel monument est représenté par cette illustration ?",
+      "a": [
+        "Tour Eiffel",
+        "Big Ben",
+        "Colisée",
+        "Arc de Triomphe"
+      ],
+      "c": 0,
+      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%235424a8%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23121a38%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%97%BC%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3EMONUMENT%3C/text%3E%0A%20%20%20%20%3C/svg%3E",
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel animal est représenté ?",
+      "a": [
+        "Panda",
+        "Koala",
+        "Loup",
+        "Tigre"
+      ],
+      "c": 0,
+      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23136f63%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23102542%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%90%BC%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3EANIMAL%3C/text%3E%0A%20%20%20%20%3C/svg%3E",
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel sport est représenté ?",
+      "a": [
+        "Football",
+        "Basket",
+        "Tennis",
+        "Rugby"
+      ],
+      "c": 0,
+      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%230b7a3e%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23132238%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%E2%9A%BD%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3ESPORT%3C/text%3E%0A%20%20%20%20%3C/svg%3E",
+      "difficulty": "moyen"
+    },
+    {
+      "q": "À quel univers cette image fait-elle penser ?",
+      "a": [
+        "Jeux vidéo",
+        "Cuisine",
+        "Architecture",
+        "Mode"
+      ],
+      "c": 0,
+      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%233c1b78%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2310162b%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%8E%AE%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3EGAMING%3C/text%3E%0A%20%20%20%20%3C/svg%3E",
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel domaine est représenté ?",
+      "a": [
+        "Musique",
+        "Football",
+        "Cinéma",
+        "Science"
+      ],
+      "c": 0,
+      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%238a185f%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2314162e%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%8E%A7%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3EMUSIQUE%3C/text%3E%0A%20%20%20%20%3C/svg%3E",
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quel type de contenu est représenté ?",
+      "a": [
+        "Cinéma",
+        "Football",
+        "Manga",
+        "Cuisine"
+      ],
+      "c": 0,
+      "image": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22900%22%20height%3D%22500%22%3E%0A%20%20%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20stop-color%3D%22%237d3b12%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23161728%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%20%20%3Crect%20width%3D%22900%22%20height%3D%22500%22%20rx%3D%2235%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22235%22%20text-anchor%3D%22middle%22%20font-size%3D%22145%22%3E%F0%9F%8E%AC%3C/text%3E%0A%20%20%20%20%3Ctext%20x%3D%22450%22%20y%3D%22385%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2250%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3ECIN%C3%89MA%3C/text%3E%0A%20%20%20%20%3C/svg%3E",
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel monument vois-tu sur cette photo ?",
+      "a": [
+        "Tour Eiffel",
+        "Big Ben",
+        "Colisée",
+        "Sagrada Família"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Tour%20Eiffel%20Wikimedia%20Commons.jpg",
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel monument vois-tu sur cette photo ?",
+      "a": [
+        "Colisée",
+        "Tour Eiffel",
+        "Taj Mahal",
+        "Empire State Building"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Colosseo%202020.jpg",
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel monument vois-tu sur cette photo ?",
+      "a": [
+        "Taj Mahal",
+        "Louvre",
+        "Big Ben",
+        "Arc de Triomphe"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Taj%20Mahal%2C%20Agra%2C%20India%20edit3.jpg",
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel animal vois-tu sur cette photo ?",
+      "a": [
+        "Lion",
+        "Tigre",
+        "Léopard",
+        "Guépard"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Lion%20waiting%20in%20Namibia.jpg",
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quel animal vois-tu sur cette photo ?",
+      "a": [
+        "Panda géant",
+        "Ours brun",
+        "Koala",
+        "Panda roux"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Giant%20Panda%202004-03-2.jpg",
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel joueur de football est sur cette photo ?",
+      "a": [
+        "Kylian Mbappé",
+        "Lionel Messi",
+        "Cristiano Ronaldo",
+        "Neymar"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Kylian%20Mbapp%C3%A9%202019.jpg",
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel joueur de football est sur cette photo ?",
+      "a": [
+        "Lionel Messi",
+        "Cristiano Ronaldo",
+        "Zinédine Zidane",
+        "Erling Haaland"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Lionel%20Messi%2020180626.jpg",
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel joueur de football est sur cette photo ?",
+      "a": [
+        "Cristiano Ronaldo",
+        "Karim Benzema",
+        "Luka Modrić",
+        "Sergio Ramos"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Cristiano%20Ronaldo%202018.jpg",
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel personnage est représenté par ce cosplay ?",
+      "a": [
+        "Ichigo Kurosaki",
+        "Naruto Uzumaki",
+        "Monkey D. Luffy",
+        "Goku"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Ichigo%20kurosaki%20cosplay.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Anime & Manga"
+    },
+    {
+      "q": "Quel personnage est représenté par ce cosplay ?",
+      "a": [
+        "Monkey D. Luffy",
+        "Ichigo Kurosaki",
+        "Sasuke Uchiha",
+        "Saitama"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Cosplay%20of%20Monkey%20D.%20Luffy.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Anime & Manga"
+    },
+    {
+      "q": "Quel personnage de jeu vidéo ce costume représente-t-il ?",
+      "a": [
+        "Mario",
+        "Sonic",
+        "Link",
+        "Kratos"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/50%20mario.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Jeux vidéo"
+    },
+    {
+      "q": "Quel monument apparaît sur cette image ?",
+      "a": [
+        "Tour Eiffel",
+        "Colisée",
+        "Big Ben",
+        "Taj Mahal"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Tour%20Eiffel%20Wikimedia%20Commons.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Culture générale"
+    },
+    {
+      "q": "Quel monument apparaît sur cette image ?",
+      "a": [
+        "Colisée",
+        "Tour Eiffel",
+        "Pyramides de Gizeh",
+        "Sagrada Família"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Colosseo%202020.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Culture générale"
+    },
+    {
+      "q": "Quel monument apparaît sur cette image ?",
+      "a": [
+        "Taj Mahal",
+        "Louvre",
+        "Big Ben",
+        "Arc de Triomphe"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Taj%20Mahal%2C%20Agra%2C%20India%20edit3.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Culture générale"
+    },
+    {
+      "q": "Quel animal apparaît sur cette image ?",
+      "a": [
+        "Lion",
+        "Tigre",
+        "Guépard",
+        "Léopard"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Lion%20waiting%20in%20Namibia.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Culture générale"
+    },
+    {
+      "q": "Quel animal apparaît sur cette image ?",
+      "a": [
+        "Panda géant",
+        "Koala",
+        "Ours brun",
+        "Panda roux"
+      ],
+      "c": 0,
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Giant%20Panda%202004-03-2.jpg",
+      "difficulty": "moyen",
+      "visualTheme": "Culture générale"
+    }
+  ],
+  "Mathématiques": [
+    {
+      "q": "Combien font 8 + 7 ?",
+      "a": [
+        "13",
+        "14",
+        "15",
+        "16"
+      ],
+      "c": 2,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 9 × 6 ?",
+      "a": [
+        "45",
+        "54",
+        "56",
+        "64"
+      ],
+      "c": 1,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 100 ÷ 4 ?",
+      "a": [
+        "20",
+        "25",
+        "30",
+        "40"
+      ],
+      "c": 1,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel est le double de 36 ?",
+      "a": [
+        "62",
+        "72",
+        "76",
+        "82"
+      ],
+      "c": 1,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quelle est la moitié de 90 ?",
+      "a": [
+        "40",
+        "45",
+        "50",
+        "55"
+      ],
+      "c": 1,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 15 - 8 ?",
+      "a": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "c": 2,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Quel nombre vient après 999 ?",
+      "a": [
+        "1000",
+        "1001",
+        "990",
+        "9990"
+      ],
+      "c": 0,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien de degrés possède un angle droit ?",
+      "a": [
+        "45°",
+        "90°",
+        "120°",
+        "180°"
+      ],
+      "c": 1,
+      "difficulty": "simple"
+    },
+    {
+      "q": "Combien font 12 × 12 ?",
+      "a": [
+        "124",
+        "134",
+        "144",
+        "154"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 144 ÷ 12 ?",
+      "a": [
+        "10",
+        "11",
+        "12",
+        "14"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel est 25 % de 200 ?",
+      "a": [
+        "25",
+        "40",
+        "50",
+        "75"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quel est le carré de 15 ?",
+      "a": [
+        "125",
+        "200",
+        "225",
+        "250"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Résous : 3x = 27. x vaut…",
+      "a": [
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "c": 3,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 2³ ?",
+      "a": [
+        "6",
+        "8",
+        "9",
+        "12"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Un triangle a des angles de 50° et 60°. Le troisième vaut…",
+      "a": [
+        "60°",
+        "70°",
+        "80°",
+        "90°"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle fraction est égale à 0,5 ?",
+      "a": [
+        "1/4",
+        "1/3",
+        "1/2",
+        "2/3"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Combien font 7² + 1 ?",
+      "a": [
+        "48",
+        "49",
+        "50",
+        "51"
+      ],
+      "c": 2,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Si 5 objets coûtent 30 €, un objet coûte…",
+      "a": [
+        "5 €",
+        "6 €",
+        "7 €",
+        "8 €"
+      ],
+      "c": 1,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Quelle est la racine carrée de 169 ?",
+      "a": [
+        "11",
+        "12",
+        "13",
+        "14"
+      ],
+      "c": 2,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Résous : 2x + 5 = 19. x vaut…",
+      "a": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "c": 2,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Combien font 15 % de 360 ?",
+      "a": [
+        "44",
+        "54",
+        "64",
+        "74"
+      ],
+      "c": 1,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quel est le PGCD de 18 et 24 ?",
+      "a": [
+        "3",
+        "6",
+        "9",
+        "12"
+      ],
+      "c": 1,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quel est le PPCM de 6 et 8 ?",
+      "a": [
+        "12",
+        "18",
+        "24",
+        "48"
+      ],
+      "c": 2,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Un article à 80 € baisse de 25 %. Nouveau prix ?",
+      "a": [
+        "55 €",
+        "60 €",
+        "65 €",
+        "70 €"
+      ],
+      "c": 1,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Combien font 3⁴ ?",
+      "a": [
+        "27",
+        "64",
+        "81",
+        "243"
+      ],
+      "c": 2,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Si x² = 121 et x est positif, x vaut…",
+      "a": [
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "c": 2,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quelle est l’aire d’un cercle de rayon 3, en fonction de π ?",
+      "a": [
+        "3π",
+        "6π",
+        "9π",
+        "12π"
+      ],
+      "c": 2,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Une voiture roule à 90 km/h pendant 2 h 30. Distance ?",
+      "a": [
+        "180 km",
+        "205 km",
+        "225 km",
+        "250 km"
+      ],
+      "c": 2,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Quel nombre est premier ?",
+      "a": [
+        "21",
+        "27",
+        "29",
+        "33"
+      ],
+      "c": 2,
+      "difficulty": "dur"
+    },
+    {
+      "q": "Combien font (8 + 4) × 3 - 6 ?",
+      "a": [
+        "24",
+        "30",
+        "32",
+        "36"
+      ],
+      "c": 1,
+      "difficulty": "dur"
+    }
+  ],
+  "Sport": [
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Basketball ?",
+      "a": [
+        "LeBron James",
+        "Novak Djokovic",
+        "Rafael Nadal",
+        "Roger Federer"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Basketball ?",
+      "a": [
+        "Stephen Curry",
+        "Carlos Alcaraz",
+        "Jannik Sinner",
+        "Serena Williams"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Basketball ?",
+      "a": [
+        "Kevin Durant",
+        "Lewis Hamilton",
+        "Max Verstappen",
+        "Charles Leclerc"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Basketball ?",
+      "a": [
+        "Giannis Antetokounmpo",
+        "Fernando Alonso",
+        "Lando Norris",
+        "George Russell"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Tennis ?",
+      "a": [
+        "Novak Djokovic",
+        "LeBron James",
+        "Stephen Curry",
+        "Kevin Durant"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Tennis ?",
+      "a": [
+        "Rafael Nadal",
+        "Giannis Antetokounmpo",
+        "Luka Dončić",
+        "Nikola Jokić"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Tennis ?",
+      "a": [
+        "Roger Federer",
+        "Lewis Hamilton",
+        "Max Verstappen",
+        "Charles Leclerc"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Tennis ?",
+      "a": [
+        "Carlos Alcaraz",
+        "Fernando Alonso",
+        "Lando Norris",
+        "George Russell"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Formule 1 ?",
+      "a": [
+        "Lewis Hamilton",
+        "LeBron James",
+        "Stephen Curry",
+        "Kevin Durant"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Formule 1 ?",
+      "a": [
+        "Max Verstappen",
+        "Giannis Antetokounmpo",
+        "Luka Dončić",
+        "Nikola Jokić"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Formule 1 ?",
+      "a": [
+        "Charles Leclerc",
+        "Novak Djokovic",
+        "Rafael Nadal",
+        "Roger Federer"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Formule 1 ?",
+      "a": [
+        "Fernando Alonso",
+        "Carlos Alcaraz",
+        "Jannik Sinner",
+        "Serena Williams"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Boxe ?",
+      "a": [
+        "Muhammad Ali",
+        "LeBron James",
+        "Stephen Curry",
+        "Kevin Durant"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Boxe ?",
+      "a": [
+        "Mike Tyson",
+        "Giannis Antetokounmpo",
+        "Luka Dončić",
+        "Nikola Jokić"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Boxe ?",
+      "a": [
+        "Floyd Mayweather",
+        "Novak Djokovic",
+        "Rafael Nadal",
+        "Roger Federer"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Boxe ?",
+      "a": [
+        "Canelo Álvarez",
+        "Carlos Alcaraz",
+        "Jannik Sinner",
+        "Serena Williams"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en MMA/UFC ?",
+      "a": [
+        "Jon Jones",
+        "LeBron James",
+        "Stephen Curry",
+        "Kevin Durant"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en MMA/UFC ?",
+      "a": [
+        "Conor McGregor",
+        "Giannis Antetokounmpo",
+        "Luka Dončić",
+        "Nikola Jokić"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en MMA/UFC ?",
+      "a": [
+        "Khabib Nurmagomedov",
+        "Novak Djokovic",
+        "Rafael Nadal",
+        "Roger Federer"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en MMA/UFC ?",
+      "a": [
+        "Islam Makhachev",
+        "Carlos Alcaraz",
+        "Jannik Sinner",
+        "Serena Williams"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Rugby ?",
+      "a": [
+        "Antoine Dupont",
+        "LeBron James",
+        "Stephen Curry",
+        "Kevin Durant"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Rugby ?",
+      "a": [
+        "Jonny Wilkinson",
+        "Giannis Antetokounmpo",
+        "Luka Dončić",
+        "Nikola Jokić"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Rugby ?",
+      "a": [
+        "Dan Carter",
+        "Novak Djokovic",
+        "Rafael Nadal",
+        "Roger Federer"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Rugby ?",
+      "a": [
+        "Richie McCaw",
+        "Carlos Alcaraz",
+        "Jannik Sinner",
+        "Serena Williams"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Athlétisme ?",
+      "a": [
+        "Usain Bolt",
+        "LeBron James",
+        "Stephen Curry",
+        "Kevin Durant"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Athlétisme ?",
+      "a": [
+        "Shelly-Ann Fraser-Pryce",
+        "Giannis Antetokounmpo",
+        "Luka Dončić",
+        "Nikola Jokić"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Athlétisme ?",
+      "a": [
+        "Noah Lyles",
+        "Novak Djokovic",
+        "Rafael Nadal",
+        "Roger Federer"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Athlétisme ?",
+      "a": [
+        "Armand Duplantis",
+        "Carlos Alcaraz",
+        "Jannik Sinner",
+        "Serena Williams"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Natation ?",
+      "a": [
+        "Michael Phelps",
+        "LeBron James",
+        "Stephen Curry",
+        "Kevin Durant"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Natation ?",
+      "a": [
+        "Léon Marchand",
+        "Giannis Antetokounmpo",
+        "Luka Dončić",
+        "Nikola Jokić"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Natation ?",
+      "a": [
+        "Katie Ledecky",
+        "Novak Djokovic",
+        "Rafael Nadal",
+        "Roger Federer"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Natation ?",
+      "a": [
+        "Caeleb Dressel",
+        "Carlos Alcaraz",
+        "Jannik Sinner",
+        "Serena Williams"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Cyclisme ?",
+      "a": [
+        "Tadej Pogačar",
+        "LeBron James",
+        "Stephen Curry",
+        "Kevin Durant"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Cyclisme ?",
+      "a": [
+        "Jonas Vingegaard",
+        "Giannis Antetokounmpo",
+        "Luka Dončić",
+        "Nikola Jokić"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Cyclisme ?",
+      "a": [
+        "Remco Evenepoel",
+        "Novak Djokovic",
+        "Rafael Nadal",
+        "Roger Federer"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Cyclisme ?",
+      "a": [
+        "Mathieu van der Poel",
+        "Carlos Alcaraz",
+        "Jannik Sinner",
+        "Serena Williams"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Golf ?",
+      "a": [
+        "Tiger Woods",
+        "LeBron James",
+        "Stephen Curry",
+        "Kevin Durant"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Golf ?",
+      "a": [
+        "Rory McIlroy",
+        "Giannis Antetokounmpo",
+        "Luka Dončić",
+        "Nikola Jokić"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Golf ?",
+      "a": [
+        "Scottie Scheffler",
+        "Novak Djokovic",
+        "Rafael Nadal",
+        "Roger Federer"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Golf ?",
+      "a": [
+        "Jon Rahm",
+        "Carlos Alcaraz",
+        "Jannik Sinner",
+        "Serena Williams"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Volleyball ?",
+      "a": [
+        "Earvin Ngapeth",
+        "LeBron James",
+        "Stephen Curry",
+        "Kevin Durant"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Volleyball ?",
+      "a": [
+        "Wilfredo León",
+        "Giannis Antetokounmpo",
+        "Luka Dončić",
+        "Nikola Jokić"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Volleyball ?",
+      "a": [
+        "Paola Egonu",
+        "Novak Djokovic",
+        "Rafael Nadal",
+        "Roger Federer"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Volleyball ?",
+      "a": [
+        "Yuji Nishida",
+        "Carlos Alcaraz",
+        "Jannik Sinner",
+        "Serena Williams"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Baseball ?",
+      "a": [
+        "Shohei Ohtani",
+        "LeBron James",
+        "Stephen Curry",
+        "Kevin Durant"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Baseball ?",
+      "a": [
+        "Aaron Judge",
+        "Giannis Antetokounmpo",
+        "Luka Dončić",
+        "Nikola Jokić"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Baseball ?",
+      "a": [
+        "Mike Trout",
+        "Novak Djokovic",
+        "Rafael Nadal",
+        "Roger Federer"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Baseball ?",
+      "a": [
+        "Mookie Betts",
+        "Carlos Alcaraz",
+        "Jannik Sinner",
+        "Serena Williams"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Cricket ?",
+      "a": [
+        "Virat Kohli",
+        "LeBron James",
+        "Stephen Curry",
+        "Kevin Durant"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Cricket ?",
+      "a": [
+        "Sachin Tendulkar",
+        "Giannis Antetokounmpo",
+        "Luka Dončić",
+        "Nikola Jokić"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Cricket ?",
+      "a": [
+        "MS Dhoni",
+        "Novak Djokovic",
+        "Rafael Nadal",
+        "Roger Federer"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Cricket ?",
+      "a": [
+        "Rohit Sharma",
+        "Carlos Alcaraz",
+        "Jannik Sinner",
+        "Serena Williams"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Badminton ?",
+      "a": [
+        "Lin Dan",
+        "LeBron James",
+        "Stephen Curry",
+        "Kevin Durant"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Badminton ?",
+      "a": [
+        "Lee Chong Wei",
+        "Giannis Antetokounmpo",
+        "Luka Dončić",
+        "Nikola Jokić"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Badminton ?",
+      "a": [
+        "Viktor Axelsen",
+        "Novak Djokovic",
+        "Rafael Nadal",
+        "Roger Federer"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Badminton ?",
+      "a": [
+        "Kento Momota",
+        "Carlos Alcaraz",
+        "Jannik Sinner",
+        "Serena Williams"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Tennis de table ?",
+      "a": [
+        "Ma Long",
+        "LeBron James",
+        "Stephen Curry",
+        "Kevin Durant"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Tennis de table ?",
+      "a": [
+        "Fan Zhendong",
+        "Giannis Antetokounmpo",
+        "Luka Dončić",
+        "Nikola Jokić"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Tennis de table ?",
+      "a": [
+        "Timo Boll",
+        "Novak Djokovic",
+        "Rafael Nadal",
+        "Roger Federer"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Tennis de table ?",
+      "a": [
+        "Zhang Jike",
+        "Carlos Alcaraz",
+        "Jannik Sinner",
+        "Serena Williams"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Handball ?",
+      "a": [
+        "Nikola Karabatic",
+        "LeBron James",
+        "Stephen Curry",
+        "Kevin Durant"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Handball ?",
+      "a": [
+        "Mikkel Hansen",
+        "Giannis Antetokounmpo",
+        "Luka Dončić",
+        "Nikola Jokić"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Handball ?",
+      "a": [
+        "Mathias Gidsel",
+        "Novak Djokovic",
+        "Rafael Nadal",
+        "Roger Federer"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Handball ?",
+      "a": [
+        "Dika Mem",
+        "Carlos Alcaraz",
+        "Jannik Sinner",
+        "Serena Williams"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Judo ?",
+      "a": [
+        "Teddy Riner",
+        "LeBron James",
+        "Stephen Curry",
+        "Kevin Durant"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Judo ?",
+      "a": [
+        "Clarisse Agbegnenou",
+        "Giannis Antetokounmpo",
+        "Luka Dončić",
+        "Nikola Jokić"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Judo ?",
+      "a": [
+        "Shohei Ono",
+        "Novak Djokovic",
+        "Rafael Nadal",
+        "Roger Federer"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Judo ?",
+      "a": [
+        "Uta Abe",
+        "Carlos Alcaraz",
+        "Jannik Sinner",
+        "Serena Williams"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Gymnastique ?",
+      "a": [
+        "Simone Biles",
+        "LeBron James",
+        "Stephen Curry",
+        "Kevin Durant"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Gymnastique ?",
+      "a": [
+        "Kohei Uchimura",
+        "Giannis Antetokounmpo",
+        "Luka Dončić",
+        "Nikola Jokić"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Gymnastique ?",
+      "a": [
+        "Rebeca Andrade",
+        "Novak Djokovic",
+        "Rafael Nadal",
+        "Roger Federer"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Gymnastique ?",
+      "a": [
+        "Sunisa Lee",
+        "Carlos Alcaraz",
+        "Jannik Sinner",
+        "Serena Williams"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Ski alpin ?",
+      "a": [
+        "Mikaela Shiffrin",
+        "LeBron James",
+        "Stephen Curry",
+        "Kevin Durant"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Ski alpin ?",
+      "a": [
+        "Marcel Hirscher",
+        "Giannis Antetokounmpo",
+        "Luka Dončić",
+        "Nikola Jokić"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Ski alpin ?",
+      "a": [
+        "Lindsey Vonn",
+        "Novak Djokovic",
+        "Rafael Nadal",
+        "Roger Federer"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en Ski alpin ?",
+      "a": [
+        "Marco Odermatt",
+        "Carlos Alcaraz",
+        "Jannik Sinner",
+        "Serena Williams"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en MotoGP ?",
+      "a": [
+        "Marc Márquez",
+        "LeBron James",
+        "Stephen Curry",
+        "Kevin Durant"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en MotoGP ?",
+      "a": [
+        "Valentino Rossi",
+        "Giannis Antetokounmpo",
+        "Luka Dončić",
+        "Nikola Jokić"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en MotoGP ?",
+      "a": [
+        "Francesco Bagnaia",
+        "Novak Djokovic",
+        "Rafael Nadal",
+        "Roger Federer"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    },
+    {
+      "q": "Lequel de ces sportifs est surtout connu en MotoGP ?",
+      "a": [
+        "Fabio Quartararo",
+        "Carlos Alcaraz",
+        "Jannik Sinner",
+        "Serena Williams"
+      ],
+      "c": 0,
+      "difficulty": "moyen"
+    }
+  ]
+}
