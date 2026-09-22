@@ -1,0 +1,10 @@
+V5.62 — IMAGE CULTE SCENES
+- Image Culte recentré sur des scènes/screenshot, pas posters/logos/portraits.
+- 13 œuvres libres/domaine public actuellement, film + animation.
+- Chaque entrée a une requête scène dédiée.
+- Proxy Commons: jusqu'à 20 résultats raster; rejette poster/logo/cover/DVD/title card/portrait/headshot/premiere/advert/lobby card.
+- Choisit volontairement un résultat non-premier quand possible pour réduire les images trop évidentes.
+- Image servie par Party Arena et cache 24 h.
+- Faux choix Image Culte générés parmi les autres œuvres du même pool.
+Tests locaux: syntaxe PASS; 13 scènes; 13 rounds; 4 choix uniques.
+Limite importante: pour les scènes modernes protégées de films/séries/anime, je n'ai pas téléchargé/repackagé arbitrairement des screenshots. Commons rappelle que les captures audiovisuelles non libres ne sont normalement pas réutilisables sauf licence libre/domaine public. L'expansion moderne devra donc utiliser des visuels officiellement réutilisables/embeddables.
