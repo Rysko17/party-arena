@@ -1244,17 +1244,28 @@ const BAC_CATEGORIES=['Anime, série ou film','Personne publique','Fruit ou lég
 const BAC_LETTERS='ABCDEFGHIJKLMNOPRSTV';
 function bacRound(r){r.bacAnswers={};r.bacJudgements={};r.bacPhase='write';r.bacDeadline=Date.now()+30000;r.bacLetterBag=r.bacLetterBag||[];if(!r.bacLetterBag.length)r.bacLetterBag=BAC_LETTERS.split('').sort(()=>Math.random()-.5);const letter=r.bacLetterBag.pop();return {game:'Petit Bac',q:'✍️ PETIT BAC — Lettre '+letter,letter,categories:BAC_CATEGORIES,phase:'write',theme:'Culture générale',points:1250};}
 function bacPublic(r){const ids=Object.keys(r.players);return {game:'Petit Bac',q:r.current.q,letter:r.current.letter,categories:BAC_CATEGORIES,phase:r.bacPhase,deadline:r.bacPhase==='write'?r.bacDeadline:null,players:ids.map(id=>({id,name:r.players[id].name,submitted:!!r.bacAnswers[id],answers:r.bacPhase==='review'?r.bacAnswers[id]:undefined,judgements:r.bacPhase==='review'?r.bacJudgements[id]:undefined})),host:r.host};}
-// Mot interdit V5.87 : difficulté liée au mot, deux changements maximum, rôle tournant.
+// Mot interdit V5.88 : deux cycles Facile → Moyen → Difficile (5 changements).
+// Le premier mot est toujours facile. Chaque changement avance d'un cran.
+const TABOO_CYCLE=['simple','moyen','dur','simple','moyen','dur'];
 function tabooNewWord(r){
- const selected=r.settings.themes||[], clean=selected.filter(t=>TABOO_CLEAN[t]?.length), hard=selected.filter(t=>TABOO_THREE[t]?.length);
- const easyPool=clean.flatMap(t=>TABOO_CLEAN[t].filter(m=>m[0].length<=13).map(m=>({t,m}))), mediumPool=clean.flatMap(t=>TABOO_CLEAN[t].filter(m=>m[0].length>13).map(m=>({t,m}))), hardPool=hard.flatMap(t=>TABOO_THREE[t].map(m=>({t,m})));
- const fallback=Object.keys(TABOO_CLEAN).flatMap(t=>TABOO_CLEAN[t].map(m=>({t,m})));
- const buckets=[{difficulty:'simple',pool:easyPool,points:250},{difficulty:'moyen',pool:mediumPool,points:500},{difficulty:'dur',pool:hardPool,points:1000}].filter(b=>b.pool.length);
- const chosen=buckets[Math.floor(Math.random()*buckets.length)]||{difficulty:'moyen',pool:fallback,points:500};
- const pool=chosen.pool.filter(z=>!r.tabooSeen?.has(z.t+'|'+z.m[0])) ;const z=(pool.length?pool:chosen.pool)[Math.floor(Math.random()*(pool.length||chosen.pool.length))];
+ const selected=r.settings.themes||[];
+ const selectedClean=selected.filter(t=>TABOO_CLEAN[t]?.length);
+ const selectedHard=selected.filter(t=>TABOO_THREE[t]?.length);
+ const allClean=Object.keys(TABOO_CLEAN),allHard=Object.keys(TABOO_THREE);
+ const level=TABOO_CYCLE[Math.min(r.tabooRerolls||0,5)];
+ const makeClean=(themes,medium)=>themes.flatMap(t=>TABOO_CLEAN[t].filter(m=>medium?m[0].length>13:m[0].length<=13).map(m=>({t,m})));
+ const makeHard=themes=>themes.flatMap(t=>TABOO_THREE[t].map(m=>({t,m})));
+ // Si les thèmes du lobby n'ont aucun mot de la difficulté demandée,
+ // compléter avec les autres thèmes pour respecter le circuit et les points.
+ let pool=level==='dur'?makeHard(selectedHard):makeClean(selectedClean,level==='moyen');
+ if(!pool.length)pool=level==='dur'?makeHard(allHard):makeClean(allClean,level==='moyen');
+ if(!pool.length)pool=makeClean(allClean,false);
+ const fresh=pool.filter(z=>!r.tabooSeen?.has(z.t+'|'+z.m[0]));
+ const options=fresh.length?fresh:pool;
+ const z=options[Math.floor(Math.random()*options.length)];
  r.tabooSeen=r.tabooSeen||new Set();r.tabooSeen.add(z.t+'|'+z.m[0]);
- const person=chosen.difficulty==='dur',bans=person?z.m[2]:[z.m[1]];
- return {game:'Mot interdit',q:'Fais deviner ton mot en exactement 3 mots.',theme:z.t,oral:true,tabooWord:z.m[0],forbiddenWords:bans,origin:z.t,isPerson:person,points:chosen.points,difficulty:chosen.difficulty,explainer:r.tabooExplainer,rerolls:r.tabooRerolls||0};
+ const person=level==='dur',bans=person?z.m[2]:[z.m[1]];
+ return {game:'Mot interdit',q:'Fais deviner ton mot en exactement 3 mots.',theme:z.t,oral:true,tabooWord:z.m[0],forbiddenWords:bans,origin:z.t,isPerson:person,points:({simple:250,moyen:500,dur:1000})[level],difficulty:level,explainer:r.tabooExplainer,rerolls:r.tabooRerolls||0,maxRerolls:5};
 }
 function tabooRoundFor(c,id){if(c.game!=='Mot interdit')return publicRound(c);return id===c.explainer?c:{game:c.game,q:'Devine le mot en l’écrivant !',theme:c.theme,origin:c.origin,difficulty:c.difficulty,points:c.points,explainer:c.explainer,rerolls:c.rerolls,forbiddenWords:[],isPerson:c.isPerson};}
 function sendTabooRound(r){for(const id of Object.keys(r.players))io.to(id).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:tabooRoundFor(r.current,id)});}
@@ -1500,7 +1511,7 @@ s.on('duelWinner',x=>{
    r._advancing=true;setTimeout(()=>next(r),1800);
  }
 });
-s.on('tabooReroll',({code}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Mot interdit'||r._advancing||s.id!==r.tabooExplainer||r.tabooRerolls>=2||r.tabooWinner)return;r.tabooRerolls++;r.tabooGuesses={};r.tabooGuessAt={};r.current=tabooNewWord(r);sendTabooRound(r);armRoundTimer(r);});
+s.on('tabooReroll',({code}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Mot interdit'||r._advancing||s.id!==r.tabooExplainer||r.tabooRerolls>=5||r.tabooWinner)return;r.tabooRerolls++;r.tabooGuesses={};r.tabooGuessAt={};r.current=tabooNewWord(r);sendTabooRound(r);armRoundTimer(r);});
 s.on('tabooGuess',({code,text}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Mot interdit'||r._advancing||s.id===r.tabooExplainer||!r.players[s.id]||r.tabooWinner||(r.tabooGuessAt?.[s.id]&&Date.now()-r.tabooGuessAt[s.id]<1200))return;const guess=normTaboo(String(text||'').slice(0,90));if(!guess)return;const answer=normTaboo(r.current.tabooWord);const correct=guess===answer;r.tabooGuesses=r.tabooGuesses||{};r.tabooGuessAt=r.tabooGuessAt||{};r.tabooGuessAt[s.id]=Date.now();if(correct){r.tabooWinner=s.id;io.to(r.code).emit('tabooFound',{winner:r.players[s.id].name,points:r.current.points,word:r.current.tabooWord,explainer:r.players[r.tabooExplainer]?.name});io.to(r.host).emit('tabooJudgePrompt',{winner:s.id,explainer:r.tabooExplainer,points:r.current.points});}else{r.tabooGuesses[s.id]=guess;io.to(s.id).emit('tabooGuessFeedback',{correct:false});}});
 s.on('tabooJudge',({code,valid}={})=>{const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Mot interdit'||!r.tabooWinner||r.tabooJudged||r._advancing||typeof valid!=='boolean')return;r.tabooJudged=true;if(valid){r.players[r.tabooWinner].score+=r.current.points;if(r.players[r.tabooExplainer])r.players[r.tabooExplainer].score+=r.current.points;}emit(r);io.to(code).emit('tabooEnd',{word:r.current.tabooWord,valid,points:valid?r.current.points:0});r._advancing=true;if(r._roundTimer)clearTimeout(r._roundTimer);setTimeout(()=>next(r),2700);});
 s.on('award',x=>{let r=rooms[x.code];if(r&&r.host===s.id&&r.players[x.id]){

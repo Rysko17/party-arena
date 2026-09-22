@@ -1,0 +1,9 @@
+PARTY ARENA V5.88 — MOT INTERDIT : DEUX CIRCUITS
+- Ordre des 6 mots : Facile → Moyen → Difficile → Facile → Moyen → Difficile.
+- 5 changements autorisés pour parcourir les 2 circuits.
+- Points : facile 250, moyen 500, difficile 1000 pour le devineur et celui qui fait deviner après validation.
+- Les mots déjà vus sont évités si la banque le permet.
+- Si aucun mot de la difficulté voulue n'existe dans les thèmes sélectionnés, le jeu complète depuis les autres thèmes.
+- Le timer de 30 secondes redémarre à chaque changement.
+- Tests locaux : node --check server.js et scripts HTML ; simulation du circuit 6 mots ; ZIP testé.
+- Non testé en multijoueur sur Render.
