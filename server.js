@@ -2,6 +2,7 @@ const express=require('express'),http=require('http'),{Server}=require('socket.i
 const app=express(),server=http.createServer(app),io=new Server(server),GLOBAL_USED={},DB=JSON.parse(fs.readFileSync(path.join(__dirname,'questions.json'),'utf8')),rooms={};
 app.use(express.static(path.join(__dirname,'public')));
 function code(){let s='',a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';for(let i=0;i<4;i++)s+=a[Math.floor(Math.random()*a.length)];return s}
+function publicRound(c){if(!c||c.game!=='Ciné Extrait')return c;const {clipAnswer,clipAliases,c:correctIndex,...safe}=c;return safe}
 function view(r){return{code:r.code,host:r.host,players:Object.values(r.players).map(p=>({id:p.id,name:p.name,score:p.score})),settings:r.settings,round:r.round,total:r.total,state:r.state,gameIndex:r.gameIndex,gameRound:r.gameRound}}
 function emit(r){io.to(r.code).emit('room',view(r))}
 function question(r){
@@ -704,6 +705,10 @@ async function imageCulteRound(r){
  const dec=imageCulteDecoys(z,pool),a=[z.work,...dec].sort(()=>Math.random()-.5);
  return {game:'Image culte',q:difficulty==='dur'?'🎬 PLAN DIFFICILE — De quelle œuvre vient cette scène ?':'🎬 De quelle œuvre vient cette scène ?',a,c:a.indexOf(z.work),image:'/tmdb-scene/'+z.type+'/'+z.id+'/'+difficulty+'?file='+encodeURIComponent(pic.tmdbPath),theme:z.theme,difficulty,points:difficultyPoints(difficulty),imageCulte:true,tmdbAttribution};
 }
+// Comparaison souple pour les réponses écrites (accents, ponctuation, petites fautes).
+function normalizeClipTitle(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/&/g,' and ').replace(/[^a-z0-9]+/g,' ').replace(/\b(le|la|les|the|a|an|un|une|de|du|des|of)\b/g,' ').replace(/\s+/g,' ').trim()}
+function clipEditDistance(a,b){const prev=Array.from({length:b.length+1},(_,i)=>i);for(let i=1;i<=a.length;i++){let last=prev[0];prev[0]=i;for(let j=1;j<=b.length;j++){const old=prev[j];prev[j]=Math.min(prev[j]+1,prev[j-1]+1,last+(a[i-1]===b[j-1]?0:1));last=old}}return prev[b.length]}
+function clipAnswerMatches(input,answer,aliases=[]){const a=normalizeClipTitle(input);if(a.length<2)return false;return [answer,...aliases].some(t=>{const b=normalizeClipTitle(t);if(!b)return false;if(a===b)return true;const d=clipEditDistance(a,b);return d<=Math.min(3,Math.floor(b.length/5))&&a.length>=Math.max(3,Math.floor(b.length*.65))})}
 // Ciné Extrait: official YouTube trailers referenced by TMDB. Never downloads copyrighted video.
 const clipVideoCache=new Map();
 async function tmdbOfficialClips(entry){
@@ -728,7 +733,7 @@ async function cineExtraitRound(r){
   const a=[entry.work,...dec].sort(()=>Math.random()-.5);
   // Seek past the opening logo; the player validates video length before playback.
   const start=difficulty==='dur'?45:difficulty==='moyen'?30:15;
-  return {game:'Ciné Extrait',q:'🎞️ Devine le film, la série ou l’anime avec cet extrait de bande-annonce officielle',a,c:a.indexOf(entry.work),theme:entry.theme,difficulty,points:difficultyPoints(difficulty),clip:true,clipSeconds:seconds,excerptId:'clip-'+entry.type+'-'+entry.id+'-'+z.key,video:z.key,start,end:start+seconds,sourceLabel:z.name||'Bande-annonce officielle'};
+  return {game:'Ciné Extrait',q:'🎞️ Devine le film, la série ou l’anime avec cet extrait de bande-annonce officielle',a:[],c:0,clipAnswer:entry.work,clipAliases:entry.aliases||[],theme:entry.theme,difficulty,points:difficultyPoints(difficulty),clip:true,clipSeconds:seconds,excerptId:'clip-'+entry.type+'-'+entry.id+'-'+z.key,video:z.key,start,end:start+seconds,sourceLabel:z.name||'Bande-annonce officielle'};
  }
  return {game:'Ciné Extrait',q:'⚠️ Aucune bande-annonce officielle accessible trouvée. Vérifie TMDB ou relance.',a:[],clip:true,clipUnavailable:true,theme:'Cinéma & Séries',points:0};
 }
@@ -825,10 +830,56 @@ for(const [theme,entries] of Object.entries(TMC_OPINION_VARIANTS)){
  TMC_THEME_BANK[theme].push(...entries.map(([q,a])=>({q,a})));
 }
 
+const TMC_PREMIUM={
+ 'Anime & Manga':[
+ ['Quel anime a la meilleure bande-son ?', ['Attack on Titan','Naruto','Bleach','Made in Abyss']],
+ ['Quel personnage a le plus de flow ?', ['Gojo','Itachi','Levi','Aizen']],
+ ['Quel stratège choisirais-tu pour monter un plan impossible ?', ['Lelouch','Light Yagami','Shikamaru','Erwin Smith']],
+ ['Quel rival a le meilleur développement ?', ['Sasuke','Vegeta','Bakugo','Killua']],
+ ['Quel antagoniste a la meilleure écriture ?', ['Johan Liebert','Meruem','Pain','Griffith']],
+ ['Quel anime possède le meilleur premier épisode ?', ['Attack on Titan','Death Note','The Promised Neverland','Oshi no Ko']],
+ ['Quel personnage secondaire mériterait son propre anime ?', ['Levi','Kakashi','Toji','Shanks']],
+ ['Quel combat regarderais-tu une nouvelle fois ?', ['Levi contre Beast Titan','Naruto contre Pain','Gojo contre Toji','Ichigo contre Ulquiorra']],
+ ['Quel anime a le meilleur opening ?', ['Tokyo Ghoul','Attack on Titan','Fullmetal Alchemist Brotherhood','Demon Slayer']],
+ ['Quel personnage te semble le plus sous-estimé ?', ['Rock Lee','Reigen','Jean Kirstein','Kuwabara']],
+ ['Quel univers serait le plus dangereux à vivre ?', ['Berserk','Attack on Titan','Jujutsu Kaisen','Chainsaw Man']],
+ ['Quel personnage est le plus intimidant sans parler ?', ['Madara','Aizen','Toji','Sukuna']],
+ ['Quel anime a la fin la plus marquante ?', ['Code Geass','Attack on Titan','Death Note','Steins;Gate']],
+ ['Quel mentor aimerais-tu avoir ?', ['Kakashi','Urahara','Jiraya','Gojo']],
+ ['Quel duo fonctionne le mieux ?', ['Gon et Killua','Naruto et Sasuke','Edward et Alphonse','Denji et Power']],
+ ['Quel anime possède les meilleures scènes émotionnelles ?', ['Violet Evergarden','Your Lie in April','Clannad After Story','A Silent Voice']],
+ ['Quel méchant aurait pu être le héros de sa propre histoire ?', ['Pain','Meruem','Itachi','Geto']],
+ ['Quel personnage a la meilleure entrée en scène ?', ['Madara','Gojo','Levi','Escanor']],
+ ['Quel arc narratif préfères-tu ?', ['Marineford','Shibuya','Chimera Ant','Pain']],
+ ['Quel anime mériterait un remake moderne ?', ['Berserk','Tokyo Ghoul','Soul Eater','Claymore']]
+ ],
+ 'Cinéma & Séries':[
+ ['Quelle série possède la meilleure bande originale ?', ['Dark','Stranger Things','Game of Thrones','Peaky Blinders']],
+ ['Quel film possède la meilleure bande originale ?', ['Interstellar','Inception','Gladiator','Pirates des Caraïbes']],
+ ['Quel personnage de série a le meilleur développement ?', ['Walter White','Jesse Pinkman','Jimmy McGill','Jaime Lannister']],
+ ['Quel personnage secondaire vole la vedette ?', ['Saul Goodman','Steve Harrington','Tyrion Lannister','Omar Little']],
+ ['Quel antagoniste de série est le plus mémorable ?', ['Gus Fring','Homelander','Ramsay Bolton','Lalo Salamanca']],
+ ['Quelle série a le meilleur épisode pilote ?', ['Lost','Breaking Bad','The Last of Us','Mr. Robot']],
+ ['Quel film a le retournement final le plus marquant ?', ['Fight Club','Shutter Island','The Prestige','Sixième Sens']],
+ ['Quel film a la meilleure scène d’introduction ?', ['The Dark Knight','Inglourious Basterds','Drive','Scream']],
+ ['Quel détective de fiction choisirais-tu pour résoudre un crime ?', ['Sherlock Holmes','Rust Cohle','Benoit Blanc','Columbo']],
+ ['Quel univers de film aimerais-tu explorer ?', ['Harry Potter','Star Wars','Le Seigneur des anneaux','Avatar']],
+ ['Quel film possède les meilleurs dialogues ?', ['Pulp Fiction','The Social Network','Inglourious Basterds','The Dark Knight']],
+ ['Quelle série a les meilleurs retournements ?', ['Dark','Mr. Robot','Lost','Game of Thrones']],
+ ['Quel duo de série fonctionne le mieux ?', ['Walter et Jesse','Joel et Ellie','Sherlock et Watson','Jake et Boyle']],
+ ['Quel film a la meilleure photographie ?', ['Blade Runner 2049','Dune','The Batman','1917']],
+ ['Quel personnage de cinéma a le plus de charisme ?', ['Jack Sparrow','Tony Stark','John Wick','Hans Landa']],
+ ['Quelle série te donnerait envie de tout revoir ?', ['Breaking Bad','Dark','The Wire','Better Call Saul']],
+ ['Quel film de science-fiction a le meilleur univers ?', ['Interstellar','Dune','Blade Runner 2049','The Matrix']],
+ ['Quel film a la scène de combat la plus marquante ?', ['John Wick 4','The Raid','The Dark Knight','Kill Bill']],
+ ['Quel méchant de cinéma est le mieux écrit ?', ['Joker','Darth Vader','Hans Landa','Thanos']],
+ ['Quelle série a le meilleur dernier épisode ?', ['Breaking Bad','Better Call Saul','The Good Place','Mr. Robot']]
+ ]
+};
 function makeRound(r,g){
  let c={game:g};
  if(g==='Quiz Battle'){let x=question(r);c={game:g,q:x.q,a:x.a,c:x.c,image:x.image||null,theme:x.theme,difficulty:x.difficulty||'simple',points:({simple:250,moyen:500,dur:1000}[x.difficulty]||250)}}
- else if(g==='Tu me connais ?'){let ps=Object.values(r.players),target=ps[(r.gameRound-1)%ps.length];r.secretChoice=null;r.guesses={};let pool=[];for(const t of r.settings.themes||[])for(const x of (TMC_THEME_BANK[t]||[]))pool.push({t,x});if(!pool.length)for(const [t,a] of Object.entries(TMC_THEME_BANK))for(const x of a)pool.push({t,x});let av=[...new Set(pool.map(o=>o.t))],tt=chooseTheme(r,'tmcThemes',av),tp=pool.filter(o=>o.t===tt),z=unusedPick(r,'tmcTheme:'+tt,tp);c={game:g,phase:'choose',target:target.id,targetName:target.name,q:`🎯 Question sur ${target.name} : ${z.x.q}`,a:z.x.a}}
+ else if(g==='Tu me connais ?'){let ps=Object.values(r.players),target=ps[(r.gameRound-1)%ps.length];r.secretChoice=null;r.guesses={};let pool=[];for(const t of r.settings.themes||[]){const premium=TMC_PREMIUM[t]||[];for(const [q,a] of premium)pool.push({t,x:{q,a}});if(!premium.length)for(const x of (TMC_THEME_BANK[t]||[]))pool.push({t,x})}if(!pool.length)for(const [t,a] of Object.entries(TMC_THEME_BANK))for(const x of a)pool.push({t,x});let av=[...new Set(pool.map(o=>o.t))],tt=chooseTheme(r,'tmcThemes',av),tp=pool.filter(o=>o.t===tt),z=unusedPick(r,'tmcTheme:'+tt,tp);c={game:g,phase:'choose',target:target.id,targetName:target.name,q:`🎯 Question sur ${target.name} : ${z.x.q}`,a:z.x.a}}
  else if(g==='Majorité'){let selected=(r.settings.themes||[]).filter(t=>(MAJORITY_VARIANTS[t]||[]).length);if(!selected.length)selected=Object.keys(MAJORITY_VARIANTS);let theme=chooseTheme(r,'majorityThemes',selected),mq=unusedPick(r,'majority:'+theme,MAJORITY_VARIANTS[theme]);c={game:g,q:mq.q,a:mq.a,theme}}
  else if(g==='La Bombe'){let z=themedPick(r,'bomb');c={game:g,q:z.value,theme:z.theme,typedBomb:true,points:500}}
  else if(g==="L’Imposteur"){let z=themedPick(r,'impostor'),w=z.value,ps=Object.values(r.players),imp=ps[Math.floor(Math.random()*ps.length)];r.secret={imp:imp.id,n:w[0],o:w[1]};r.impostorId=imp.id;r.normalWord=w[0];c={game:g,q:`Thème : ${z.theme} — Décris ton mot sans le dire, puis trouvez l’imposteur !`,theme:z.theme,oral:true}}
@@ -870,7 +921,7 @@ function armRoundTimer(r){
  if(r._roundTimer)clearTimeout(r._roundTimer);const sec=roundSeconds(r.current);if(!sec)return;
  const token=(r._timerToken=(r._timerToken||0)+1);
  r._roundTimer=setTimeout(()=>{if(!rooms[r.code]||token!==r._timerToken||r._advancing)return;const g=r.current?.game;
-  if(['Quiz Battle','Qui est-ce ?','Image culte','Blind Test','Ciné Extrait','Trouve l’intrus'].includes(g)){const ids=Object.keys(r.players);r.answers=r.answers||{};for(const id of ids)if(r.answers[id]==null)r.answers[id]=-999;io.to(r.code).emit('roundReveal',{answer:r.current.a?.[r.current.c]||'',why:r.current.why||'',timeout:true});r._advancing=true;setTimeout(()=>next(r),1800);return}
+  if(['Quiz Battle','Qui est-ce ?','Image culte','Blind Test','Ciné Extrait','Trouve l’intrus'].includes(g)){const ids=Object.keys(r.players);r.answers=r.answers||{};for(const id of ids)if(r.answers[id]==null)r.answers[id]=-999;io.to(r.code).emit('roundReveal',{answer:r.current.game==='Ciné Extrait'?r.current.clipAnswer:(r.current.a?.[r.current.c]||''),why:r.current.why||'',timeout:true});r._advancing=true;setTimeout(()=>next(r),1800);return}
   io.to(r.code).emit('timerExpired',{game:g});
  },sec*1000);
 }
@@ -895,7 +946,7 @@ async function next(r){
  }
  r.gameRound++;r.round++;r.answers={};r.answerOrder=[];r.guesses={};r.oralDecisions={};r.bombAnswers={};r.impostorVotes={};r._advancing=false;
  const g=r.settings.games[r.gameIndex],c=g==='Image culte'?await imageCulteRound(r):g==='Ciné Extrait'?await cineExtraitRound(r):makeRound(r,g);r.current=c;r._clipStarted=false;r._clipEnded=false;r._blindPlaybackStarted=c?.game==='Blind Test'?false:true;
- io.to(r.code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:limit,gameIndex:r.gameIndex,current:c});
+ io.to(r.code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:limit,gameIndex:r.gameIndex,current:publicRound(c)});
  if(!c.imageCulteUnavailable&&!c.clipUnavailable&&g!=='Ciné Extrait')armRoundTimer(r);
  if(g==="L’Imposteur")for(const p of Object.values(r.players))io.to(p.id).emit('secret',{word:p.id===r.secret.imp?r.secret.o:r.secret.n});
  emit(r);
@@ -912,7 +963,7 @@ io.on('connection',(s)=>{
  s.on('clipPlaybackStarted',({code,excerptId}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Ciné Extrait'||r.current.excerptId!==excerptId||r._clipStarted)return;r._clipStarted=true});
  s.on('clipPlaybackEnded',({code,excerptId}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Ciné Extrait'||r.current.excerptId!==excerptId||!r._clipStarted||r._clipEnded)return;r._clipEnded=true;armRoundTimer(r)});
  s.on('clipPlaybackError',async({code,excerptId}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Ciné Extrait'||r.current.excerptId!==excerptId||r._clipReplacing)return;r._clipReplacing=true;
-  try{const c=await cineExtraitRound(r);r.current=c;r._clipStarted=false;r._clipEnded=false;r.answers={};r.answerOrder=[];r._advancing=false;io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:c})}finally{r._clipReplacing=false}
+  try{const c=await cineExtraitRound(r);r.current=c;r._clipStarted=false;r._clipEnded=false;r.answers={};r.answerOrder=[];r._advancing=false;io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:publicRound(c)})}finally{r._clipReplacing=false}
  });
  s.on('blindPlaybackError',({code,excerptId,reason}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Blind Test'||r.current?.excerptId!==excerptId)return;r.badBlind=r.badBlind||new Set();if(r.badBlind.has(excerptId))return;r.badBlind.add(excerptId);r.blindSeen=r.blindSeen||new Set();r.blindSeen.add(excerptId);r.current=blindRound(r);r.answers={};r.answerOrder=[];r._advancing=false;io.to(code).emit('blindReplaced',{bad:excerptId,reason:reason||'playback'});io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:r.current});armRoundTimer(r)});
 
@@ -970,7 +1021,7 @@ io.on('connection',(s)=>{
    setTimeout(()=>{r.gameIndex++;r.gameRound=0;if(r.gameIndex>=r.settings.games.length)io.to(r.code).emit('finished',view(r));else next(r)},2200);
    return;
  }
- if(r.current?.game==='Ciné Extrait'&&!r._clipEnded)return;
+ if(r.current?.game==='Ciné Extrait')return;
  r.answerOrder=r.answerOrder||[];
  if(!r.answerOrder.includes(s.id))r.answerOrder.push(s.id);
  r.answers[s.id]=+x.value;
@@ -1000,6 +1051,13 @@ io.on('connection',(s)=>{
    r._advancing=true;setTimeout(()=>next(r),1800);
  }
 });
+ s.on('clipTypedAnswer',x=>{const r=rooms[x?.code];if(!r||r.current?.game!=='Ciné Extrait'||!r._clipEnded||r._advancing||!r.players[s.id]||r.answers?.[s.id]!=null)return;
+  const input=String(x.text||'').slice(0,100),correct=clipAnswerMatches(input,r.current.clipAnswer,r.current.clipAliases);r.answers[s.id]=correct?1:0;r.answerOrder=r.answerOrder||[];r.answerOrder.push(s.id);
+  const pts=correct?speedPoints(r.current.points||500,r.answerOrder.length):0;if(pts)r.players[s.id].score+=pts;
+  io.to(s.id).emit('answerFeedback',{correct,points:pts,correctAnswer:r.current.clipAnswer});emit(r);
+  const ids=Object.keys(r.players);io.to(r.code).emit('answerProgress',{done:Object.keys(r.answers).length,total:ids.length});
+  if(ids.every(id=>r.answers[id]!=null)){if(r._roundTimer)clearTimeout(r._roundTimer);io.to(r.code).emit('roundReveal',{answer:r.current.clipAnswer});r._advancing=true;setTimeout(()=>next(r),1800)}
+ });
  s.on('secretChoice',x=>{let r=rooms[x.code];if(!r||r.current.game!=='Tu me connais ?'||r.current.target!==s.id||r.current.phase!=='choose')return;r.secretChoice=+x.value;r.current.phase='guess';io.to(r.code).emit('tmcGuess',{q:r.current.q,a:r.current.a,target:r.current.target,targetName:r.current.targetName})});
  s.on('tmcGuess',x=>{
  let r=rooms[x.code];if(!r||r.current.game!=='Tu me connais ?'||r.current.phase!=='guess'||s.id===r.current.target||r.guesses[s.id]!=null)return;

@@ -1,0 +1,8 @@
+V5.68 — CINE EXTRAIT RÉPONSE ÉCRITE / TU ME CONNAIS PREMIUM
+- Ciné Extrait: champ texte à la place des 4 choix, 8/5/3 secondes, 10 secondes pour répondre après la lecture.
+- Serveur: comparaison tolérante aux accents, ponctuation, articles et petites fautes (distance d'édition limitée).
+- La bonne réponse ne figure plus dans les données de manche envoyées au navigateur.
+- Masques visuels sur les bandeaux supérieur et inférieur du lecteur YouTube pour réduire l'affichage des titres. LIMITATION: YouTube peut encore afficher le nom dans la vidéo elle-même, dans les publicités ou en dehors des bandeaux; aucun masquage universel garanti.
+- Tu me connais: 40 questions sélectionnées manuellement (20 Anime & Manga, 20 Cinéma & Séries), avec réponses cohérentes; priorité aux thèmes choisis.
+- Tests: syntaxe JS serveur/client, 6 cas de tolérance et anti-fuite, contrôles UI, 40 questions premium.
+- Test YouTube/TMDB réel et test multijoueur sur Render non effectués.
