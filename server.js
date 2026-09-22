@@ -1244,6 +1244,21 @@ const BAC_CATEGORIES=['Anime, série ou film','Personne publique','Fruit ou lég
 const BAC_LETTERS='ABCDEFGHIJKLMNOPRSTV';
 function bacRound(r){r.bacAnswers={};r.bacJudgements={};r.bacPhase='write';r.bacDeadline=Date.now()+30000;r.bacLetterBag=r.bacLetterBag||[];if(!r.bacLetterBag.length)r.bacLetterBag=BAC_LETTERS.split('').sort(()=>Math.random()-.5);const letter=r.bacLetterBag.pop();return {game:'Petit Bac',q:'✍️ PETIT BAC — Lettre '+letter,letter,categories:BAC_CATEGORIES,phase:'write',theme:'Culture générale',points:1250};}
 function bacPublic(r){const ids=Object.keys(r.players);return {game:'Petit Bac',q:r.current.q,letter:r.current.letter,categories:BAC_CATEGORIES,phase:r.bacPhase,deadline:r.bacPhase==='write'?r.bacDeadline:null,players:ids.map(id=>({id,name:r.players[id].name,submitted:!!r.bacAnswers[id],answers:r.bacPhase==='review'?r.bacAnswers[id]:undefined,judgements:r.bacPhase==='review'?r.bacJudgements[id]:undefined})),host:r.host};}
+// Mot interdit V5.87 : difficulté liée au mot, deux changements maximum, rôle tournant.
+function tabooNewWord(r){
+ const selected=r.settings.themes||[], clean=selected.filter(t=>TABOO_CLEAN[t]?.length), hard=selected.filter(t=>TABOO_THREE[t]?.length);
+ const easyPool=clean.flatMap(t=>TABOO_CLEAN[t].filter(m=>m[0].length<=13).map(m=>({t,m}))), mediumPool=clean.flatMap(t=>TABOO_CLEAN[t].filter(m=>m[0].length>13).map(m=>({t,m}))), hardPool=hard.flatMap(t=>TABOO_THREE[t].map(m=>({t,m})));
+ const fallback=Object.keys(TABOO_CLEAN).flatMap(t=>TABOO_CLEAN[t].map(m=>({t,m})));
+ const buckets=[{difficulty:'simple',pool:easyPool,points:250},{difficulty:'moyen',pool:mediumPool,points:500},{difficulty:'dur',pool:hardPool,points:1000}].filter(b=>b.pool.length);
+ const chosen=buckets[Math.floor(Math.random()*buckets.length)]||{difficulty:'moyen',pool:fallback,points:500};
+ const pool=chosen.pool.filter(z=>!r.tabooSeen?.has(z.t+'|'+z.m[0])) ;const z=(pool.length?pool:chosen.pool)[Math.floor(Math.random()*(pool.length||chosen.pool.length))];
+ r.tabooSeen=r.tabooSeen||new Set();r.tabooSeen.add(z.t+'|'+z.m[0]);
+ const person=chosen.difficulty==='dur',bans=person?z.m[2]:[z.m[1]];
+ return {game:'Mot interdit',q:'Fais deviner ton mot en exactement 3 mots.',theme:z.t,oral:true,tabooWord:z.m[0],forbiddenWords:bans,origin:z.t,isPerson:person,points:chosen.points,difficulty:chosen.difficulty,explainer:r.tabooExplainer,rerolls:r.tabooRerolls||0};
+}
+function tabooRoundFor(c,id){if(c.game!=='Mot interdit')return publicRound(c);return id===c.explainer?c:{game:c.game,q:'Devine le mot en l’écrivant !',theme:c.theme,origin:c.origin,difficulty:c.difficulty,points:c.points,explainer:c.explainer,rerolls:c.rerolls,forbiddenWords:[],isPerson:c.isPerson};}
+function sendTabooRound(r){for(const id of Object.keys(r.players))io.to(id).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:tabooRoundFor(r.current,id)});}
+function normTaboo(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ')}
 function makeRound(r,g){
  let c={game:g};
  if(g==='Quiz Battle'){let x=question(r);c={game:g,q:x.q,a:x.a,c:x.c,image:x.image||null,theme:x.theme,difficulty:x.difficulty||'simple',points:({simple:250,moyen:500,dur:1000}[x.difficulty]||250)}}
@@ -1257,17 +1272,7 @@ function makeRound(r,g){
    const duels=pairing.pairs.map((pair,i)=>{const z=pickDuelPrompt(r,String(r.gameRound)+':'+i);const difficulty=['simple','moyen','dur'][(r.gameRound+i)%3];return{id:'d'+i,players:pair,theme:z.t,q:z.x,difficulty,points:difficultyPoints(difficulty)}});
    c={game:g,q:'DUELS',duels,bye:pairing.bye,pairDuel:true,points:500}
  }
- else if(g==='Mot interdit'){
-   let selected=(r.settings.themes||[]),hardThemes=selected.filter(t=>TABOO_THREE[t]?.length);
-   if(hardThemes.length&&Math.random()<0.70){
-     const t=chooseTheme(r,'tabooTheme',hardThemes),m=unusedPick(r,'tabooThree:'+t,TABOO_THREE[t]);
-     c={game:g,q:`Fais deviner « ${m[0]} » en EXACTEMENT 3 mots.`,theme:t,oral:true,tabooWord:m[0],forbiddenWords:m[2],origin:t,isPerson:true,points:1000,difficulty:'dur'}
-   }else{
-     let themes=selected.filter(t=>TABOO_CLEAN[t]?.length);if(!themes.length)themes=Object.keys(TABOO_CLEAN);
-     const t=chooseTheme(r,'tabooTheme',themes),m=unusedPick(r,'tabooClean:'+t,TABOO_CLEAN[t]);
-     c={game:g,q:`Fais deviner « ${m[0]} » en EXACTEMENT 3 mots sans prononcer « ${m[1]} ».`,theme:t,oral:true,tabooWord:m[0],forbiddenWords:[m[1]],origin:t,isPerson:false,points:500,difficulty:'moyen'}
-   }
- }
+ else if(g==='Mot interdit'){c=tabooNewWord(r)}
  else if(g==='Blind Test'){c=blindRound(r)}
  else if(g==='Image culte'){c={game:'Image culte',q:'Chargement de la scène…',a:[]}}
  else if(g==='Qui est-ce ?'){
@@ -1291,6 +1296,7 @@ function armRoundTimer(r){
  const token=(r._timerToken=(r._timerToken||0)+1);
  r._roundTimer=setTimeout(()=>{if(!rooms[r.code]||token!==r._timerToken||r._advancing)return;const g=r.current?.game;
   if(['Quiz Battle','Qui est-ce ?','Image culte','Blind Test','Ciné Extrait','Trouve l’intrus'].includes(g)){const ids=Object.keys(r.players);r.answers=r.answers||{};for(const id of ids)if(r.answers[id]==null)r.answers[id]=-999;io.to(r.code).emit('roundReveal',{answer:r.current.game==='Ciné Extrait'?r.current.clipAnswer:(r.current.a?.[r.current.c]||''),why:r.current.why||'',timeout:true});r._advancing=true;setTimeout(()=>next(r),1800);return}
+  if(g==='Mot interdit'){io.to(r.code).emit('tabooEnd',{word:r.current.tabooWord,timeout:true});r._advancing=true;setTimeout(()=>next(r),2400);return;}
   if(g==='Petit Bac'&&r.bacPhase==='write'){r.bacPhase='review';io.to(r.code).emit('bacState',bacPublic(r));return;}
   io.to(r.code).emit('timerExpired',{game:g});
  },sec*1000);
@@ -1315,8 +1321,8 @@ async function next(r){
    limit=gameLimit(r)
  }
  r.gameRound++;r.round++;r.answers={};r.answerOrder=[];r.guesses={};r.oralDecisions={};r.bombAnswers={};r.impostorVotes={};r._advancing=false;
- const g=r.settings.games[r.gameIndex],c=g==='Image culte'?await imageCulteRound(r):g==='Ciné Extrait'?await cineExtraitRound(r):g==='Qui est-ce ?'?(await pickWhoWithPhoto(r).then(z=>z?{game:g,q:z.q,a:z.a,c:z.c,theme:z.theme,whoRebus:false,whoPhoto:true,image:z.image||null,duoImages:z.duoImages||null,difficulty:z.difficulty||'dur',points:difficultyPoints(z.difficulty||'dur')}:unavailableWhoRound())):makeRound(r,g);r.current=c;r._clipStarted=false;r._clipEnded=false;r._blindPlaybackStarted=c?.game==='Blind Test'?false:true;
- io.to(r.code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:limit,gameIndex:r.gameIndex,current:g==='Petit Bac'?bacPublic(r):publicRound(c)});
+ const g=r.settings.games[r.gameIndex];if(g==='Mot interdit'){const ids=Object.keys(r.players);r.tabooExplainer=ids[(r.gameRound-1)%ids.length];r.tabooRerolls=0;r.tabooGuesses={};r.tabooGuessAt={};r.tabooWinner=null;r.tabooJudged=false;}const c=g==='Image culte'?await imageCulteRound(r):g==='Ciné Extrait'?await cineExtraitRound(r):g==='Qui est-ce ?'?(await pickWhoWithPhoto(r).then(z=>z?{game:g,q:z.q,a:z.a,c:z.c,theme:z.theme,whoRebus:false,whoPhoto:true,image:z.image||null,duoImages:z.duoImages||null,difficulty:z.difficulty||'dur',points:difficultyPoints(z.difficulty||'dur')}:unavailableWhoRound())):makeRound(r,g);r.current=c;r._clipStarted=false;r._clipEnded=false;r._blindPlaybackStarted=c?.game==='Blind Test'?false:true;
+ if(g==='Mot interdit')sendTabooRound(r);else io.to(r.code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:limit,gameIndex:r.gameIndex,current:g==='Petit Bac'?bacPublic(r):publicRound(c)});
  if(c.whoImageUnavailable){r._advancing=true;setTimeout(()=>next(r),1800)}else if(!c.imageCulteUnavailable&&!c.clipUnavailable&&g!=='Ciné Extrait'&&g!=='Blind Test')armRoundTimer(r);
  if(g==="L’Imposteur")for(const p of Object.values(r.players))io.to(p.id).emit('secret',{word:p.id===r.secret.imp?r.secret.o:r.secret.n});
  emit(r);
@@ -1494,7 +1500,11 @@ s.on('duelWinner',x=>{
    r._advancing=true;setTimeout(()=>next(r),1800);
  }
 });
+s.on('tabooReroll',({code}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Mot interdit'||r._advancing||s.id!==r.tabooExplainer||r.tabooRerolls>=2||r.tabooWinner)return;r.tabooRerolls++;r.tabooGuesses={};r.tabooGuessAt={};r.current=tabooNewWord(r);sendTabooRound(r);armRoundTimer(r);});
+s.on('tabooGuess',({code,text}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Mot interdit'||r._advancing||s.id===r.tabooExplainer||!r.players[s.id]||r.tabooWinner||(r.tabooGuessAt?.[s.id]&&Date.now()-r.tabooGuessAt[s.id]<1200))return;const guess=normTaboo(String(text||'').slice(0,90));if(!guess)return;const answer=normTaboo(r.current.tabooWord);const correct=guess===answer;r.tabooGuesses=r.tabooGuesses||{};r.tabooGuessAt=r.tabooGuessAt||{};r.tabooGuessAt[s.id]=Date.now();if(correct){r.tabooWinner=s.id;io.to(r.code).emit('tabooFound',{winner:r.players[s.id].name,points:r.current.points,word:r.current.tabooWord,explainer:r.players[r.tabooExplainer]?.name});io.to(r.host).emit('tabooJudgePrompt',{winner:s.id,explainer:r.tabooExplainer,points:r.current.points});}else{r.tabooGuesses[s.id]=guess;io.to(s.id).emit('tabooGuessFeedback',{correct:false});}});
+s.on('tabooJudge',({code,valid}={})=>{const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Mot interdit'||!r.tabooWinner||r.tabooJudged||r._advancing||typeof valid!=='boolean')return;r.tabooJudged=true;if(valid){r.players[r.tabooWinner].score+=r.current.points;if(r.players[r.tabooExplainer])r.players[r.tabooExplainer].score+=r.current.points;}emit(r);io.to(code).emit('tabooEnd',{word:r.current.tabooWord,valid,points:valid?r.current.points:0});r._advancing=true;if(r._roundTimer)clearTimeout(r._roundTimer);setTimeout(()=>next(r),2700);});
 s.on('award',x=>{let r=rooms[x.code];if(r&&r.host===s.id&&r.players[x.id]){
+   if(r.current?.game==='Mot interdit')return;
    if(r.oralDecisions?.[x.id]!=null)return;
    r.oralDecisions=r.oralDecisions||{};r.oralDecisions[x.id]=+x.points>0?'ok':'no';
    r.players[x.id].score+=+x.points||0;emit(r);

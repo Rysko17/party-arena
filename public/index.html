@@ -321,19 +321,11 @@ if(x.current.typedBomb){
  return;
 }
 if(x.current.game==='Mot interdit'){
- img.classList.add('hide');q.innerHTML=`🚫 <b>MOT INTERDIT</b> <span class="pill">30 SECONDES</span>`;
- const bans=(x.current.forbiddenWords||[]).join(' • ');
- answers.innerHTML=`<div class="card tabooCard" style="text-align:center;max-width:760px;margin:18px auto;padding:28px">
- <div>📚 ORIGINE : <b>${x.current.origin||x.current.theme||''}</b> • 🎯 ${(x.current.difficulty||'moyen').toUpperCase()} • ${x.current.points||500} pts</div>
- <div style="margin-top:18px;font-size:16px">🎯 MOT / PERSONNAGE À FAIRE DEVINER</div>
- <div style="font-size:38px;font-weight:1000;margin:10px 0 20px">${x.current.tabooWord||'MOT MANQUANT'}</div>
- <div style="font-size:18px;font-weight:900">🗣️ TU DOIS LE FAIRE DEVINER EN EXACTEMENT 3 MOTS</div>
- ${x.current.isPerson?`<div style="margin:16px 0;font-size:18px">🚫 INTERDIT DE DÉCRIRE SON PHYSIQUE, SES CHEVEUX, SON VISAGE OU SES VÊTEMENTS.</div>`:''}
- <div style="margin:12px 0">🚫 MOTS / INDICES INTERDITS : <b>${bans}</b></div>
- <p>L'hôte valide uniquement si exactement 3 mots ont été utilisés et qu'aucune règle interdite n'a été enfreinte.</p></div>`;
- hc.classList.toggle('hide',me!==state?.host);
- if(me===state?.host)award.innerHTML=state.players.map(p=>`<div style="margin:8px 0"><b>${p.name}</b> <button onclick="give('${p.id}')">✅ Valider</button> <button class="backBtn" onclick="refuse('${p.id}')">❌ Refuser</button></div>`).join('');
- return;
+ img.classList.add('hide');const explainer=x.current.explainer===me;const pts=x.current.points||250;
+ q.innerHTML=`🚫 <b>MOT INTERDIT</b> <span class="pill">30 SECONDES</span> <span class="pill">${(x.current.difficulty||'simple').toUpperCase()} • ${pts} PTS</span>`;
+ if(explainer){answers.innerHTML=`<div class="card tabooCard" style="text-align:center;max-width:760px;margin:18px auto;padding:28px"><h2>🎤 À TOI DE FAIRE DEVINER !</h2><div>📚 ${x.current.origin||x.current.theme}</div><div style="font-size:38px;font-weight:1000;margin:18px 0">${x.current.tabooWord}</div><div>🗣️ EXACTEMENT 3 MOTS</div>${x.current.isPerson?'<p>🚫 Ne décris pas le physique ou les vêtements.</p>':''}<p>🚫 Indices interdits : <b>${(x.current.forbiddenWords||[]).join(' • ')}</b></p><p>🏆 ${pts} points si quelqu’un trouve et que l’hôte valide tes indices.</p><button onclick="s.emit('tabooReroll',{code:room})" ${x.current.rerolls>=2?'disabled':''}>🔄 AUTRE MOT (${Math.max(0,2-(x.current.rerolls||0))} restants)</button></div>`;}
+ else{answers.innerHTML=`<div class="card" style="max-width:760px;margin:18px auto;text-align:center;padding:25px"><h2>⌨️ DEVINE LE MOT !</h2><p>Écoute les 3 mots du joueur qui fait deviner, puis écris ta réponse.</p><p>🏆 ${pts} points si tu trouves et si les indices sont validés.</p><input id="tabooInput" maxlength="90" autocomplete="off" placeholder="Écris le mot ou le nom..." onkeydown="if(event.key==='Enter')submitTaboo()" style="width:100%;box-sizing:border-box;padding:16px;font-size:21px;color:#111;background:#fff;border-radius:12px"><button id="tabooSend" onclick="submitTaboo()">📨 ENVOYER</button><div id="tabooFeedback"></div></div>`;}
+ hc.classList.toggle('hide',true);award.innerHTML='';return;
 }
 if(x.current.game==='L’Imposteur'){
  setTimeout(()=>{
@@ -389,6 +381,11 @@ if(x.current.specialDuel){
  if(!allowed)answers.innerHTML=`<div class="card">👀 Tu regardes le duel entre <b>${f}</b> et <b>${l}</b>.</div>`;
 }
 let h=state&&state.host===me;hc.classList.toggle('hide',!h);if(h&&x.current.game!=='L’Imposteur')award.innerHTML=x.current.oral?state.players.map(p=>`<div style="margin:8px 0"><b>${p.name}</b> <button onclick="give('${p.id}')">✅ Valider +500</button> <button class="backBtn" onclick="refuse('${p.id}')">❌ Refuser</button></div>`).join(''):''});s.on('tmcGuess',x=>{q.textContent=x.q;if(me===x.target){answers.innerHTML='<div class="card">🤫 Ta réponse est enregistrée. Attends les réponses des autres.</div>'}else{answers.innerHTML=x.a.map((a,i)=>`<div class="ans" onclick="tmcGuess(${i})">${a}</div>`).join('')}});function submitClipAnswer(){const el=document.getElementById('clipTyped'),btn=document.getElementById('clipSubmit');if(!el||el.disabled||!el.value.trim())return;s.emit('clipTypedAnswer',{code:room,text:el.value.trim()});el.disabled=true;if(btn){btn.disabled=true;btn.textContent='🔒 Réponse envoyée'}}
+function submitTaboo(){const e=document.getElementById('tabooInput');if(!e||!e.value.trim())return;s.emit('tabooGuess',{code:room,text:e.value.trim()});e.value='';}
+s.on('tabooGuessFeedback',()=>{const e=document.getElementById('tabooFeedback');if(e)e.textContent='❌ Pas encore ! Réessaie.'});
+s.on('tabooFound',x=>{const e=document.getElementById('tabooFeedback');if(e)e.textContent='🎉 '+x.winner+' a trouvé '+x.word+' ! Validation des indices en attente.';const inp=document.getElementById('tabooInput');if(inp)inp.disabled=true;});
+s.on('tabooJudgePrompt',x=>{award.innerHTML=`<div class="card"><h3>👑 Les indices respectaient-ils les règles ?</h3><p>Exactement 3 mots, sans indices interdits ?</p><button onclick="s.emit('tabooJudge',{code:room,valid:true});award.innerHTML='Validation envoyée'">✅ VALIDER • +${x.points} pts chacun</button><button class="backBtn" onclick="s.emit('tabooJudge',{code:room,valid:false});award.innerHTML='Refus envoyé'">❌ REFUSER • 0 point</button></div>`;hc.classList.remove('hide');});
+s.on('tabooEnd',x=>{const e=document.getElementById('tabooFeedback');if(e)e.textContent='🏁 Réponse : '+x.word+(x.timeout?' • Temps écoulé':x.valid?' • Points attribués':' • Indices refusés');});
 function submitWhoAnswer(){const el=document.getElementById('whoTyped'),btn=document.getElementById('whoSubmit');if(!el||el.disabled||!el.value.trim())return;s.emit('whoTypedAnswer',{code:room,text:el.value.trim()});el.disabled=true;if(btn){btn.disabled=true;btn.textContent='🔒 Réponse envoyée'}}
 function tmcGuess(i){s.emit('tmcGuess',{code:room,value:i});answers.innerHTML='<div class="card">🔒 Réponse enregistrée.</div>'}s.on('guessResult',x=>{answers.innerHTML+=`<div class="card">${x.correct?'✅ Bonne réponse ! +500':'❌ Mauvaise réponse'}</div>`});
 s.on('secret',x=>{secret.classList.remove('hide');secret.innerHTML=`🤫 TON MOT SECRET : <h1>${x.word}</h1>Ne le montre pas.`});s.on('finished',r=>{play.classList.add('hide');final.classList.remove('hide');rank.innerHTML=[...r.players].sort((a,b)=>b.score-a.score).map((p,i)=>`<div class="score"><b>${i+1}. ${p.name}</b><b>${p.score} pts</b></div>`).join('')+`${r.host===me?'<div class="row" style="margin-top:18px"><button onclick="restartSame()">🔁 Recommencer</button><button onclick="backToSetup()">⚙️ Changer jeux / thèmes</button></div>':''}`});function restartSame(){final.classList.add('hide');s.emit('restartSame',room)}

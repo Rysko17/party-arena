@@ -1,0 +1,9 @@
+PARTY ARENA V5.87 — MOT INTERDIT
+- Un joueur différent fait deviner à chaque manche; les autres écrivent leur réponse.
+- Le mot secret et les indices interdits sont envoyés uniquement au joueur qui fait deviner.
+- Difficulté estimée selon les banques de mots (simple/moyen/dur): 250/500/1000 points.
+- Deux changements de mot possibles par manche, sans points de pénalité; timer de 30 s relancé.
+- Le premier joueur qui trouve et le joueur qui fait deviner reçoivent chacun les points après validation des indices par l'hôte.
+- Les joueurs peuvent réessayer après 1,2 s en cas d'erreur.
+- Vérifications locales: node --check serveur et scripts client, intégrité du ZIP.
+- Non testé en multijoueur sur Render.
