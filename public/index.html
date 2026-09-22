@@ -289,7 +289,7 @@ function startRoundTimer(sec){clearInterval(roundTimerInt);let el=document.getEl
 function timerForGame(g){if(g==='Blind Test'||g==='Ciné Extrait')return 10;if(g==='Mot interdit'||g==='Petit Bac')return 30;if(g==='Trouve l’intrus')return 20;if(['Quiz Battle','Qui est-ce ?','Image culte','Duel','La Bombe'].includes(g))return 10;return 0}
 
 s.on('connect',()=>{try{s.emit('blindHistory',JSON.parse(localStorage.getItem('partyArenaBlindSeen')||'[]'))}catch(e){}});
-s.on('round',x=>{if(x.current?.game==='Ciné Extrait')startRoundTimer(0);if(clipPlayer){try{clipPlayer.destroy()}catch(e){}clipPlayer=null}clearTimeout(clipWatch);startRoundTimer(timerForGame(x.current.game));if(x.current&&x.current.game==='Blind Test'&&x.current.excerptId){try{let a=JSON.parse(localStorage.getItem('partyArenaBlindSeen')||'[]');if(!a.includes(x.current.excerptId)){a.push(x.current.excerptId);if(a.length>5000)a=a.slice(-5000);localStorage.setItem('partyArenaBlindSeen',JSON.stringify(a));}}catch(e){}}const ac=document.getElementById('answerCount');if(ac)ac.textContent='Réponses : 0/0';const rf=document.getElementById('roundFeedback');if(rf)rf.innerHTML='';
+s.on('round',x=>{renderWhoDuo(null);if(x.current?.game==='Ciné Extrait')startRoundTimer(0);if(clipPlayer){try{clipPlayer.destroy()}catch(e){}clipPlayer=null}clearTimeout(clipWatch);startRoundTimer(timerForGame(x.current.game));if(x.current&&x.current.game==='Blind Test'&&x.current.excerptId){try{let a=JSON.parse(localStorage.getItem('partyArenaBlindSeen')||'[]');if(!a.includes(x.current.excerptId)){a.push(x.current.excerptId);if(a.length>5000)a=a.slice(-5000);localStorage.setItem('partyArenaBlindSeen',JSON.stringify(a));}}catch(e){}}const ac=document.getElementById('answerCount');if(ac)ac.textContent='Réponses : 0/0';const rf=document.getElementById('roundFeedback');if(rf)rf.innerHTML='';
 const jb=[...document.querySelectorAll('button')].find(b=>b.textContent==='Lancement…');if(jb){jb.disabled=false;jb.textContent='▶ JOUER'};lobby.classList.add('hide');play.classList.remove('hide');secret.classList.add('hide');rl.textContent=`${x.current.game} — Manche ${x.gameRound}/${x.gameTotal}`;gl.textContent=x.current.game;tl.textContent=x.current.theme||'';q.innerHTML=(x.current.q||'')+(x.current.difficulty?` <span class="pill">🎯 ${x.current.difficulty.toUpperCase()} • ${x.current.points} pts</span>`:'');
 if(x.current.game==='Qui est-ce ?' && me===state?.host){award.innerHTML=`<button onclick="s.emit('rerollWho',{code:room})">🔄 CHANGER L’IMAGE / QUESTION</button>`;}
 if(x.current.game==='Petit Bac'){renderBac(x.current);return;}
@@ -356,7 +356,7 @@ if(x.current.game==='L’Imposteur' && me===state?.host && x.current.phase!=='vo
  award.innerHTML=`<div class="card"><h3>🕵️ Imposteur</h3><button onclick="startImpostorVote()">🗳️ LANCER LE VOTE</button><button onclick="s.emit('next',room)">⏭️ PASSER / JEU SUIVANT</button></div>`;
 }
 if(x.current.difficulty && !x.current.blind && !x.current.pairDuel) q.innerHTML += ` <small>• ${x.current.difficulty.toUpperCase()} • ${x.current.points||500} pts</small>`;
-if(x.current.answer && state && state.host===me) q.textContent += '  •  Réponse : '+x.current.answer;img.classList.toggle('hide',!x.current.image);if(x.current.image){img.dataset.pixelDone='0';img.src=x.current.image;}img.onload=()=>{if(x.current.imageCulte)applyImageCulteEffect(x.current.imageEffect)};applyImageCulteEffect(x.current.imageCulte?x.current.imageEffect:'none');document.getElementById('tmdbCredit').classList.toggle('hide',!x.current.imageCulte);if(x.current.game==='Tu me connais ?'&&x.current.phase==='choose'){if(me===x.current.target){q.textContent=x.current.q+' — choisis ta réponse secrètement';answers.innerHTML=x.current.a.map((a,i)=>`<div class="ans" onclick="secretChoice(${i})">${a}</div>`).join('')}else{q.textContent=x.current.targetName+' choisit sa réponse secrète…';answers.innerHTML='<div class="card">⏳ Attends que '+x.current.targetName+' ait choisi. Tu ne peux pas répondre avant.</div>'}}else{answers.innerHTML=x.current.a?x.current.a.map((a,i)=>`<div class="ans" onclick="answer(${i})">${a}</div>`).join(''):''}if(x.current.specialDuel){
+if(x.current.answer && state && state.host===me) q.textContent += '  •  Réponse : '+x.current.answer;renderWhoDuo(x.current.duoImages);img.classList.toggle('hide',!x.current.image);if(x.current.image){img.dataset.pixelDone='0';img.src=x.current.image;}img.onload=()=>{if(x.current.imageCulte)applyImageCulteEffect(x.current.imageEffect)};applyImageCulteEffect(x.current.imageCulte?x.current.imageEffect:'none');document.getElementById('tmdbCredit').classList.toggle('hide',!x.current.imageCulte);if(x.current.game==='Tu me connais ?'&&x.current.phase==='choose'){if(me===x.current.target){q.textContent=x.current.q+' — choisis ta réponse secrètement';answers.innerHTML=x.current.a.map((a,i)=>`<div class="ans" onclick="secretChoice(${i})">${a}</div>`).join('')}else{q.textContent=x.current.targetName+' choisit sa réponse secrète…';answers.innerHTML='<div class="card">⏳ Attends que '+x.current.targetName+' ait choisi. Tu ne peux pas répondre avant.</div>'}}else{answers.innerHTML=x.current.a?x.current.a.map((a,i)=>`<div class="ans" onclick="answer(${i})">${a}</div>`).join(''):''}if(x.current.specialDuel){
  const allowed=[x.current.first,x.current.last].includes(me);
  const f=state?.players?.find(p=>p.id===x.current.first)?.name||'Premier';
  const l=state?.players?.find(p=>p.id===x.current.last)?.name||'Dernier';
@@ -442,13 +442,42 @@ render();s.on('allAnswered',()=>{answers.innerHTML='<div class="card">✅ Tout l
 
 
 let bacState=null;let bacCountdown=null;function updateBacClock(){const el=document.getElementById('bacClock');if(!el||!bacState||bacState.phase!=='write')return;const left=Math.max(0,Math.ceil((bacState.deadline-Date.now())/1000));el.textContent='⏱️ '+left+' secondes';if(left===0){document.querySelectorAll('.bacInput').forEach(x=>x.disabled=true);const b=document.getElementById('bacSendBtn');if(b)b.disabled=true;}}
+// Duo visage : chaque photo occupe le MÊME cadre. On n'en montre que
+// la moitié gauche pour la première personne et la moitié droite pour la seconde.
+// Ainsi ce ne sont plus deux portraits côte à côte, mais un visage hybride.
+function renderWhoDuo(images){
+ let el=document.getElementById('whoDuoVisual');
+ if(!el){
+   el=document.createElement('div');el.id='whoDuoVisual';
+   el.style.cssText='display:none;position:relative;width:min(92%,400px);aspect-ratio:1/1;margin:15px auto;border-radius:16px;overflow:hidden;background:#161822;box-shadow:0 10px 28px #0008';
+   img.insertAdjacentElement('afterend',el);
+ }
+ if(!Array.isArray(images)||images.length!==2||images.some(src=>typeof src!=='string'||!src)){
+   el.style.display='none';el.replaceChildren();return;
+ }
+ el.style.display='block';el.replaceChildren();
+ images.forEach((src,i)=>{
+   const photo=document.createElement('img');
+   photo.src=src;photo.alt=i===0?'Moitié gauche du visage':'Moitié droite du visage';
+   // Les deux images sont superposées et cadrées sur le haut du portrait.
+   // Le découpage se fait exactement au milieu du visage, sans bande noire.
+   photo.style.cssText='position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center 24%;clip-path:'+(i===0?'inset(0 50% 0 0)':'inset(0 0 0 50%)')+';';
+   photo.onerror=()=>{el.dataset.imageError='1';};
+   el.appendChild(photo);
+ });
+ const seam=document.createElement('div');
+ seam.setAttribute('aria-hidden','true');
+ seam.style.cssText='position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.25);pointer-events:none';
+ el.appendChild(seam);
+}
+
 function bacEscape(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function renderBac(b){bacState=b;img.classList.add('hide');document.getElementById('tmdbCredit').classList.add('hide');q.textContent='✍️ PETIT BAC — LETTRE '+b.letter;if(bacCountdown)clearInterval(bacCountdown);bacCountdown=null;const mine=b.players.find(p=>p.id===me);if(b.phase==='write'){
- answers.innerHTML=`<div class="card"><h2>Lettre : ${bacEscape(b.letter)}</h2><h2 id="bacClock" style="color:#ffce55">⏱️ 30 secondes</h2><p>Chaque réponse doit commencer par cette lettre. L'hôte validera les propositions.</p>${b.categories.map((cat,i)=>`<label style="display:block;margin:14px 0"><b>${bacEscape(cat)}</b><input class="bacInput" data-bac="${i}" maxlength="90" ${mine?.submitted?'disabled':''} placeholder="Réponse en ${bacEscape(b.letter)}…" style="display:block;width:100%;box-sizing:border-box;padding:13px;border-radius:10px;background:white;color:#111" value="${bacEscape(mine?.answers?.[i]||'')}"></label>`).join('')}<button id="bacSendBtn" ${mine?.submitted?'disabled':''} onclick="bacSend()">${mine?.submitted?'🔒 Réponses envoyées':'📨 ENVOYER MES 4 RÉPONSES'}</button><p id="bacProgress">${b.players.filter(p=>p.submitted).length}/${b.players.length} joueurs ont envoyé leurs réponses.</p></div>`;updateBacClock();bacCountdown=setInterval(updateBacClock,200);
+function renderBac(b){bacState=b;renderWhoDuo(null);img.classList.add('hide');document.getElementById('tmdbCredit').classList.add('hide');q.textContent='✍️ PETIT BAC — LETTRE '+b.letter;if(bacCountdown)clearInterval(bacCountdown);bacCountdown=null;const mine=b.players.find(p=>p.id===me);if(b.phase==='write'){
+ answers.innerHTML=`<div class="card"><h2>Lettre : ${bacEscape(b.letter)}</h2><h2 id="bacClock" style="color:#ffce55">⏱️ 30 secondes</h2><p>Chaque réponse doit commencer par cette lettre. L'hôte validera les propositions.</p>${b.categories.map((cat,i)=>`<label style="display:block;margin:14px 0"><b>${bacEscape(cat)}</b><input class="bacInput" data-bac="${i}" maxlength="90" ${mine?.submitted?'disabled':''} placeholder="Réponse en ${bacEscape(b.letter)}…" style="display:block;width:100%;box-sizing:border-box;padding:13px;border-radius:10px;background:white;color:#111" value="${bacEscape(mine?.answers?.[i]||'')}"></label>`).join('')}<button id="bacSendBtn" ${mine?.submitted?'disabled':''} onclick="bacSend()">${mine?.submitted?'🔒 Réponses envoyées':'📨 ENVOYER MES 5 RÉPONSES'}</button><p id="bacProgress">${b.players.filter(p=>p.submitted).length}/${b.players.length} joueurs ont envoyé leurs réponses.</p></div>`;updateBacClock();bacCountdown=setInterval(updateBacClock,200);
  }else{answers.innerHTML=`<div class="card"><h2>👑 Validation par l'hôte — ${bacEscape(b.letter)}</h2>${b.players.map(p=>`<div class="card"><h3>${bacEscape(p.name)} ${p.submitted?'':'(aucune réponse)'}</h3>${b.categories.map((cat,i)=>`<div style="margin:10px 0"><b>${bacEscape(cat)}</b> : ${bacEscape(p.answers?.[i]||'—')} ${me===b.host&&p.answers?.[i]?`<button onclick="bacJudge('${p.id}',${i},true)" style="background:${p.judgements?.[i]===true?'#167c43':''}">✅</button> <button onclick="bacJudge('${p.id}',${i},false)">❌</button>`:p.judgements?.[i]===true?'✅ Validée':p.judgements?.[i]===false?'❌ Refusée':'⏳'}</div>`).join('')}</div>`).join('')}</div>`;}
  hc.classList.toggle('hide',me!==b.host);if(me===b.host)award.innerHTML=b.phase==='write'?'<button onclick="bacReview()">👑 TERMINER ET VALIDER LES RÉPONSES</button>':'<button onclick="bacNext()">➡️ MANCHE SUIVANTE</button>';}
 function bacReview(){s.emit("bacReview",{code:room})}function bacNext(){s.emit("bacNext",{code:room})}
-function bacSend(){const values=[...document.querySelectorAll('.bacInput')].map(el=>el.value.trim());if(values.length!==4)return;s.emit('bacSubmit',{code:room,answers:values});}
+function bacSend(){const values=[...document.querySelectorAll('.bacInput')].map(el=>el.value.trim());if(values.length!==5)return;s.emit('bacSubmit',{code:room,answers:values});}
 function bacJudge(playerId,category,valid){s.emit('bacJudge',{code:room,playerId,category,valid});}
 s.on('bacState',b=>{if(b.phase==='write'&&bacState?.phase==='write'&&!b.players.find(p=>p.id===me)?.submitted){bacState=b;const progress=document.getElementById('bacProgress');if(progress)progress.textContent=b.players.filter(p=>p.submitted).length+'/'+b.players.length+' joueurs ont envoyé leurs réponses.';return;}renderBac(b)});
 function renderPersistentHostControls(x){

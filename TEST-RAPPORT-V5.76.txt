@@ -1,0 +1,9 @@
+V5.76 — QUI EST-CE ? DUO : DEUX MOITIÉS DE VISAGE
+- Le premier portrait fournit uniquement sa moitié gauche.
+- Le deuxième portrait fournit uniquement sa moitié droite.
+- Les deux portraits sont superposés dans un seul cadre carré pour former un visage hybride.
+- Mode duo disponible pour Football, Sport, Cinéma & Séries (célébrités), Musique et Anime & Manga lorsque suffisamment de portraits existent.
+- Pas de duo de monuments ; quatre choix de réponses cohérents issus de la même catégorie.
+- Cadrage automatique centré vers le haut des portraits ; les images de profil ou photos de groupe peuvent rester imparfaites.
+- Tests locaux : syntaxe Node serveur et JavaScript navigateur, contrôle de la logique des deux moitiés.
+- La disponibilité réelle des photos distantes et le cadrage exact de chaque visage restent à vérifier sur le site déployé.
