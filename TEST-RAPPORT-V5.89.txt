@@ -1,0 +1,7 @@
+PARTY ARENA V5.89 — MOT INTERDIT : FAUTES D'ORTHOGRAPHE
+- Réponses écrites acceptant les accents manquants, ponctuation et petites fautes.
+- 1 modification pour les mots de 5 à 8 lettres, 2 à partir de 9 lettres.
+- Mots de moins de 5 lettres : correspondance exacte après normalisation.
+- Le circuit de difficulté V5.88 et les points restent inchangés.
+- Vérifications : node --check server.js et script du site ; 11 cas de test unitaires.
+- Tests réels en multijoueur sur Render non effectués.

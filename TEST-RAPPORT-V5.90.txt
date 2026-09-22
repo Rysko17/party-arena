@@ -1,0 +1,7 @@
+PARTY ARENA V5.90 — MOT INTERDIT : NOMS PROPRES
+- Tolérance renforcée sur les noms propres, en particulier les personnes/personnages difficiles.
+- Accents, espaces et tirets normalisés ; inversion de lettres adjacentes acceptée.
+- Jusqu'à trois erreurs réparties sur un nom propre long, avec limites par mot.
+- Noms manquants ou complètement différents refusés ; autres mots inchangés.
+- Vérifications locales : node --check serveur et script HTML ; 9 cas de reconnaissance validés.
+- Pas de test multijoueur réel sur Render.

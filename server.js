@@ -1270,6 +1270,61 @@ function tabooNewWord(r){
 function tabooRoundFor(c,id){if(c.game!=='Mot interdit')return publicRound(c);return id===c.explainer?c:{game:c.game,q:'Devine le mot en l’écrivant !',theme:c.theme,origin:c.origin,difficulty:c.difficulty,points:c.points,explainer:c.explainer,rerolls:c.rerolls,forbiddenWords:[],isPerson:c.isPerson};}
 function sendTabooRound(r){for(const id of Object.keys(r.players))io.to(id).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:tabooRoundFor(r.current,id)});}
 function normTaboo(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ')}
+
+// Tolérance orthographique prudente : accents, ponctuation et petites fautes de frappe.
+// 1 caractère d'écart à partir de 5 lettres ; 2 à partir de 9 lettres.
+// Les réponses courtes restent exactes pour éviter de valider un autre mot.
+function tabooEditDistance(a,b,limit){
+ if(Math.abs(a.length-b.length)>limit)return limit+1;
+ let prev=Array.from({length:b.length+1},(_,i)=>i);
+ for(let i=1;i<=a.length;i++){
+  const cur=[i];let rowMin=cur[0];
+  for(let j=1;j<=b.length;j++){
+   const v=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));
+   cur.push(v);if(v<rowMin)rowMin=v;
+  }
+  if(rowMin>limit)return limit+1;
+  prev=cur;
+ }
+ return prev[b.length];
+}
+// Une inversion de deux lettres voisines est une faute de frappe courante.
+function tabooTypoDistance(a,b,limit){
+ if(Math.abs(a.length-b.length)>limit)return limit+1;
+ const d=Array.from({length:a.length+1},()=>Array(b.length+1).fill(0));
+ for(let i=0;i<=a.length;i++)d[i][0]=i;
+ for(let j=0;j<=b.length;j++)d[0][j]=j;
+ for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++){
+  d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+  if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])d[i][j]=Math.min(d[i][j],d[i-2][j-2]+1);
+ }
+ return d[a.length][b.length];
+}
+function tabooAnswerMatches(guess,answer,isProperName=false){
+ if(guess===answer)return true;
+ const a=guess.replace(/ /g,''),b=answer.replace(/ /g,'');
+ if(!a||!b)return false;
+ if(isProperName){
+  // Noms propres : jusqu'à 3 petites fautes pour les noms longs,
+  // mais jamais de réponse sans rapport ou de prénom/nom manquant.
+  const limit=b.length>=11?3:b.length>=9?2:b.length>=5?1:0;
+  if(!limit||a.length<Math.max(4,b.length-limit))return false;
+  const given=guess.split(' '),expected=answer.split(' ');
+  if(given.length!==expected.length)return false;
+  let errors=0;
+  for(let i=0;i<expected.length;i++){
+   const part=expected[i],typed=given[i];
+   const perPart=part.length>=6?2:part.length>=5?1:0;
+   const distance=tabooTypoDistance(typed,part,perPart);
+   if(distance>perPart)return false;
+   errors+=distance;
+  }
+  return errors<=limit;
+ }
+ const limit=b.length>=9?2:b.length>=5?1:0;
+ return limit>0&&a.length>=Math.max(4,b.length-limit)&&tabooEditDistance(a,b,limit)<=limit;
+}
+
 function makeRound(r,g){
  let c={game:g};
  if(g==='Quiz Battle'){let x=question(r);c={game:g,q:x.q,a:x.a,c:x.c,image:x.image||null,theme:x.theme,difficulty:x.difficulty||'simple',points:({simple:250,moyen:500,dur:1000}[x.difficulty]||250)}}
@@ -1512,7 +1567,7 @@ s.on('duelWinner',x=>{
  }
 });
 s.on('tabooReroll',({code}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Mot interdit'||r._advancing||s.id!==r.tabooExplainer||r.tabooRerolls>=5||r.tabooWinner)return;r.tabooRerolls++;r.tabooGuesses={};r.tabooGuessAt={};r.current=tabooNewWord(r);sendTabooRound(r);armRoundTimer(r);});
-s.on('tabooGuess',({code,text}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Mot interdit'||r._advancing||s.id===r.tabooExplainer||!r.players[s.id]||r.tabooWinner||(r.tabooGuessAt?.[s.id]&&Date.now()-r.tabooGuessAt[s.id]<1200))return;const guess=normTaboo(String(text||'').slice(0,90));if(!guess)return;const answer=normTaboo(r.current.tabooWord);const correct=guess===answer;r.tabooGuesses=r.tabooGuesses||{};r.tabooGuessAt=r.tabooGuessAt||{};r.tabooGuessAt[s.id]=Date.now();if(correct){r.tabooWinner=s.id;io.to(r.code).emit('tabooFound',{winner:r.players[s.id].name,points:r.current.points,word:r.current.tabooWord,explainer:r.players[r.tabooExplainer]?.name});io.to(r.host).emit('tabooJudgePrompt',{winner:s.id,explainer:r.tabooExplainer,points:r.current.points});}else{r.tabooGuesses[s.id]=guess;io.to(s.id).emit('tabooGuessFeedback',{correct:false});}});
+s.on('tabooGuess',({code,text}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Mot interdit'||r._advancing||s.id===r.tabooExplainer||!r.players[s.id]||r.tabooWinner||(r.tabooGuessAt?.[s.id]&&Date.now()-r.tabooGuessAt[s.id]<1200))return;const guess=normTaboo(String(text||'').slice(0,90));if(!guess)return;const answer=normTaboo(r.current.tabooWord);const rawAnswer=r.current.tabooWord;const properName=!!r.current.isPerson||/\b[A-ZÀ-Ý][a-zà-ÿ]+(?:[ -][A-ZÀ-Ý][a-zà-ÿ]+)+/.test(rawAnswer);const correct=tabooAnswerMatches(guess,answer,properName);r.tabooGuesses=r.tabooGuesses||{};r.tabooGuessAt=r.tabooGuessAt||{};r.tabooGuessAt[s.id]=Date.now();if(correct){r.tabooWinner=s.id;io.to(r.code).emit('tabooFound',{winner:r.players[s.id].name,points:r.current.points,word:r.current.tabooWord,explainer:r.players[r.tabooExplainer]?.name});io.to(r.host).emit('tabooJudgePrompt',{winner:s.id,explainer:r.tabooExplainer,points:r.current.points});}else{r.tabooGuesses[s.id]=guess;io.to(s.id).emit('tabooGuessFeedback',{correct:false});}});
 s.on('tabooJudge',({code,valid}={})=>{const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Mot interdit'||!r.tabooWinner||r.tabooJudged||r._advancing||typeof valid!=='boolean')return;r.tabooJudged=true;if(valid){r.players[r.tabooWinner].score+=r.current.points;if(r.players[r.tabooExplainer])r.players[r.tabooExplainer].score+=r.current.points;}emit(r);io.to(code).emit('tabooEnd',{word:r.current.tabooWord,valid,points:valid?r.current.points:0});r._advancing=true;if(r._roundTimer)clearTimeout(r._roundTimer);setTimeout(()=>next(r),2700);});
 s.on('award',x=>{let r=rooms[x.code];if(r&&r.host===s.id&&r.players[x.id]){
    if(r.current?.game==='Mot interdit')return;
