@@ -21,7 +21,7 @@
 </style>
 <style>
 #gameImg:not(.hide){display:block!important;width:min(92vw,720px)!important;height:min(52vh,440px)!important;object-fit:contain!important;object-position:50% 50%!important;margin:10px auto!important;border-radius:16px;background:#111!important;padding:6px!important;box-sizing:border-box!important}
-</style><style>.cineTitleMask{position:absolute;top:0;left:0;right:0;height:52px;background:#090b13;z-index:5;pointer-events:none}.cineBottomMask{position:absolute;bottom:0;left:0;right:0;height:28px;background:#090b13;z-index:5;pointer-events:none}</style></head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.72 — PIXEL & CINÉ EXTRAIT</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
+</style><style>.cineTitleMask{position:absolute;top:0;left:0;right:0;height:52px;background:#090b13;z-index:5;pointer-events:none}.cineBottomMask{position:absolute;bottom:0;left:0;right:0;height:28px;background:#090b13;z-index:5;pointer-events:none}</style></head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.74 — PETIT BAC & PHOTOS</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
 <div id="home" class="card">
 <h2>Que veux-tu faire ?</h2>
 <p>Crée une nouvelle partie ou rejoins tes amis avec leur code.</p>
@@ -136,13 +136,13 @@ function applyImageCulteEffect(effect){
  const filters={'soft-blur':'blur(3px)','strong-blur':'blur(8px)','desaturate':'grayscale(1) contrast(1.35)','hue':'hue-rotate(145deg) saturate(1.8)','invert':'invert(.85) hue-rotate(100deg)'};
  if(filters[effect])img.style.filter=filters[effect];
  if(effect==='crop'){img.style.clipPath='inset(15% 19% 15% 19%)';img.style.transform='scale(1.15)'}
- if(['pixel-soft','pixel-strong','pixel-extreme'].includes(effect)){
+ if(['pixel-soft','pixel-medium','pixel-strong','pixel-extreme'].includes(effect)){
   // Pixelation uses the original same-origin TMDB image. No floating rectangle or overlay.
   if(!img.complete||!img.naturalWidth||img.dataset.pixelDone==='1')return;
   try{
    const w=img.naturalWidth,h=img.naturalHeight;
    const small=document.createElement('canvas');
-   const blocks=effect==='pixel-extreme'?10:effect==='pixel-strong'?16:40;
+   const blocks=effect==='pixel-extreme'?34:effect==='pixel-strong'?48:effect==='pixel-medium'?64:88;
    small.width=blocks;small.height=Math.max(1,Math.round(blocks*h/w));
    const ctx=small.getContext('2d');ctx.imageSmoothingEnabled=true;ctx.drawImage(img,0,0,small.width,small.height);
    const out=document.createElement('canvas');out.width=Math.min(w,960);out.height=Math.max(1,Math.round(out.width*h/w));
@@ -286,7 +286,7 @@ if(isHost){render();}});
 
 let roundTimerInt=null;
 function startRoundTimer(sec){clearInterval(roundTimerInt);let el=document.getElementById('roundTimer');if(!el){el=document.createElement('div');el.id='roundTimer';el.className='pill';el.style.cssText='font-size:22px;font-weight:900;margin:10px auto;display:block;width:max-content';(document.getElementById('play')||document.body).prepend(el)}if(!sec){el.style.display='none';return}el.style.display='block';let left=sec;el.textContent=`⏱️ ${left}s`;roundTimerInt=setInterval(()=>{left--;el.textContent=`⏱️ ${Math.max(0,left)}s`;if(left<=0)clearInterval(roundTimerInt)},1000)}
-function timerForGame(g){if(g==='Blind Test'||g==='Ciné Extrait')return 10;if(g==='Mot interdit')return 30;if(g==='Trouve l’intrus')return 20;if(['Quiz Battle','Qui est-ce ?','Image culte','Duel','La Bombe'].includes(g))return 10;return 0}
+function timerForGame(g){if(g==='Blind Test'||g==='Ciné Extrait')return 10;if(g==='Mot interdit'||g==='Petit Bac')return 30;if(g==='Trouve l’intrus')return 20;if(['Quiz Battle','Qui est-ce ?','Image culte','Duel','La Bombe'].includes(g))return 10;return 0}
 
 s.on('connect',()=>{try{s.emit('blindHistory',JSON.parse(localStorage.getItem('partyArenaBlindSeen')||'[]'))}catch(e){}});
 s.on('round',x=>{if(x.current?.game==='Ciné Extrait')startRoundTimer(0);if(clipPlayer){try{clipPlayer.destroy()}catch(e){}clipPlayer=null}clearTimeout(clipWatch);startRoundTimer(timerForGame(x.current.game));if(x.current&&x.current.game==='Blind Test'&&x.current.excerptId){try{let a=JSON.parse(localStorage.getItem('partyArenaBlindSeen')||'[]');if(!a.includes(x.current.excerptId)){a.push(x.current.excerptId);if(a.length>5000)a=a.slice(-5000);localStorage.setItem('partyArenaBlindSeen',JSON.stringify(a));}}catch(e){}}const ac=document.getElementById('answerCount');if(ac)ac.textContent='Réponses : 0/0';const rf=document.getElementById('roundFeedback');if(rf)rf.innerHTML='';
@@ -441,10 +441,10 @@ render();s.on('allAnswered',()=>{answers.innerHTML='<div class="card">✅ Tout l
 
 
 
-let bacState=null;
+let bacState=null;let bacCountdown=null;function updateBacClock(){const el=document.getElementById('bacClock');if(!el||!bacState||bacState.phase!=='write')return;const left=Math.max(0,Math.ceil((bacState.deadline-Date.now())/1000));el.textContent='⏱️ '+left+' secondes';if(left===0){document.querySelectorAll('.bacInput').forEach(x=>x.disabled=true);const b=document.getElementById('bacSendBtn');if(b)b.disabled=true;}}
 function bacEscape(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function renderBac(b){bacState=b;img.classList.add('hide');document.getElementById('tmdbCredit').classList.add('hide');q.textContent='✍️ PETIT BAC — LETTRE '+b.letter;const mine=b.players.find(p=>p.id===me);if(b.phase==='write'){
- answers.innerHTML=`<div class="card"><h2>Lettre : ${bacEscape(b.letter)}</h2><p>Chaque réponse doit commencer par cette lettre. L'hôte validera les propositions.</p>${b.categories.map((cat,i)=>`<label style="display:block;margin:14px 0"><b>${bacEscape(cat)}</b><input class="bacInput" data-bac="${i}" maxlength="90" ${mine?.submitted?'disabled':''} placeholder="Réponse en ${bacEscape(b.letter)}…" style="display:block;width:100%;box-sizing:border-box;padding:13px;border-radius:10px;background:white;color:#111" value="${bacEscape(mine?.answers?.[i]||'')}"></label>`).join('')}<button ${mine?.submitted?'disabled':''} onclick="bacSend()">${mine?.submitted?'🔒 Réponses envoyées':'📨 ENVOYER MES 4 RÉPONSES'}</button><p id="bacProgress">${b.players.filter(p=>p.submitted).length}/${b.players.length} joueurs ont envoyé leurs réponses.</p></div>`;
+function renderBac(b){bacState=b;img.classList.add('hide');document.getElementById('tmdbCredit').classList.add('hide');q.textContent='✍️ PETIT BAC — LETTRE '+b.letter;if(bacCountdown)clearInterval(bacCountdown);bacCountdown=null;const mine=b.players.find(p=>p.id===me);if(b.phase==='write'){
+ answers.innerHTML=`<div class="card"><h2>Lettre : ${bacEscape(b.letter)}</h2><h2 id="bacClock" style="color:#ffce55">⏱️ 30 secondes</h2><p>Chaque réponse doit commencer par cette lettre. L'hôte validera les propositions.</p>${b.categories.map((cat,i)=>`<label style="display:block;margin:14px 0"><b>${bacEscape(cat)}</b><input class="bacInput" data-bac="${i}" maxlength="90" ${mine?.submitted?'disabled':''} placeholder="Réponse en ${bacEscape(b.letter)}…" style="display:block;width:100%;box-sizing:border-box;padding:13px;border-radius:10px;background:white;color:#111" value="${bacEscape(mine?.answers?.[i]||'')}"></label>`).join('')}<button id="bacSendBtn" ${mine?.submitted?'disabled':''} onclick="bacSend()">${mine?.submitted?'🔒 Réponses envoyées':'📨 ENVOYER MES 4 RÉPONSES'}</button><p id="bacProgress">${b.players.filter(p=>p.submitted).length}/${b.players.length} joueurs ont envoyé leurs réponses.</p></div>`;updateBacClock();bacCountdown=setInterval(updateBacClock,200);
  }else{answers.innerHTML=`<div class="card"><h2>👑 Validation par l'hôte — ${bacEscape(b.letter)}</h2>${b.players.map(p=>`<div class="card"><h3>${bacEscape(p.name)} ${p.submitted?'':'(aucune réponse)'}</h3>${b.categories.map((cat,i)=>`<div style="margin:10px 0"><b>${bacEscape(cat)}</b> : ${bacEscape(p.answers?.[i]||'—')} ${me===b.host&&p.answers?.[i]?`<button onclick="bacJudge('${p.id}',${i},true)" style="background:${p.judgements?.[i]===true?'#167c43':''}">✅</button> <button onclick="bacJudge('${p.id}',${i},false)">❌</button>`:p.judgements?.[i]===true?'✅ Validée':p.judgements?.[i]===false?'❌ Refusée':'⏳'}</div>`).join('')}</div>`).join('')}</div>`;}
  hc.classList.toggle('hide',me!==b.host);if(me===b.host)award.innerHTML=b.phase==='write'?'<button onclick="bacReview()">👑 TERMINER ET VALIDER LES RÉPONSES</button>':'<button onclick="bacNext()">➡️ MANCHE SUIVANTE</button>';}
 function bacReview(){s.emit("bacReview",{code:room})}function bacNext(){s.emit("bacNext",{code:room})}

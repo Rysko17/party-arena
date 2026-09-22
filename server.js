@@ -369,6 +369,17 @@ function whoKind(name,theme){
  if(WHO_FEMALE.has(name))return 'female';
  return 'male';
 }
+// Qui est-ce : TMDB fournit les portraits d'acteurs ; Wikimedia Commons les monuments.
+// Les images sont ajoutées uniquement après une réponse API contenant un chemin exploitable.
+const WHO_ACTOR_NAMES=['Cillian Murphy','Pedro Pascal','Zendaya','Florence Pugh','Tom Holland','Margot Robbie','Robert Downey Jr.','Ryan Gosling','Ana de Armas','Keanu Reeves','Jenna Ortega','Millie Bobby Brown','Henry Cavill','Timothée Chalamet','Scarlett Johansson','Leonardo DiCaprio','Denzel Washington','Samuel L. Jackson','Jason Momoa','Sydney Sweeney','Andrew Garfield','Emma Stone','Chris Hemsworth','Anne Hathaway','Christian Bale','Mads Mikkelsen','Park Seo-joon','Lee Jung-jae','Song Kang-ho','Hiroyuki Sanada'];
+const WHO_LANDMARKS=[['Sagrada Família','Sagrada Familia Barcelona'],['Burj Khalifa','Burj Khalifa Dubai'],['Opéra de Sydney','Sydney Opera House'],['Pyramides de Gizeh','Great Pyramid of Giza'],['Mont Saint-Michel','Mont Saint Michel abbey'],['Machu Picchu','Machu Picchu Peru'],['Pont du Golden Gate','Golden Gate Bridge San Francisco'],['Arc de Triomphe','Arc de Triomphe Paris'],['Petra','Petra Jordan Treasury'],['Château de Chambord','Chateau de Chambord']];
+const whoApiStatus={tmdbActors:0,commonsLandmarks:0,attempted:0};
+function addWhoPhoto(z){if(!z?.image||WHO_PHOTOS.some(p=>p.answer===z.answer&&p.image===z.image))return false;WHO_PHOTOS.push(z);return true;}
+async function warmWhoActors(){if(!tmdbKey())return;for(const name of WHO_ACTOR_NAMES){try{const url='https://api.themoviedb.org/3/search/person?api_key='+encodeURIComponent(tmdbKey())+'&query='+encodeURIComponent(name)+'&language=fr-FR';const data=await tmdbJson(url);const match=(data.results||[]).find(p=>p.name.toLowerCase()===name.toLowerCase()&&p.profile_path);if(match&&addWhoPhoto({answer:name,theme:'Cinéma & Séries',image:'https://image.tmdb.org/t/p/w500'+match.profile_path,source:'TMDB'}))whoApiStatus.tmdbActors++;}catch(e){console.warn('Who TMDB',name,e.message)}whoApiStatus.attempted++;}}
+async function warmWhoLandmarks(){for(const [name,term] of WHO_LANDMARKS){try{const url='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch='+encodeURIComponent('filetype:bitmap '+term)+'&gsrnamespace=6&gsrlimit=8&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=700&format=json&origin=*';const res=await fetch(url,{headers:{'User-Agent':'PartyArena/5.74 (educational quiz; Wikimedia Commons API)'},signal:AbortSignal.timeout(8000)});if(!res.ok)continue;const data=await res.json();const pages=Object.values(data.query?.pages||{});const file=pages.find(p=>{const info=p.imageinfo?.[0],lic=info?.extmetadata?.LicenseShortName?.value||'';return info?.thumburl&&/CC|public domain|PD/i.test(lic)&&!/(map|logo|flag|plan)/i.test(p.title)});if(file&&addWhoPhoto({answer:name,theme:'Culture générale',image:file.imageinfo[0].thumburl,source:'Wikimedia Commons',attribution:file.imageinfo[0].descriptionurl}))whoApiStatus.commonsLandmarks++;}catch(e){console.warn('Who Commons',name,e.message)}}}
+app.get('/qui-est-ce-status',(req,res)=>res.json({...whoApiStatus,photoEntries:WHO_PHOTOS.length,tmdbConfigured:!!tmdbKey()}));
+async function warmWhoAnime(){const pool=IMAGE_CULTE_BANK.filter(x=>x.theme==='Anime & Manga').slice(0,24);for(let i=0;i<pool.length;i+=3){await Promise.allSettled(pool.slice(i,i+3).map(async z=>{const pics=await tmdbLoadScene(z,'moyen');if(pics?.length){const pic=pics[0];addWhoPhoto({answer:z.work,theme:'Anime & Manga',image:'/tmdb-scene/'+z.type+'/'+z.id+'/moyen?file='+encodeURIComponent(pic.tmdbPath),source:'TMDB',animeScene:true});}}));}}
+setTimeout(()=>{warmWhoActors().catch(()=>{});warmWhoLandmarks().catch(()=>{});if(tmdbKey())warmWhoAnime().catch(()=>{})},1800);
 function pickWhoMixed(r){
  const selected=r.settings.themes||[];
  let photoThemes=[...new Set(WHO_PHOTOS.filter(x=>selected.includes(x.theme)).map(x=>x.theme))];
@@ -383,7 +394,7 @@ function pickWhoMixed(r){
    if(pool.length<3)pool=[...new Set(WHO_PHOTOS.filter(x=>x.theme===z.theme && whoKind(x.answer,x.theme)===kind).map(x=>x.answer))].filter(x=>x!==z.answer);
    if(pool.length<3)pool=[...new Set(WHO_PHOTOS.filter(x=>whoKind(x.answer,x.theme)===kind).map(x=>x.answer))].filter(x=>x!==z.answer);
    const wrong=pool.sort(()=>Math.random()-.5).slice(0,3);
-   if(wrong.length===3){const a=[z.answer,...wrong].sort(()=>Math.random()-.5);return {q:'Qui est-ce ?',a,c:a.indexOf(z.answer),theme:z.theme,image:z.image,whoPhoto:true,difficulty:(WHO_PHOTOS.indexOf(z)>=28?'dur':'moyen')}}
+   if(wrong.length===3){const a=[z.answer,...wrong].sort(()=>Math.random()-.5);return {q:z.animeScene?'De quel anime vient cette scène ?':'Qui est-ce ?',a,c:a.indexOf(z.answer),theme:z.theme,image:z.image,whoPhoto:true,difficulty:(WHO_PHOTOS.indexOf(z)>=28?'dur':'moyen')}}
  }
  let rebus=WHO_REBUS.filter(x=>selected.includes(x.theme));if(!rebus.length)rebus=WHO_REBUS;
  const z=unusedPick(r,'whoRebus',rebus);return {...z,whoRebus:true,difficulty:'dur'};
@@ -691,7 +702,7 @@ async function tmdbLoadScene(entry,difficulty='moyen'){
 }
 function tmdbWarmScenes(){if(tmdbWarmRunning||!tmdbKey())return;tmdbWarmRunning=true;(async()=>{while(tmdbWarmIndex<IMAGE_CULTE_BANK.length){const batch=IMAGE_CULTE_BANK.slice(tmdbWarmIndex,tmdbWarmIndex+3);tmdbWarmIndex+=3;await Promise.allSettled(batch.map(x=>tmdbLoadScene(x,'moyen')));await new Promise(r=>setTimeout(r,250))}tmdbWarmRunning=false})().catch(e=>{console.warn('TMDB warm',e.message);tmdbWarmRunning=false})}
 function pickImageEffect(difficulty){
- const variants=difficulty==='moyen'?['soft-blur','desaturate','hue','crop','pixel-soft','pixel-soft']:difficulty==='extra-dur'?['pixel-extreme','pixel-extreme','pixel-strong','pixel-strong','strong-blur','invert','crop','pixel-extreme']:['strong-blur','hue','crop','pixel-strong','pixel-strong','invert','pixel-extreme'];
+ const variants=difficulty==='moyen'?['soft-blur','desaturate','hue','crop','pixel-soft','pixel-soft']:difficulty==='extra-dur'?['pixel-medium','pixel-medium','pixel-strong','strong-blur','invert','crop','pixel-medium']:['strong-blur','hue','crop','pixel-medium','pixel-soft','invert'];
  return variants[Math.floor(Math.random()*variants.length)];
 }
 async function imageCulteRound(r){
@@ -963,8 +974,8 @@ for(const theme of new Set([...Object.keys(MAJORITY_VARIANTS),...Object.keys(TMC
 // Petit Bac : même lettre et catégories pour tous, validation exclusivement par l'hôte.
 const BAC_CATEGORIES=['Anime, série ou film','Personne publique','Fruit ou légume','Métier'];
 const BAC_LETTERS='ABCDEFGHIJKLMNOPRSTV';
-function bacRound(r){r.bacAnswers={};r.bacJudgements={};r.bacPhase='write';r.bacLetterBag=r.bacLetterBag||[];if(!r.bacLetterBag.length)r.bacLetterBag=BAC_LETTERS.split('').sort(()=>Math.random()-.5);const letter=r.bacLetterBag.pop();return {game:'Petit Bac',q:'✍️ PETIT BAC — Lettre '+letter,letter,categories:BAC_CATEGORIES,phase:'write',theme:'Culture générale',points:1000};}
-function bacPublic(r){const ids=Object.keys(r.players);return {game:'Petit Bac',q:r.current.q,letter:r.current.letter,categories:BAC_CATEGORIES,phase:r.bacPhase,players:ids.map(id=>({id,name:r.players[id].name,submitted:!!r.bacAnswers[id],answers:r.bacPhase==='review'?r.bacAnswers[id]:undefined,judgements:r.bacPhase==='review'?r.bacJudgements[id]:undefined})),host:r.host};}
+function bacRound(r){r.bacAnswers={};r.bacJudgements={};r.bacPhase='write';r.bacDeadline=Date.now()+30000;r.bacLetterBag=r.bacLetterBag||[];if(!r.bacLetterBag.length)r.bacLetterBag=BAC_LETTERS.split('').sort(()=>Math.random()-.5);const letter=r.bacLetterBag.pop();return {game:'Petit Bac',q:'✍️ PETIT BAC — Lettre '+letter,letter,categories:BAC_CATEGORIES,phase:'write',theme:'Culture générale',points:1000};}
+function bacPublic(r){const ids=Object.keys(r.players);return {game:'Petit Bac',q:r.current.q,letter:r.current.letter,categories:BAC_CATEGORIES,phase:r.bacPhase,deadline:r.bacPhase==='write'?r.bacDeadline:null,players:ids.map(id=>({id,name:r.players[id].name,submitted:!!r.bacAnswers[id],answers:r.bacPhase==='review'?r.bacAnswers[id]:undefined,judgements:r.bacPhase==='review'?r.bacJudgements[id]:undefined})),host:r.host};}
 function makeRound(r,g){
  let c={game:g};
  if(g==='Quiz Battle'){let x=question(r);c={game:g,q:x.q,a:x.a,c:x.c,image:x.image||null,theme:x.theme,difficulty:x.difficulty||'simple',points:({simple:250,moyen:500,dur:1000}[x.difficulty]||250)}}
@@ -1006,12 +1017,13 @@ function makeRound(r,g){
  return c;
 }
 
-function roundSeconds(c){if(!c)return 0;if(c.game==='Blind Test'||c.game==='Ciné Extrait')return 10;if(c.game==='Mot interdit')return 30;if(c.game==='Trouve l’intrus')return 20;if(['Quiz Battle','Qui est-ce ?','Image culte','Duel','La Bombe'].includes(c.game))return 10;return 0}
+function roundSeconds(c){if(!c)return 0;if(c.game==='Petit Bac')return 30;if(c.game==='Blind Test'||c.game==='Ciné Extrait')return 10;if(c.game==='Mot interdit')return 30;if(c.game==='Trouve l’intrus')return 20;if(['Quiz Battle','Qui est-ce ?','Image culte','Duel','La Bombe'].includes(c.game))return 10;return 0}
 function armRoundTimer(r){
  if(r._roundTimer)clearTimeout(r._roundTimer);const sec=roundSeconds(r.current);if(!sec)return;
  const token=(r._timerToken=(r._timerToken||0)+1);
  r._roundTimer=setTimeout(()=>{if(!rooms[r.code]||token!==r._timerToken||r._advancing)return;const g=r.current?.game;
   if(['Quiz Battle','Qui est-ce ?','Image culte','Blind Test','Ciné Extrait','Trouve l’intrus'].includes(g)){const ids=Object.keys(r.players);r.answers=r.answers||{};for(const id of ids)if(r.answers[id]==null)r.answers[id]=-999;io.to(r.code).emit('roundReveal',{answer:r.current.game==='Ciné Extrait'?r.current.clipAnswer:(r.current.a?.[r.current.c]||''),why:r.current.why||'',timeout:true});r._advancing=true;setTimeout(()=>next(r),1800);return}
+  if(g==='Petit Bac'&&r.bacPhase==='write'){r.bacPhase='review';io.to(r.code).emit('bacState',bacPublic(r));return;}
   io.to(r.code).emit('timerExpired',{game:g});
  },sec*1000);
 }
@@ -1086,8 +1098,8 @@ io.on('connection',(s)=>{
  s.on('start',(payload,cb)=>{const c=typeof payload==='string'?payload:payload?.code,hostKey=typeof payload==='object'?payload?.hostKey:null;let r=rooms[c];
  if(r&&r.host!==s.id&&hostKey&&r.hostKey&&String(hostKey)===String(r.hostKey)){const old=r.players[r.host];if(old){delete r.players[r.host];r.players[s.id]={...old,id:s.id}}r.host=s.id;s.join(c)}
  if(!r||r.host!==s.id)return cb&&cb({ok:false,reason:'HOST_SESSION_LOST'});if(!r.settings.games?.length)return cb&&cb({ok:false,reason:'NO_GAMES'});r.round=0;r.gameIndex=0;r.gameRound=0;r.used=r.used||{};r.total=totalRounds(r);Object.values(r.players).forEach(p=>p.score=0);cb&&cb({ok:true});next(r)});
- s.on('bacSubmit',({code,answers}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Petit Bac'||r.bacPhase!=='write'||!r.players[s.id]||r.bacAnswers[s.id])return;if(!Array.isArray(answers)||answers.length!==4)return;r.bacAnswers[s.id]=answers.map(a=>String(a||'').trim().slice(0,90));io.to(code).emit('bacState',bacPublic(r));});
- s.on('bacReview',({code}={})=>{const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Petit Bac'||r.bacPhase!=='write')return;r.bacPhase='review';io.to(code).emit('bacState',bacPublic(r));});
+ s.on('bacSubmit',({code,answers}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Petit Bac'||r.bacPhase!=='write'||!r.players[s.id]||r.bacAnswers[s.id])return;if(!Array.isArray(answers)||answers.length!==4)return;if(Date.now()>r.bacDeadline)return;r.bacAnswers[s.id]=answers.map(a=>String(a||'').trim().slice(0,90));io.to(code).emit('bacState',bacPublic(r));});
+ s.on('bacReview',({code}={})=>{const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Petit Bac'||r.bacPhase!=='write')return;r.bacPhase='review';if(r._roundTimer)clearTimeout(r._roundTimer);r._timerToken=(r._timerToken||0)+1;io.to(code).emit('bacState',bacPublic(r));});
  s.on('bacJudge',({code,playerId,category,valid}={})=>{const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Petit Bac'||r.bacPhase!=='review'||!r.bacAnswers[playerId]||!Number.isInteger(category)||category<0||category>=4||typeof valid!=='boolean')return;r.bacJudgements[playerId]=r.bacJudgements[playerId]||{};const old=r.bacJudgements[playerId][category];if(old===valid)return;if(old===true)r.players[playerId].score-=250;if(valid)r.players[playerId].score+=250;r.bacJudgements[playerId][category]=valid;io.to(code).emit('bacState',bacPublic(r));emit(r);});
  s.on('bacNext',({code}={})=>{const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Petit Bac'||r.bacPhase!=='review')return;r._advancing=true;next(r);});
  s.on('answer',x=>{

@@ -1,0 +1,7 @@
+PARTY ARENA V5.74 — RAPPORT LOCAL
+- Petit Bac : délai serveur de 30 s, compteur synchronisé sur l'échéance serveur, passage automatique à la validation de l'hôte ; aucune réponse tardive acceptée.
+- Image Culte : retrait du pixel extrême du tirage, niveaux de pixel plus doux (88, 64, 48 blocs en largeur) et autres effets conservés.
+- Qui est-ce : portraits d'acteurs via recherche TMDB ; lieux via recherche Wikimedia Commons avec filtre de licence ; animes via scènes TMDB, sans prétendre identifier un personnage précis.
+- Le cache de photos n'est alimenté que par les images réellement renvoyées par les API ; statut /qui-est-ce-status.
+- Syntaxe serveur et scripts navigateur validée, simulation des effets et vérification des chemins du minuteur réussies.
+- LIMITES : aucun accès à la clé TMDB du déploiement ; disponibilité réelle des images, licences individuelles et rendu multijoueur Render non vérifiés. Wikimedia Commons peut retourner peu de lieux ; les photos existantes servent de secours.
