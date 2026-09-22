@@ -1,0 +1,8 @@
+V5.58 — BLIND REAL BANK
+Base V5.57: 80 entrées honnêtes.
+Ajouts: 44 Anime + 49 Dessins animés, issus de deux vidéos YouTube dont les descriptions publiques donnent une tracklist minutée. Les timestamps ont été placés à l'intérieur des pistes (Anime +12 s, Cartoons +8 s) et l'entrée Regular Show a été exclue car sa fenêtre indiquée était trop courte.
+Banque active: Anime 54, Cinéma/Séries 10, Musique 55, Dessins animés 54 = 173.
+Ces ajouts sont de vraies fenêtres de pistes répertoriées, pas des +24 s générés arbitrairement.
+Le garde-fou V5.57 reste actif: chrono après PLAYING réel; erreur/timeout/durée invalide => fallback/remplacement.
+Tests: IDs uniques, sources présentes, 200 rounds générés, durée logique 8 s, syntaxe serveur/client PASS.
+Limite: l'environnement de test ne peut pas écouter les médias distants. Disponibilité/son réel reste validé à l'exécution par le player; les deux vidéos sources peuvent aussi changer/disparaître ultérieurement.

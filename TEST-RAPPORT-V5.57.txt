@@ -1,0 +1,9 @@
+V5.57 — BLIND PLAYBACK FIX
+Retour V5.56: 5/15 audibles.
+- Toutes les variantes synthétiques +24/+48/etc supprimées. Banque active honnête: 80 timestamps de base (Anime 10, Cinéma/Séries 10, Musique 55, Dessins animés 5).
+- YouTube Player 200x200 masqué/clippé au lieu de 1x1; origin ajouté.
+- Le chrono Blind attend maintenant un vrai événement PLAYING. Il ne démarre plus pendant un chargement ou un extrait mort.
+- YouTube/SoundCloud/TikTok signalent PLAY au serveur; ensuite seulement le chrono démarre.
+- Erreur, durée invalide ou timeout => source suivante; toutes sources échouées => remplacement synchronisé.
+Tests: syntaxe serveur/client PASS; 80 entrées base; aucune expansion artificielle; 100 rounds générés; 8 s logique PASS.
+Limite: le test local ne peut pas écouter les médias distants; après déploiement, un test réel navigateur reste nécessaire pour mesurer le taux audible.
