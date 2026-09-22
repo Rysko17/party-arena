@@ -1,0 +1,11 @@
+PARTY ARENA V5.67 — IMAGE CULTE ÉTENDU + CINÉ EXTRAIT
+
+Image Culte : banque de base V5.66 conservée (115 œuvres). Découverte automatique TMDB : 11 pages (films, séries, animes) au démarrage, dédoublonnées par ID/type. Simulation API : +220 nouvelles œuvres, total 335. Les chiffres réels dépendent des résultats de l'API TMDB, de la clé, du réseau et des droits de disponibilité. Chaque scène reste vérifiée et chargée avant d'être envoyée ; les nouvelles œuvres ne garantissent pas toutes une image utilisable.
+
+Nouveau jeu : « Ciné Extrait ». Vidéos officielles YouTube référencées dans TMDB, priorité aux clips officiels puis bandes-annonces/teasers. Extrait 8 secondes simple, 5 secondes moyen, 3 secondes difficile. Quatre propositions proches issues de la banque Image Culte. Lecture YouTube visible, le compte à rebours des réponses (10 s) démarre après la lecture. Une vidéo non lisible déclenche une recherche de remplacement. La banque vidéo est dynamique : les œuvres sans vidéo officielle sont ignorées.
+
+LIMITATION IMPORTANTE : les bandes-annonces officielles ne sont PAS forcément des extraits de scènes brutes de films/séries/animes ; des titres/logos peuvent parfois apparaître. Les clips officiels sont préférés quand TMDB en référence. YouTube peut refuser la lecture selon le pays, les droits, la publicité ou les restrictions d'intégration. Aucune vidéo protégée n'est téléchargée, copiée ou contournée.
+
+TESTS : syntaxe Node serveur PASS ; syntaxe JavaScript client PASS ; simulation TMDB 11 pages PASS ; 15 manches Ciné Extrait avec durées 8/5/3 PASS ; 1 manche Image Culte simulée PASS. Aucune lecture réelle de vidéo YouTube ni requête TMDB réelle avec la clé de l'utilisateur n'a été testée. Aucun test multijoueur réel sur Render.
+
+Render : TMDB_API_KEY reste dans Environment. Diagnostic /image-culte-status : total, discovered, ready, discoveryError.

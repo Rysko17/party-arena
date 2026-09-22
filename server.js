@@ -631,6 +631,19 @@ function imageCulteDecoys(entry,pool){
  for(const e of [...pool].sort(()=>Math.random()-.5))add(e.work);
  return out.slice(0,3);
 }
+// Extra works are discovered from TMDB IDs, not invented catalogue entries.
+let tmdbDiscoverStatus={loaded:0,attempted:false,error:null};
+async function tmdbExpandCatalogue(){
+ if(!tmdbKey()||tmdbDiscoverStatus.attempted)return;
+ tmdbDiscoverStatus.attempted=true;
+ const plans=[['movie','Cinéma & Séries','popularity.desc',null,3],['tv','Cinéma & Séries','popularity.desc',null,3],['tv','Anime & Manga','popularity.desc',16,3],['movie','Anime & Manga','popularity.desc',16,2]];
+ const known=new Set(IMAGE_CULTE_BANK.map(x=>x.type+'-'+x.id));
+ for(const [type,theme,sort,genre,pages] of plans)for(let page=1;page<=pages;page++){
+  try{const u=new URL('https://api.themoviedb.org/3/discover/'+type);u.searchParams.set('api_key',tmdbKey());u.searchParams.set('sort_by',sort);u.searchParams.set('page',page);u.searchParams.set('include_adult','false');u.searchParams.set('vote_count.gte','80');if(genre)u.searchParams.set('with_genres',genre);if(theme==='Anime & Manga')u.searchParams.set('with_original_language','ja');
+   const data=await tmdbJson(u.toString());for(const x of data.results||[]){const id=Number(x.id),work=x.title||x.name;if(!id||!work||known.has(type+'-'+id))continue;known.add(type+'-'+id);IMAGE_CULTE_BANK.push({work,type,id,theme,dynamic:true});tmdbDiscoverStatus.loaded++}
+  }catch(e){tmdbDiscoverStatus.error=e.message}
+ }
+}
 const tmdbSceneCache=new Map(),tmdbScenePending=new Map(),tmdbSceneBad=new Map();
 let tmdbWarmIndex=0,tmdbWarmRunning=false;
 const tmdbAttribution='Images : TMDB (The Movie Database). Ce produit utilise l’API TMDB mais n’est ni approuvé ni certifié par TMDB.';
@@ -677,7 +690,7 @@ async function imageCulteRound(r){
  const themes=[...new Set(pool.map(x=>x.theme))],theme=chooseTheme(r,'imageThemes',themes);
  const prioritized=[...pool.filter(x=>x.theme===theme),...pool.filter(x=>x.theme!==theme)].sort((a,b)=>Number(r.imageCulteWorkSeen.has(a.type+'-'+a.id))-Number(r.imageCulteWorkSeen.has(b.type+'-'+b.id)));
  let candidates=[];
- for(const entry of prioritized){
+ for(const entry of prioritized.slice(0,Math.min(prioritized.length,16))){
   let scenes=tmdbSceneCache.get(key(entry));if(!scenes)scenes=await tmdbLoadScene(entry,difficulty);
   if(!Array.isArray(scenes))continue;
   const unseenScenes=scenes.filter(pic=>!r.imageCulteSeen.has(pic.tmdbPath));if(unseenScenes.length)candidates.push({entry,pic:unseenScenes[Math.floor(Math.random()*unseenScenes.length)]});
@@ -690,6 +703,34 @@ async function imageCulteRound(r){
  const z=picked.entry,pic=picked.pic;r.imageCulteSeen.add(pic.tmdbPath);r.imageCulteWorkSeen.add(z.type+'-'+z.id);
  const dec=imageCulteDecoys(z,pool),a=[z.work,...dec].sort(()=>Math.random()-.5);
  return {game:'Image culte',q:difficulty==='dur'?'🎬 PLAN DIFFICILE — De quelle œuvre vient cette scène ?':'🎬 De quelle œuvre vient cette scène ?',a,c:a.indexOf(z.work),image:'/tmdb-scene/'+z.type+'/'+z.id+'/'+difficulty+'?file='+encodeURIComponent(pic.tmdbPath),theme:z.theme,difficulty,points:difficultyPoints(difficulty),imageCulte:true,tmdbAttribution};
+}
+// Ciné Extrait: official YouTube trailers referenced by TMDB. Never downloads copyrighted video.
+const clipVideoCache=new Map();
+async function tmdbOfficialClips(entry){
+ const k=entry.type+'-'+entry.id;if(clipVideoCache.has(k))return clipVideoCache.get(k);
+ try{const u='https://api.themoviedb.org/3/'+entry.type+'/'+entry.id+'/videos?api_key='+encodeURIComponent(tmdbKey())+'&language=en-US';const j=await tmdbJson(u);
+  const clips=(j.results||[]).filter(x=>x.site==='YouTube'&&/^[A-Za-z0-9_-]{11}$/.test(x.key)&&x.official===true&&['Trailer','Teaser','Clip'].includes(x.type));
+  if(clips.length){clips.sort((a,b)=>Number(b.type==='Clip')-Number(a.type==='Clip'));clipVideoCache.set(k,clips);return clips}
+ }catch(e){console.warn('Ciné Extrait',entry.work,e.message)}
+ clipVideoCache.set(k,[]);return [];
+}
+async function cineExtraitRound(r){
+ const selected=r.settings.themes||[],all=IMAGE_CULTE_BANK.filter(x=>selected.includes(x.theme)&&['Cinéma & Séries','Anime & Manga'].includes(x.theme));
+ const pool=all.length?all:IMAGE_CULTE_BANK.filter(x=>['Cinéma & Séries','Anime & Manga'].includes(x.theme));
+ r.clipSeen=r.clipSeen||new Set();r.clipWorkSeen=r.clipWorkSeen||new Set();
+ const difficulty=['simple','moyen','dur'][(Math.max(1,r.gameRound)-1)%3],seconds={simple:8,moyen:5,dur:3}[difficulty];
+ const themes=[...new Set(pool.map(x=>x.theme))],theme=chooseTheme(r,'clipThemes',themes);
+ const ordered=[...pool].sort((a,b)=>Number(b.theme===theme)-Number(a.theme===theme)||Number(r.clipWorkSeen.has(a.type+'-'+a.id))-Number(r.clipWorkSeen.has(b.type+'-'+b.id))||Math.random()-.5);
+ for(const entry of ordered.slice(0,25)){
+  const clips=await tmdbOfficialClips(entry);const fresh=clips.filter(x=>!r.clipSeen.has(entry.type+'-'+entry.id+'-'+x.key));if(!fresh.length)continue;
+  const z=fresh[Math.floor(Math.random()*fresh.length)];r.clipSeen.add(entry.type+'-'+entry.id+'-'+z.key);r.clipWorkSeen.add(entry.type+'-'+entry.id);
+  const dec=imageCulteDecoys(entry,pool);if(dec.length!==3)continue;
+  const a=[entry.work,...dec].sort(()=>Math.random()-.5);
+  // Seek past the opening logo; the player validates video length before playback.
+  const start=difficulty==='dur'?45:difficulty==='moyen'?30:15;
+  return {game:'Ciné Extrait',q:'🎞️ Devine le film, la série ou l’anime avec cet extrait de bande-annonce officielle',a,c:a.indexOf(entry.work),theme:entry.theme,difficulty,points:difficultyPoints(difficulty),clip:true,clipSeconds:seconds,excerptId:'clip-'+entry.type+'-'+entry.id+'-'+z.key,video:z.key,start,end:start+seconds,sourceLabel:z.name||'Bande-annonce officielle'};
+ }
+ return {game:'Ciné Extrait',q:'⚠️ Aucune bande-annonce officielle accessible trouvée. Vérifie TMDB ou relance.',a:[],clip:true,clipUnavailable:true,theme:'Cinéma & Séries',points:0};
 }
 // V5.65: questions d'opinion conçues pour comparer des choix de même nature.
 const TMC_OPINION_VARIANTS={
@@ -824,12 +865,12 @@ function makeRound(r,g){
  return c;
 }
 
-function roundSeconds(c){if(!c)return 0;if(c.game==='Blind Test')return 10;if(c.game==='Mot interdit')return 30;if(c.game==='Trouve l’intrus')return 20;if(['Quiz Battle','Qui est-ce ?','Image culte','Duel','La Bombe'].includes(c.game))return 10;return 0}
+function roundSeconds(c){if(!c)return 0;if(c.game==='Blind Test'||c.game==='Ciné Extrait')return 10;if(c.game==='Mot interdit')return 30;if(c.game==='Trouve l’intrus')return 20;if(['Quiz Battle','Qui est-ce ?','Image culte','Duel','La Bombe'].includes(c.game))return 10;return 0}
 function armRoundTimer(r){
  if(r._roundTimer)clearTimeout(r._roundTimer);const sec=roundSeconds(r.current);if(!sec)return;
  const token=(r._timerToken=(r._timerToken||0)+1);
  r._roundTimer=setTimeout(()=>{if(!rooms[r.code]||token!==r._timerToken||r._advancing)return;const g=r.current?.game;
-  if(['Quiz Battle','Qui est-ce ?','Image culte','Blind Test','Trouve l’intrus'].includes(g)){const ids=Object.keys(r.players);r.answers=r.answers||{};for(const id of ids)if(r.answers[id]==null)r.answers[id]=-999;io.to(r.code).emit('roundReveal',{answer:r.current.a?.[r.current.c]||'',why:r.current.why||'',timeout:true});r._advancing=true;setTimeout(()=>next(r),1800);return}
+  if(['Quiz Battle','Qui est-ce ?','Image culte','Blind Test','Ciné Extrait','Trouve l’intrus'].includes(g)){const ids=Object.keys(r.players);r.answers=r.answers||{};for(const id of ids)if(r.answers[id]==null)r.answers[id]=-999;io.to(r.code).emit('roundReveal',{answer:r.current.a?.[r.current.c]||'',why:r.current.why||'',timeout:true});r._advancing=true;setTimeout(()=>next(r),1800);return}
   io.to(r.code).emit('timerExpired',{game:g});
  },sec*1000);
 }
@@ -853,9 +894,9 @@ async function next(r){
    limit=gameLimit(r)
  }
  r.gameRound++;r.round++;r.answers={};r.answerOrder=[];r.guesses={};r.oralDecisions={};r.bombAnswers={};r.impostorVotes={};r._advancing=false;
- const g=r.settings.games[r.gameIndex],c=g==='Image culte'?await imageCulteRound(r):makeRound(r,g);r.current=c;r._blindPlaybackStarted=c?.game==='Blind Test'?false:true;
+ const g=r.settings.games[r.gameIndex],c=g==='Image culte'?await imageCulteRound(r):g==='Ciné Extrait'?await cineExtraitRound(r):makeRound(r,g);r.current=c;r._clipStarted=false;r._clipEnded=false;r._blindPlaybackStarted=c?.game==='Blind Test'?false:true;
  io.to(r.code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:limit,gameIndex:r.gameIndex,current:c});
- if(!c.imageCulteUnavailable)armRoundTimer(r);
+ if(!c.imageCulteUnavailable&&!c.clipUnavailable&&g!=='Ciné Extrait')armRoundTimer(r);
  if(g==="L’Imposteur")for(const p of Object.values(r.players))io.to(p.id).emit('secret',{word:p.id===r.secret.imp?r.secret.o:r.secret.n});
  emit(r);
 }
@@ -868,6 +909,11 @@ function scheduleNextIfAll(r){
 }
 io.on('connection',(s)=>{
  const socket=s;
+ s.on('clipPlaybackStarted',({code,excerptId}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Ciné Extrait'||r.current.excerptId!==excerptId||r._clipStarted)return;r._clipStarted=true});
+ s.on('clipPlaybackEnded',({code,excerptId}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Ciné Extrait'||r.current.excerptId!==excerptId||!r._clipStarted||r._clipEnded)return;r._clipEnded=true;armRoundTimer(r)});
+ s.on('clipPlaybackError',async({code,excerptId}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Ciné Extrait'||r.current.excerptId!==excerptId||r._clipReplacing)return;r._clipReplacing=true;
+  try{const c=await cineExtraitRound(r);r.current=c;r._clipStarted=false;r._clipEnded=false;r.answers={};r.answerOrder=[];r._advancing=false;io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:c})}finally{r._clipReplacing=false}
+ });
  s.on('blindPlaybackError',({code,excerptId,reason}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Blind Test'||r.current?.excerptId!==excerptId)return;r.badBlind=r.badBlind||new Set();if(r.badBlind.has(excerptId))return;r.badBlind.add(excerptId);r.blindSeen=r.blindSeen||new Set();r.blindSeen.add(excerptId);r.current=blindRound(r);r.answers={};r.answerOrder=[];r._advancing=false;io.to(code).emit('blindReplaced',{bad:excerptId,reason:reason||'playback'});io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:r.current});armRoundTimer(r)});
 
 
@@ -924,6 +970,7 @@ io.on('connection',(s)=>{
    setTimeout(()=>{r.gameIndex++;r.gameRound=0;if(r.gameIndex>=r.settings.games.length)io.to(r.code).emit('finished',view(r));else next(r)},2200);
    return;
  }
+ if(r.current?.game==='Ciné Extrait'&&!r._clipEnded)return;
  r.answerOrder=r.answerOrder||[];
  if(!r.answerOrder.includes(s.id))r.answerOrder.push(s.id);
  r.answers[s.id]=+x.value;
@@ -939,7 +986,7 @@ io.on('connection',(s)=>{
    }
    return;
  }
- const scored=['Quiz Battle','Trouve l’intrus','Qui est-ce ?','Image culte','Blind Test'].includes(r.current.game);
+ const scored=['Quiz Battle','Trouve l’intrus','Qui est-ce ?','Image culte','Blind Test','Ciné Extrait'].includes(r.current.game);
  const correct=scored && +x.value===r.current.c;
  const rank=Math.max(1,r.answerOrder.indexOf(s.id)+1);
  const pts=correct?speedPoints((r.current.points||500),rank):0;
@@ -1068,7 +1115,7 @@ s.on('disconnect',()=>{for(const c in rooms){let r=rooms[c];if(r.players[s.id]){
 });
 
 app.get('/tmdb-scene/:type/:id/:difficulty',(req,res)=>{const type=req.params.type,id=Number(req.params.id);if(!['movie','tv'].includes(type)||!Number.isSafeInteger(id))return res.status(400).end();const difficulty=['simple','moyen','dur'].includes(req.params.difficulty)?req.params.difficulty:'moyen';const hits=tmdbSceneCache.get(id+'-'+type+'-'+difficulty);const hit=Array.isArray(hits)?hits.find(x=>x.tmdbPath===req.query.file):null;if(!hit)return res.status(404).end();res.set('Content-Type',hit.ct);res.set('Cache-Control','public,max-age=3600');res.send(hit.buffer)});
-app.get('/image-culte-status',(req,res)=>res.json({tmdbConfigured:!!tmdbKey(),ready:tmdbSceneCache.size,total:IMAGE_CULTE_BANK.length,pending:tmdbScenePending.size}));
-if(tmdbKey()){setTimeout(tmdbWarmScenes,500)}else{console.warn('Image Culte: TMDB_API_KEY manquante dans Render Environment')}
-server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.66 lancé'));
+app.get('/image-culte-status',(req,res)=>res.json({tmdbConfigured:!!tmdbKey(),ready:tmdbSceneCache.size,total:IMAGE_CULTE_BANK.length,discovered:tmdbDiscoverStatus.loaded,discoveryError:tmdbDiscoverStatus.error,pending:tmdbScenePending.size}));
+if(tmdbKey()){setTimeout(async()=>{await tmdbExpandCatalogue();tmdbWarmScenes()},500)}else{console.warn('Image Culte: TMDB_API_KEY manquante dans Render Environment')}
+server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.67 lancé'));
 const HARD_EXTRA={"Culture générale": [{"q": "Quel traité de 1648 est associé à la fin de la guerre de Trente Ans ?", "a": ["Westphalie", "Utrecht", "Versailles", "Tordesillas"], "c": 0, "difficulty": "dur"}, {"q": "Quel élément chimique porte le numéro atomique 74 ?", "a": ["Tungstène", "Osmium", "Iridium", "Hafnium"], "c": 0, "difficulty": "dur"}, {"q": "Quelle dynastie chinoise a précédé immédiatement les Ming ?", "a": ["Yuan", "Song", "Qing", "Tang"], "c": 0, "difficulty": "dur"}, {"q": "Quel philosophe a écrit Critique de la raison pure ?", "a": ["Kant", "Hegel", "Spinoza", "Leibniz"], "c": 0, "difficulty": "dur"}], "Football": [{"q": "Quel club a remporté la première Coupe d’Europe des clubs champions en 1956 ?", "a": ["Real Madrid", "Benfica", "Milan", "Reims"], "c": 0, "difficulty": "dur"}, {"q": "Quel gardien a remporté le Ballon d’Or 1963 ?", "a": ["Lev Yachine", "Dino Zoff", "Gordon Banks", "Sepp Maier"], "c": 0, "difficulty": "dur"}, {"q": "Quel pays a remporté l’Euro 1992 après avoir été repêché tardivement ?", "a": ["Danemark", "Suède", "Pays-Bas", "Allemagne"], "c": 0, "difficulty": "dur"}], "Anime & Manga": [{"q": "Dans Hunter × Hunter, quel type de Nen est associé à Kurapika lorsque ses yeux deviennent écarlates ?", "a": ["Spécialisation", "Matérialisation", "Renforcement", "Manipulation"], "c": 0, "difficulty": "dur"}, {"q": "Dans Fullmetal Alchemist, quel principe est présenté comme fondamental à l’alchimie au début de l’œuvre ?", "a": ["Échange équivalent", "Transmutation absolue", "Résonance vitale", "Cercle parfait"], "c": 0, "difficulty": "dur"}, {"q": "Dans Bleach, comment se nomme l’étape supérieure de libération d’un Zanpakutō ?", "a": ["Bankai", "Resurrección", "Shikai", "Vollständig"], "c": 0, "difficulty": "dur"}], "Mathématiques": [{"q": "Quelle est la dérivée de ln(x²+1) ?", "a": ["2x/(x²+1)", "1/(x²+1)", "2/(x²+1)", "ln(2x)"], "c": 0, "difficulty": "dur"}, {"q": "Combien vaut la somme des angles intérieurs d’un dodécagone ?", "a": ["1800°", "1620°", "1980°", "2160°"], "c": 0, "difficulty": "dur"}, {"q": "Si log₂(x)=7, combien vaut x ?", "a": ["128", "64", "256", "49"], "c": 0, "difficulty": "dur"}]};for(const [t,a] of Object.entries(HARD_EXTRA)){DB[t]=DB[t]||[];DB[t].push(...a)}
