@@ -605,7 +605,7 @@ async function warmEraTracks(){
  for(const item of BLIND_ERA_TARGETS){await loadEraTrack(item);await new Promise(resolve=>setTimeout(resolve,450))}
  eraState.finished=true;
 }
-app.get('/blind-bank-status',(req,res)=>res.json({eraTheme:BLIND_ERA_THEME,era:eraState,
+app.get('/blind-bank-status',(req,res)=>res.json({eraTheme:BLIND_ERA_THEME,automaticInBlindTest:true,eraProbabilityWhenAvailable:0.50,eraAvailable:BLIND_DOUBLE_BANK[BLIND_ERA_THEME].length>0,era:eraState,
  audius:{...audiusState},existingPlayable:Object.fromEntries(Object.entries(BLIND_DOUBLE_BANK).map(([k,v])=>[k,v.length])),
  searchTargets:Object.fromEntries(Object.entries(BLIND_THEME_TARGETS).map(([k,v])=>[k,v.length])),
  note:'Une cible de recherche n’est pas un extrait jouable. Deezer nécessite une autorisation adaptée avant activation.'}));
@@ -693,14 +693,14 @@ app.get('/audius-stream/:id',async(req,res)=>{
 setTimeout(()=>warmAudius().catch(e=>{audiusState.lastError=String(e.message);audiusState.ready=true}),3800);
 
 function blindRound(r){
- let themes=(r.settings.themes||[]).filter(t=>BLIND_DOUBLE_BANK[t]?.length);
+ // 2006–2018 est une sous-catégorie AUTOMATIQUE du Blind Test, jamais un choix du lobby.
+ // Le catalogue doit contenir de vrais extraits autorisés, sinon on conserve les autres thèmes.
+ let themes=(r.settings.themes||[]).filter(t=>t!==BLIND_ERA_THEME&&BLIND_DOUBLE_BANK[t]?.length);
  if(!themes.length)themes=['Musique','Anime & Manga','Cinéma & Séries','Dessins animés'].filter(t=>BLIND_DOUBLE_BANK[t]?.length);
- // Randomise the theme independently for every Blind round.
- // Do not use a deterministic "starter" tied to gameRound.
- let themePool=[...themes];
- if(themes.length>1&&r.lastBlindTheme)themePool=themePool.filter(x=>x!==r.lastBlindTheme);
- const weighted=themes.includes(BLIND_ERA_THEME)&&BLIND_DOUBLE_BANK[BLIND_ERA_THEME].length&&Math.random()<.58;
- const t=weighted?BLIND_ERA_THEME:chooseTheme(r,'blindThemes',themes);r.lastBlindTheme=t;
+ const eraReady=BLIND_DOUBLE_BANK[BLIND_ERA_THEME].length>0;
+ // 50 % des manches Blind Test, même si « Musique » n'est pas coché dans le lobby.
+ const t=eraReady&&(!themes.length||Math.random()<.50)?BLIND_ERA_THEME:chooseTheme(r,'blindThemes',themes);
+ r.lastBlindTheme=t;
  let pool=BLIND_DOUBLE_BANK[t],seen=r.blindSeen||new Set(),fresh=pool.filter(x=>!seen.has(x.excerptId));
  if(!fresh.length)fresh=pool;
  // Fisher-Yates shuffle before selection: each new game/round gets a fresh order.

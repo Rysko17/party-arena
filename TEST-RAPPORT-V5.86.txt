@@ -1,0 +1,10 @@
+V5.85 — Musique 2006–2018 intégrée au Blind Test
+- Supprimée des thèmes sélectionnables dans le lobby.
+- Tirage automatique 50 % des manches Blind Test SI le catalogue 2006–2018 contient des extraits.
+- Extraits de cette période sans effets et à vitesse normale, 8 secondes.
+- Autres thèmes utilisés lorsque le catalogue 2006–2018 est vide ou pour les 20 % restants.
+- /blind-bank-status expose eraAvailable, eraProbabilityWhenAvailable et automaticInBlindTest.
+- IMPORTANT : les extraits Deezer sont désactivés par défaut pour respecter les droits de diffusion. Sans extraits autorisés, impossible de garantir le thème. Le catalogue de recherche (354 cibles) ne garantit pas la lecture.
+- Vérifications : syntaxe Node et JavaScript navigateur, simulation du tirage avec banque non vide / vide, intégrité ZIP.
+
+V5.86 : probabilité réduite à 50 % ; aucun changement des extraits ni du lobby.
