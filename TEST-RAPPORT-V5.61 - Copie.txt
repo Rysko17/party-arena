@@ -1,0 +1,19 @@
+V5.61 — HARD BLIND + IMAGE CULTE FIX
+BLIND:
+- Simple 4 choix, Moyen 5 choix, Difficile 6 choix.
+- Faux choix priorisent désormais même vidéo/source puis même genre, donc les propositions sont plus proches.
+- Difficile: x0.50/x0.75/x1.50/x2.00, scramble, stutter, micro-fragments.
+- Moyen: x0.75/x1.25/stutter.
+- Aucun faux morceau ajouté à la banque pour gonfler le compteur.
+IMAGE CULTE:
+- Suppression de la dépendance directe aux hotlinks fragiles dans la manche.
+- L'image passe par /image-culte sur le même domaine Party Arena.
+- Le serveur recherche une image sur Wikimedia Commons via API, télécharge la miniature côté serveur, la sert au navigateur et la met en cache 24 h.
+- Cela évite les problèmes de redirection/hotlink côté navigateur.
+TESTS:
+- syntaxe serveur/client PASS
+- 600 Blind rounds PASS
+- choix 4/5/6 selon difficulté PASS
+- modes hard rencontrés PASS
+- 10 Image Culte rounds générés avec URL same-origin PASS
+Limite: le test local n'a pas accès au réseau pour confirmer chaque réponse Wikimedia au moment du déploiement; le endpoint renvoie 404/502 si Commons n'a aucun résultat ou est indisponible.

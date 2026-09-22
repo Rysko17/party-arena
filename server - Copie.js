@@ -363,27 +363,95 @@ const WHO_VISUAL_EXPANSION={"Anime & Manga": ["Naruto Uzumaki", "Sasuke Uchiha",
 
 const WHO_FEMALE=new Set(['Beyoncé','Rihanna','Ariana Grande','Dua Lipa','Simone Biles','Serena Williams','Naomi Osaka']);
 function whoKind(name,theme){
- if(theme==='Anime & Manga')return 'anime';
+ if(theme==='Anime & Manga')return 'anime-character';
  if(theme==='Dessins animés')return 'cartoon';
  if(theme==='Cinéma & Séries')return 'cinema';
+ if(WHO_LANDMARKS?.some(x=>x[0]===name))return 'monument';
+ if(theme==='Football')return 'footballer';
+ if(theme==='Sport')return 'other-sport';
  if(WHO_FEMALE.has(name))return 'female';
  return 'male';
 }
+// Qui est-ce : TMDB fournit les portraits d'acteurs ; Wikimedia Commons les monuments.
+// Les images sont ajoutées uniquement après une réponse API contenant un chemin exploitable.
+const WHO_ACTOR_NAMES=['Cillian Murphy','Pedro Pascal','Zendaya','Florence Pugh','Tom Holland','Margot Robbie','Robert Downey Jr.','Ryan Gosling','Ana de Armas','Keanu Reeves','Jenna Ortega','Millie Bobby Brown','Henry Cavill','Timothée Chalamet','Scarlett Johansson','Leonardo DiCaprio','Denzel Washington','Samuel L. Jackson','Jason Momoa','Sydney Sweeney','Andrew Garfield','Emma Stone','Chris Hemsworth','Anne Hathaway','Christian Bale','Mads Mikkelsen','Park Seo-joon','Lee Jung-jae','Song Kang-ho','Hiroyuki Sanada'];
+const WHO_LANDMARKS=[['Sagrada Família','Sagrada Familia Barcelona'],['Burj Khalifa','Burj Khalifa Dubai'],['Opéra de Sydney','Sydney Opera House'],['Pyramides de Gizeh','Great Pyramid of Giza'],['Mont Saint-Michel','Mont Saint Michel abbey'],['Machu Picchu','Machu Picchu Peru'],['Pont du Golden Gate','Golden Gate Bridge San Francisco'],['Arc de Triomphe','Arc de Triomphe Paris'],['Petra','Petra Jordan Treasury'],['Château de Chambord','Chateau de Chambord']];
+// TheSportsDB V1: public free key 123. Never put an API key in the browser.
+// Only validated portrait images are offered to players; existing sources remain fallbacks.
+const sportsDbKey=()=>process.env.SPORTSDB_API_KEY||'123';
+const SPORTS_EXTRA={
+ Football:['N’Golo Kanté','Paul Pogba','Ousmane Dembélé','Marcus Thuram','Randal Kolo Muani','Eduardo Camavinga','Aurélien Tchouaméni','William Saliba','Ibrahima Konaté','Mike Maignan','Jules Koundé','Achraf Hakimi','Hakim Ziyech','Riyad Mahrez','Sadio Mané','Mohamed Salah','Victor Osimhen','Ademola Lookman','Khvicha Kvaratskhelia','Lamine Yamal','Pedri','Gavi','Ferran Torres','Raphinha','Robert Lewandowski','Jamal Musiala','Florian Wirtz','Kai Havertz','Bukayo Saka','Cole Palmer','Phil Foden','Declan Rice','Martin Ødegaard','Bruno Fernandes','Bernardo Silva','Rúben Dias','João Félix','Rafael Leão','Federico Valverde','Rodrygo','Endrick','Lautaro Martínez','Julián Álvarez','Enzo Fernández','Alexis Mac Allister','Emiliano Martínez','Ángel Di María','Paulo Dybala','Olivier Giroud','Raphaël Varane','Hugo Lloris','Franck Ribéry','Arjen Robben','Wesley Sneijder','Robin van Persie','Sergio Ramos','Gerard Piqué','Andrés Iniesta','Xavi Hernández','David Villa','Fernando Torres','Iker Casillas','Gianluigi Buffon','Andrea Pirlo','Gennaro Gattuso','Paolo Maldini','Alessandro Del Piero','Zlatan Ibrahimović','Edinson Cavani','Luis Suárez','Sergio Agüero','Wayne Rooney','Steven Gerrard','Frank Lampard','Didier Drogba','Samuel Eto’o','Yaya Touré','Vincent Kompany','Eden Hazard','Kevin De Bruyne','Romelu Lukaku','Thibaut Courtois','Son Heung-min','Heung-min Son','Harry Kane','Jude Bellingham','Vinícius Júnior','Erling Haaland'],
+ Sport:['Victor Wembanyama','Kobe Bryant','Michael Jordan','Shaquille O’Neal','Kyrie Irving','James Harden','Jayson Tatum','Jaylen Brown','Anthony Edwards','Jimmy Butler','Devin Booker','Joel Embiid','Nikola Jokić','Luka Dončić','LeBron James','Stephen Curry','Kevin Durant','Giannis Antetokounmpo','Diana Taurasi','A’ja Wilson','Caitlin Clark','Naomi Osaka','Iga Świątek','Aryna Sabalenka','Coco Gauff','Carlos Alcaraz','Jannik Sinner','Novak Djokovic','Rafael Nadal','Roger Federer','Serena Williams','Lewis Hamilton','Max Verstappen','Charles Leclerc','Lando Norris','Fernando Alonso','Oscar Piastri','George Russell','Sebastian Vettel','Michael Schumacher','Ayrton Senna','Valentino Rossi','Marc Márquez','Fabio Quartararo','Jon Jones','Conor McGregor','Khabib Nurmagomedov','Islam Makhachev','Alex Pereira','Israel Adesanya','Francis Ngannou','Ciryl Gane','Amanda Nunes','Ronda Rousey','Muhammad Ali','Mike Tyson','Tyson Fury','Oleksandr Usyk','Anthony Joshua','Canelo Álvarez','Floyd Mayweather','Antoine Dupont','Cheslin Kolbe','Beauden Barrett','Dan Carter','Jonah Lomu','Usain Bolt','Noah Lyles','Armand Duplantis','Simone Biles','Léon Marchand','Michael Phelps']
+};
+const sportsStatus={configured:true,source:'TheSportsDB V1',checked:0,found:0,failed:0,replaced:0,extra:0,imagesCached:0,started:false,completed:false};
+const sportsImageCache=new Map();
+const sportsName=x=>String(x||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’']/g,'').replace(/[^a-z0-9]/gi,'').toLowerCase();
+const sportsUrl=(name)=>'https://www.thesportsdb.com/api/v1/json/'+encodeURIComponent(sportsDbKey())+'/searchplayers.php?p='+encodeURIComponent(name);
+function sportsPortraitUrl(p){const url=p?.strThumb||p?.strCutout||p?.strRender||'';try{const u=new URL(url);return u.protocol==='https:'&&(/(^|\.)thesportsdb\.com$/.test(u.hostname)||u.hostname==='r2.thesportsdb.com')?url:null}catch{return null}}
+async function sportsDownload(url){const response=await fetch(url,{signal:AbortSignal.timeout(7500)});if(!response.ok||!/^image\/(jpeg|png|webp)/i.test(response.headers.get('content-type')||''))return null;const data=Buffer.from(await response.arrayBuffer());return data.length>=2000&&data.length<3000000?{data,type:response.headers.get('content-type').split(';')[0]}:null}
+async function sportsLookup(name,theme){
+ try{const res=await fetch(sportsUrl(name),{signal:AbortSignal.timeout(7500)});if(!res.ok)throw Error('HTTP '+res.status);const data=await res.json();const matches=(data.player||[]).filter(p=>sportsName(p.strPlayer)===sportsName(name));const match=matches.find(p=>sportsPortraitUrl(p));if(!match)return false;
+ const url=sportsPortraitUrl(match),img=await sportsDownload(url);if(!img)return false;
+ const id=String(match.idPlayer);sportsImageCache.set(id,img);sportsStatus.imagesCached++;
+ const local='/sportsdb-photo/'+id;let existing=WHO_PHOTOS.filter(p=>p.answer===name&&p.theme===theme);
+ if(existing.length){for(const p of existing){p.image=local;p.source='TheSportsDB';p.kind=theme==='Football'?'footballer':sportsKind(match.strSport);p.sportsDiscipline=match.strSport||'';}sportsStatus.replaced+=existing.length;}
+ else{WHO_PHOTOS.push({answer:name,theme,kind:theme==='Football'?'footballer':sportsKind(match.strSport),image:local,source:'TheSportsDB',sportsDiscipline:match.strSport||''});sportsStatus.extra++;}
+ // Older WHO_BANK entries also serve photo-based rounds: replace their SVGs with real portraits.
+ for(const w of WHO_BANK[theme]||[])if(w[0]===name)w[2]=local;
+ sportsStatus.found++;return true;
+ }catch(e){sportsStatus.failed++;return false}finally{sportsStatus.checked++}
+}
+function sportsKind(sport){const s=String(sport||'').toLowerCase();if(/basket/.test(s))return 'basketball';if(/tennis/.test(s))return 'tennis';if(/motor|racing|formula|motorsport/.test(s))return 'motorsport';if(/boxing/.test(s))return 'boxing';if(/mixed martial|mma/.test(s))return 'mma';if(/rugby/.test(s))return 'rugby';if(/athlet|track/.test(s))return 'athletics';if(/swim/.test(s))return 'swimming';return 'other-sport'}
+async function warmSportsDb(){if(sportsStatus.started)return;sportsStatus.started=true;
+ const all=[];for(const theme of ['Football','Sport']){const names=[...new Set([...(WHO_PHOTOS.filter(p=>p.theme===theme).map(p=>p.answer)),...(WHO_BANK[theme]||[]).map(p=>p[0]),...SPORTS_EXTRA[theme]])];for(const name of names)all.push({name,theme})}
+ // V1 free API: cap to below 30 requests/minute. Cache successful images in RAM.
+ for(const {name,theme} of all){await sportsLookup(name,theme);await new Promise(resolve=>setTimeout(resolve,2200));}
+ sportsStatus.completed=true;
+}
+app.get('/sportsdb-photo/:id',(req,res)=>{const pic=sportsImageCache.get(req.params.id);if(!pic)return res.status(404).end();res.set('Cache-Control','public, max-age=3600');res.type(pic.type);res.send(pic.data)});
+app.get('/sportsdb-status',(req,res)=>res.json({...sportsStatus,photoEntries:WHO_PHOTOS.filter(x=>['Football','Sport'].includes(x.theme)).length,publicFreeKey:sportsDbKey()==='123'}));
+setTimeout(()=>warmSportsDb().catch(e=>console.warn('SportsDB',e.message)),3500);
+const whoApiStatus={tmdbActors:0,commonsLandmarks:0,attempted:0};
+function addWhoPhoto(z){if(!z?.image||WHO_PHOTOS.some(p=>p.answer===z.answer&&p.image===z.image))return false;WHO_PHOTOS.push(z);return true;}
+async function warmWhoActors(){if(!tmdbKey())return;for(const name of WHO_ACTOR_NAMES){try{const url='https://api.themoviedb.org/3/search/person?api_key='+encodeURIComponent(tmdbKey())+'&query='+encodeURIComponent(name)+'&language=fr-FR';const data=await tmdbJson(url);const match=(data.results||[]).find(p=>p.name.toLowerCase()===name.toLowerCase()&&p.profile_path);if(match&&addWhoPhoto({answer:name,theme:'Cinéma & Séries',image:'https://image.tmdb.org/t/p/w500'+match.profile_path,source:'TMDB'}))whoApiStatus.tmdbActors++;}catch(e){console.warn('Who TMDB',name,e.message)}whoApiStatus.attempted++;}}
+async function warmWhoLandmarks(){for(const [name,term] of WHO_LANDMARKS){try{const url='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch='+encodeURIComponent('filetype:bitmap '+term)+'&gsrnamespace=6&gsrlimit=8&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=700&format=json&origin=*';const res=await fetch(url,{headers:{'User-Agent':'PartyArena/5.74 (educational quiz; Wikimedia Commons API)'},signal:AbortSignal.timeout(8000)});if(!res.ok)continue;const data=await res.json();const pages=Object.values(data.query?.pages||{});const file=pages.find(p=>{const info=p.imageinfo?.[0],lic=info?.extmetadata?.LicenseShortName?.value||'';return info?.thumburl&&/CC|public domain|PD/i.test(lic)&&!/(map|logo|flag|plan)/i.test(p.title)});if(file&&addWhoPhoto({answer:name,theme:'Culture générale',kind:'monument',image:file.imageinfo[0].thumburl,source:'Wikimedia Commons',attribution:file.imageinfo[0].descriptionurl}))whoApiStatus.commonsLandmarks++;}catch(e){console.warn('Who Commons',name,e.message)}}}
+app.get('/qui-est-ce-status',(req,res)=>res.json({...whoApiStatus,photoEntries:WHO_PHOTOS.length,animePortraitsLoaded,tmdbConfigured:!!tmdbKey()}));
+async function warmWhoAnime(){const pool=IMAGE_CULTE_BANK.filter(x=>x.theme==='Anime & Manga').slice(0,24);for(let i=0;i<pool.length;i+=3){await Promise.allSettled(pool.slice(i,i+3).map(async z=>{const pics=await tmdbLoadScene(z,'moyen');if(pics?.length){const pic=pics[0];addWhoPhoto({answer:z.work,theme:'Anime & Manga',image:'/tmdb-scene/'+z.type+'/'+z.id+'/moyen?file='+encodeURIComponent(pic.tmdbPath),source:'TMDB',animeScene:true});}}));}}
+// Jikan/MAL public character portraits; never substitute anime scenery for characters.
+const WHO_ANIME_CHARACTERS=['Levi Ackerman','Erwin Smith','Hange Zoe','Reiner Braun','Sasha Blouse','Kento Nanami','Toji Fushiguro','Suguru Geto','Maki Zenin','Megumi Fushiguro','Nobara Kugisaki','Yuta Okkotsu','Itachi Uchiha','Shikamaru Nara','Kakashi Hatake','Minato Namikaze','Gaara','Jiraiya','Roronoa Zoro','Sanji','Nico Robin','Trafalgar Law','Shanks','Portgas D. Ace','Rukia Kuchiki','Byakuya Kuchiki','Kenpachi Zaraki','Kisuke Urahara','Sosuke Aizen','Killua Zoldyck','Kurapika','Hisoka Morow','Chrollo Lucilfer','Meruem','Roy Mustang','Riza Hawkeye','Scar','Alphonse Elric','Spike Spiegel','Faye Valentine','Vicious','Guts','Griffith','Casca','Thorfinn','Askeladd','Canute','Johan Liebert','Kenzo Tenma','Lelouch Lamperouge','C.C.','Suzaku Kururugi','Light Yagami','L Lawliet','Ryuk','Misa Amane','Shinobu Kocho','Kyojuro Rengoku','Tengen Uzui','Muichiro Tokito','Mitsuri Kanroji','Gabimaru','Sagiri Yamada Asaemon','Kafka Hibino','Mina Ashiro','Reno Ichikawa','Kikoru Shinomiya','Gen Narumi'];
+let animePortraitsLoaded=0;
+async function warmWhoCharacters(){for(const name of WHO_ANIME_CHARACTERS){try{const url='https://api.jikan.moe/v4/characters?q='+encodeURIComponent(name)+'&limit=5';const resp=await fetch(url,{signal:AbortSignal.timeout(8000)});if(!resp.ok)continue;const d=await resp.json();const norm=x=>String(x).toLowerCase().replace(/[^a-z]/g,'');const match=(d.data||[]).find(x=>norm(x.name)===norm(name)||norm(x.name).includes(norm(name.split(' ').reverse().join(' '))));const image=match?.images?.jpg?.image_url;if(image&&image.startsWith('https://')){addWhoPhoto({answer:name,theme:'Anime & Manga',image,animeCharacter:true,kind:'anime-character',source:'Jikan / MyAnimeList'});animePortraitsLoaded++}}catch(e){}await new Promise(resolve=>setTimeout(resolve,1100));}}
+setTimeout(()=>warmWhoCharacters().catch(()=>{}),2500);
+setTimeout(()=>{warmWhoActors().catch(()=>{});warmWhoLandmarks().catch(()=>{});if(tmdbKey())warmWhoAnime().catch(()=>{})},1800);
+function whoDuoRound(r,theme){
+ const pool=WHO_PHOTOS.filter(x=>x.theme===theme&&!x.animeScene&&(theme!=='Anime & Manga'||x.animeCharacter)&&x.image&&(x.kind||whoKind(x.answer,x.theme))!=='monument');
+ const kinds=[...new Set(pool.map(x=>x.kind||whoKind(x.answer,x.theme)))];const chosenKind=kinds.map(kind=>pool.filter(x=>(x.kind||whoKind(x.answer,x.theme))===kind)).filter(items=>new Set(items.map(x=>x.answer)).size>=5).sort(()=>Math.random()-.5)[0];if(!chosenKind)return null;const byName=[...new Map(chosenKind.map(x=>[x.answer,x])).values()];
+ r.whoDuoSeen=r.whoDuoSeen||new Set();const combos=[];
+ for(let i=0;i<byName.length;i++)for(let j=i+1;j<byName.length;j++){const a=byName[i],b=byName[j],key=[a.answer,b.answer].sort().join('|');if(!r.whoDuoSeen.has(key))combos.push({a,b,key})}
+ if(!combos.length){r.whoDuoSeen.clear();return whoDuoRound(r,theme)}
+ const picked=combos[Math.floor(Math.random()*combos.length)];r.whoDuoSeen.add(picked.key);
+ const names=[picked.a.answer,picked.b.answer],correct=names.join(' + ');
+ const others=byName.filter(x=>!names.includes(x.answer)).sort(()=>Math.random()-.5);
+ const wrong=[names[0]+' + '+others[0].answer,others[1].answer+' + '+names[1],others[2].answer+' + '+others[3].answer];
+ const a=[correct,...wrong].sort(()=>Math.random()-.5);
+ return {q:'👥 Deux moitiés de visage : retrouve le duo !',a,c:a.indexOf(correct),theme,image:null,duoImages:[picked.a.image,picked.b.image],whoPhoto:true,difficulty:'dur',points:1000};
+}
 function pickWhoMixed(r){
  const selected=r.settings.themes||[];
- let photoThemes=[...new Set(WHO_PHOTOS.filter(x=>selected.includes(x.theme)).map(x=>x.theme))];
- if(!photoThemes.length)photoThemes=[...new Set(WHO_PHOTOS.map(x=>x.theme))];
+ let photoThemes=[...new Set(WHO_PHOTOS.filter(x=>selected.includes(x.theme)&&!x.animeScene&&(x.theme!=='Anime & Manga'||x.animeCharacter)).map(x=>x.theme))];
+ if(!photoThemes.length)photoThemes=[...new Set(WHO_PHOTOS.filter(x=>!x.animeScene&&(x.theme!=='Anime & Manga'||x.animeCharacter)).map(x=>x.theme))];
  let t=chooseTheme(r,'whoPhotoTheme',photoThemes);
- let photos=WHO_PHOTOS.filter(x=>x.theme===t);
+ let photos=WHO_PHOTOS.filter(x=>x.theme===t && !x.animeScene && (t!=='Anime & Manga'||x.animeCharacter));
+ if(Math.random()<.32){const duo=whoDuoRound(r,t);if(duo)return duo;}
  if(photos.length){
    const z=unusedPick(r,'whoPhoto:'+t,photos);
    const zHard=WHO_PHOTOS.indexOf(z)>=28;
-   const kind=whoKind(z.answer,z.theme);
-   let pool=[...new Set(WHO_PHOTOS.filter(x=>x.theme===z.theme && whoKind(x.answer,x.theme)===kind && ((WHO_PHOTOS.indexOf(x)>=28)===zHard)).map(x=>x.answer))].filter(x=>x!==z.answer);
-   if(pool.length<3)pool=[...new Set(WHO_PHOTOS.filter(x=>x.theme===z.theme && whoKind(x.answer,x.theme)===kind).map(x=>x.answer))].filter(x=>x!==z.answer);
-   if(pool.length<3)pool=[...new Set(WHO_PHOTOS.filter(x=>whoKind(x.answer,x.theme)===kind).map(x=>x.answer))].filter(x=>x!==z.answer);
+   const kind=z.kind||whoKind(z.answer,z.theme);
+   let pool=[...new Set(WHO_PHOTOS.filter(x=>x.theme===z.theme && !x.animeScene && (z.theme!=='Anime & Manga'||x.animeCharacter) && (x.kind||whoKind(x.answer,x.theme))===kind && ((WHO_PHOTOS.indexOf(x)>=28)===zHard)).map(x=>x.answer))].filter(x=>x!==z.answer);
+   if(pool.length<3)pool=[...new Set(WHO_PHOTOS.filter(x=>x.theme===z.theme && !x.animeScene && (z.theme!=='Anime & Manga'||x.animeCharacter) && (x.kind||whoKind(x.answer,x.theme))===kind).map(x=>x.answer))].filter(x=>x!==z.answer);
+   if(pool.length<3)pool=[...new Set(WHO_PHOTOS.filter(x=>x.theme===z.theme && !x.animeScene && (x.kind||whoKind(x.answer,x.theme))===kind).map(x=>x.answer))].filter(x=>x!==z.answer);
    const wrong=pool.sort(()=>Math.random()-.5).slice(0,3);
-   if(wrong.length===3){const a=[z.answer,...wrong].sort(()=>Math.random()-.5);return {q:'Qui est-ce ?',a,c:a.indexOf(z.answer),theme:z.theme,image:z.image,whoPhoto:true,difficulty:(WHO_PHOTOS.indexOf(z)>=28?'dur':'moyen')}}
+   if(wrong.length===3){const a=[z.answer,...wrong].sort(()=>Math.random()-.5);return {q:z.theme==='Culture générale'&&kind==='monument'?'Quel est ce monument ?':z.theme==='Anime & Manga'?'Quel est ce personnage d’anime ?':'Qui est-ce ?',a,c:a.indexOf(z.answer),theme:z.theme,image:z.image,whoPhoto:true,difficulty:(WHO_PHOTOS.indexOf(z)>=28?'dur':'moyen')}}
  }
  let rebus=WHO_REBUS.filter(x=>selected.includes(x.theme));if(!rebus.length)rebus=WHO_REBUS;
  const z=unusedPick(r,'whoRebus',rebus);return {...z,whoRebus:true,difficulty:'dur'};
@@ -652,6 +720,15 @@ async function tmdbExpandCatalogue(){
   }catch(e){tmdbDiscoverStatus.error=e.message}
  }
 }
+// V5.75: targeted long-tail titles, validated through TMDB search before use.
+const CURATED_WORK_SEARCH=[
+ ['tv','Anime & Manga','Kaiju No. 8'],['tv','Anime & Manga',"Hell's Paradise"],['tv','Anime & Manga','Yu Yu Hakusho'],['tv','Anime & Manga','InuYasha'],['tv','Anime & Manga','Rurouni Kenshin'],['tv','Anime & Manga','Slam Dunk'],['tv','Anime & Manga','Great Teacher Onizuka'],['tv','Anime & Manga','Trigun'],['tv','Anime & Manga','Berserk'],['tv','Anime & Manga','Samurai Champloo'],['tv','Anime & Manga','Hajime no Ippo'],['tv','Anime & Manga','Monster'],['tv','Anime & Manga','Hellsing Ultimate'],['tv','Anime & Manga','Black Lagoon'],['tv','Anime & Manga','D.Gray-man'],['tv','Anime & Manga','Gintama'],['tv','Anime & Manga','Ergo Proxy'],['tv','Anime & Manga','Parasyte'],['tv','Anime & Manga','Psycho-Pass'],['tv','Anime & Manga','Dororo'],['tv','Anime & Manga','Dandadan'],['tv','Anime & Manga','Frieren: Beyond Journey’s End'],
+ ['tv','Cinéma & Séries','Riverdale'],['tv','Cinéma & Séries','Elite'],['tv','Cinéma & Séries','Gossip Girl'],['tv','Cinéma & Séries','One Tree Hill'],['tv','Cinéma & Séries','The O.C.'],['tv','Cinéma & Séries','The Vampire Diaries'],['tv','Cinéma & Séries','Pretty Little Liars'],['tv','Cinéma & Séries','Euphoria'],['tv','Cinéma & Séries','Prison Break'],['tv','Cinéma & Séries','Lost'],['tv','Cinéma & Séries','Dexter'],['tv','Cinéma & Séries','The 100'],['tv','Cinéma & Séries','The Originals'],['tv','Cinéma & Séries','Outer Banks'],['tv','Cinéma & Séries','Skins'],['tv','Cinéma & Séries','Suits'],
+ ['movie','Cinéma & Séries','Edge of Tomorrow'],['movie','Cinéma & Séries','The Equalizer'],['movie','Cinéma & Séries','No Time to Die'],['movie','Cinéma & Séries','Casino Royale'],['movie','Cinéma & Séries','Skyfall'],['movie','Cinéma & Séries','Purple Hearts'],['movie','Cinéma & Séries','La Rafle'],['movie','Cinéma & Séries','Intouchables'],['movie','Cinéma & Séries','La Haine'],['movie','Cinéma & Séries','The Pianist'],['movie','Cinéma & Séries','Schindler’s List'],['movie','Cinéma & Séries','The Truman Show'],['movie','Cinéma & Séries','The Notebook'],['movie','Cinéma & Séries','The Fault in Our Stars'],['movie','Cinéma & Séries','The Hunger Games'],['movie','Cinéma & Séries','The Maze Runner'],['movie','Cinéma & Séries','The Bourne Identity'],['movie','Cinéma & Séries','Taken'],['movie','Cinéma & Séries','The Dark Knight Rises'],['movie','Cinéma & Séries','The Substance'],['movie','Cinéma & Séries','Oppenheimer'],['movie','Cinéma & Séries','Everything Everywhere All at Once']
+];
+let curatedLoaded=0;
+async function warmCuratedWorks(){if(!tmdbKey())return;const known=new Set(IMAGE_CULTE_BANK.map(x=>x.type+'-'+x.id));for(let i=0;i<CURATED_WORK_SEARCH.length;i+=4){await Promise.allSettled(CURATED_WORK_SEARCH.slice(i,i+4).map(async([type,theme,title])=>{try{const u='https://api.themoviedb.org/3/search/'+type+'?api_key='+encodeURIComponent(tmdbKey())+'&query='+encodeURIComponent(title)+'&language=fr-FR';const d=await tmdbJson(u);const norm=x=>x.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');const match=(d.results||[]).find(x=>norm(x.name||x.title||'')===norm(title)||norm(x.original_name||x.original_title||'')===norm(title));if(!match)return;const id=Number(match.id),key=type+'-'+id;if(known.has(key))return;known.add(key);IMAGE_CULTE_BANK.push({work:match.name||match.title||title,type,id,theme,curated:true});curatedLoaded++}catch(e){}}));}}
+setTimeout(()=>warmCuratedWorks().catch(()=>{}),2200);
 const tmdbSceneCache=new Map(),tmdbScenePending=new Map(),tmdbSceneBad=new Map();
 let tmdbWarmIndex=0,tmdbWarmRunning=false;
 const tmdbAttribution='Images : TMDB (The Movie Database). Ce produit utilise l’API TMDB mais n’est ni approuvé ni certifié par TMDB.';
@@ -691,7 +768,7 @@ async function tmdbLoadScene(entry,difficulty='moyen'){
 }
 function tmdbWarmScenes(){if(tmdbWarmRunning||!tmdbKey())return;tmdbWarmRunning=true;(async()=>{while(tmdbWarmIndex<IMAGE_CULTE_BANK.length){const batch=IMAGE_CULTE_BANK.slice(tmdbWarmIndex,tmdbWarmIndex+3);tmdbWarmIndex+=3;await Promise.allSettled(batch.map(x=>tmdbLoadScene(x,'moyen')));await new Promise(r=>setTimeout(r,250))}tmdbWarmRunning=false})().catch(e=>{console.warn('TMDB warm',e.message);tmdbWarmRunning=false})}
 function pickImageEffect(difficulty){
- const variants=difficulty==='moyen'?['soft-blur','desaturate','hue','crop','pixel-soft','pixel-soft']:difficulty==='extra-dur'?['pixel-extreme','pixel-extreme','pixel-strong','pixel-strong','strong-blur','invert','crop','pixel-extreme']:['strong-blur','hue','crop','pixel-strong','pixel-strong','invert','pixel-extreme'];
+ const variants=difficulty==='moyen'?['soft-blur','desaturate','hue','crop','pixel-soft','pixel-soft']:difficulty==='extra-dur'?['pixel-medium','pixel-medium','pixel-strong','strong-blur','invert','crop','pixel-medium']:['strong-blur','hue','crop','pixel-medium','pixel-soft','invert'];
  return variants[Math.floor(Math.random()*variants.length)];
 }
 async function imageCulteRound(r){
@@ -961,10 +1038,10 @@ for(const theme of new Set([...Object.keys(MAJORITY_VARIANTS),...Object.keys(TMC
  const seen=new Set();TMC_CURATED[theme]=candidates.filter(x=>{if(!validTmcOpinion(x))return false;const k=x.q.toLowerCase().trim()+'|'+x.a.join('|').toLowerCase();if(seen.has(k))return false;seen.add(k);return true});
 }
 // Petit Bac : même lettre et catégories pour tous, validation exclusivement par l'hôte.
-const BAC_CATEGORIES=['Anime, série ou film','Personne publique','Fruit ou légume','Métier'];
+const BAC_CATEGORIES=['Anime, série ou film','Personne publique','Fruit ou légume','Métier','Animal'];
 const BAC_LETTERS='ABCDEFGHIJKLMNOPRSTV';
-function bacRound(r){r.bacAnswers={};r.bacJudgements={};r.bacPhase='write';r.bacLetterBag=r.bacLetterBag||[];if(!r.bacLetterBag.length)r.bacLetterBag=BAC_LETTERS.split('').sort(()=>Math.random()-.5);const letter=r.bacLetterBag.pop();return {game:'Petit Bac',q:'✍️ PETIT BAC — Lettre '+letter,letter,categories:BAC_CATEGORIES,phase:'write',theme:'Culture générale',points:1000};}
-function bacPublic(r){const ids=Object.keys(r.players);return {game:'Petit Bac',q:r.current.q,letter:r.current.letter,categories:BAC_CATEGORIES,phase:r.bacPhase,players:ids.map(id=>({id,name:r.players[id].name,submitted:!!r.bacAnswers[id],answers:r.bacPhase==='review'?r.bacAnswers[id]:undefined,judgements:r.bacPhase==='review'?r.bacJudgements[id]:undefined})),host:r.host};}
+function bacRound(r){r.bacAnswers={};r.bacJudgements={};r.bacPhase='write';r.bacDeadline=Date.now()+30000;r.bacLetterBag=r.bacLetterBag||[];if(!r.bacLetterBag.length)r.bacLetterBag=BAC_LETTERS.split('').sort(()=>Math.random()-.5);const letter=r.bacLetterBag.pop();return {game:'Petit Bac',q:'✍️ PETIT BAC — Lettre '+letter,letter,categories:BAC_CATEGORIES,phase:'write',theme:'Culture générale',points:1250};}
+function bacPublic(r){const ids=Object.keys(r.players);return {game:'Petit Bac',q:r.current.q,letter:r.current.letter,categories:BAC_CATEGORIES,phase:r.bacPhase,deadline:r.bacPhase==='write'?r.bacDeadline:null,players:ids.map(id=>({id,name:r.players[id].name,submitted:!!r.bacAnswers[id],answers:r.bacPhase==='review'?r.bacAnswers[id]:undefined,judgements:r.bacPhase==='review'?r.bacJudgements[id]:undefined})),host:r.host};}
 function makeRound(r,g){
  let c={game:g};
  if(g==='Quiz Battle'){let x=question(r);c={game:g,q:x.q,a:x.a,c:x.c,image:x.image||null,theme:x.theme,difficulty:x.difficulty||'simple',points:({simple:250,moyen:500,dur:1000}[x.difficulty]||250)}}
@@ -993,7 +1070,7 @@ function makeRound(r,g){
  else if(g==='Image culte'){c={game:'Image culte',q:'Chargement de la scène…',a:[]}}
  else if(g==='Qui est-ce ?'){
  const z=pickWhoMixed(r);
- c={game:g,q:z.q,a:z.a,c:z.c,theme:z.theme,whoRebus:!!z.whoRebus,whoPhoto:!!z.whoPhoto,image:z.image||null,difficulty:z.difficulty||'dur',points:difficultyPoints(z.difficulty||'dur')}
+ c={game:g,q:z.q,a:z.a,c:z.c,theme:z.theme,whoRebus:!!z.whoRebus,whoPhoto:!!z.whoPhoto,image:z.image||null,duoImages:z.duoImages||null,difficulty:z.difficulty||'dur',points:difficultyPoints(z.difficulty||'dur')}
 } else if(g==='Trouve l’intrus'){
  let available=Object.keys(MEGA_INTRUDER_BANK).filter(t=>(r.settings.themes||[]).includes(t));
  if(!available.length)available=Object.keys(MEGA_INTRUDER_BANK);
@@ -1006,12 +1083,13 @@ function makeRound(r,g){
  return c;
 }
 
-function roundSeconds(c){if(!c)return 0;if(c.game==='Blind Test'||c.game==='Ciné Extrait')return 10;if(c.game==='Mot interdit')return 30;if(c.game==='Trouve l’intrus')return 20;if(['Quiz Battle','Qui est-ce ?','Image culte','Duel','La Bombe'].includes(c.game))return 10;return 0}
+function roundSeconds(c){if(!c)return 0;if(c.game==='Petit Bac')return 30;if(c.game==='Blind Test'||c.game==='Ciné Extrait')return 10;if(c.game==='Mot interdit')return 30;if(c.game==='Trouve l’intrus')return 20;if(['Quiz Battle','Qui est-ce ?','Image culte','Duel','La Bombe'].includes(c.game))return 10;return 0}
 function armRoundTimer(r){
  if(r._roundTimer)clearTimeout(r._roundTimer);const sec=roundSeconds(r.current);if(!sec)return;
  const token=(r._timerToken=(r._timerToken||0)+1);
  r._roundTimer=setTimeout(()=>{if(!rooms[r.code]||token!==r._timerToken||r._advancing)return;const g=r.current?.game;
   if(['Quiz Battle','Qui est-ce ?','Image culte','Blind Test','Ciné Extrait','Trouve l’intrus'].includes(g)){const ids=Object.keys(r.players);r.answers=r.answers||{};for(const id of ids)if(r.answers[id]==null)r.answers[id]=-999;io.to(r.code).emit('roundReveal',{answer:r.current.game==='Ciné Extrait'?r.current.clipAnswer:(r.current.a?.[r.current.c]||''),why:r.current.why||'',timeout:true});r._advancing=true;setTimeout(()=>next(r),1800);return}
+  if(g==='Petit Bac'&&r.bacPhase==='write'){r.bacPhase='review';io.to(r.code).emit('bacState',bacPublic(r));return;}
   io.to(r.code).emit('timerExpired',{game:g});
  },sec*1000);
 }
@@ -1060,7 +1138,7 @@ io.on('connection',(s)=>{
 
  socket.on('rerollWho',({code}={})=>{
  const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Qui est-ce ?')return;
- const z=pickWhoMixed(r);r.current={game:'Qui est-ce ?',q:z.q,a:z.a,c:z.c,theme:z.theme,whoRebus:!!z.whoRebus,whoPhoto:!!z.whoPhoto,image:z.image||null,difficulty:z.difficulty||'dur',points:difficultyPoints(z.difficulty||'dur')};r.answers={};
+ const z=pickWhoMixed(r);r.current={game:'Qui est-ce ?',q:z.q,a:z.a,c:z.c,theme:z.theme,whoRebus:!!z.whoRebus,whoPhoto:!!z.whoPhoto,image:z.image||null,duoImages:z.duoImages||null,difficulty:z.difficulty||'dur',points:difficultyPoints(z.difficulty||'dur')};r.answers={};
  io.to(code).emit('round',{round:r.round,total:r.total,gameRound:r.gameRound,gameTotal:gameLimit(r),gameIndex:r.gameIndex,current:r.current});
 });
  socket.on('rerollImpostor',({code}={})=>{
@@ -1086,9 +1164,9 @@ io.on('connection',(s)=>{
  s.on('start',(payload,cb)=>{const c=typeof payload==='string'?payload:payload?.code,hostKey=typeof payload==='object'?payload?.hostKey:null;let r=rooms[c];
  if(r&&r.host!==s.id&&hostKey&&r.hostKey&&String(hostKey)===String(r.hostKey)){const old=r.players[r.host];if(old){delete r.players[r.host];r.players[s.id]={...old,id:s.id}}r.host=s.id;s.join(c)}
  if(!r||r.host!==s.id)return cb&&cb({ok:false,reason:'HOST_SESSION_LOST'});if(!r.settings.games?.length)return cb&&cb({ok:false,reason:'NO_GAMES'});r.round=0;r.gameIndex=0;r.gameRound=0;r.used=r.used||{};r.total=totalRounds(r);Object.values(r.players).forEach(p=>p.score=0);cb&&cb({ok:true});next(r)});
- s.on('bacSubmit',({code,answers}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Petit Bac'||r.bacPhase!=='write'||!r.players[s.id]||r.bacAnswers[s.id])return;if(!Array.isArray(answers)||answers.length!==4)return;r.bacAnswers[s.id]=answers.map(a=>String(a||'').trim().slice(0,90));io.to(code).emit('bacState',bacPublic(r));});
- s.on('bacReview',({code}={})=>{const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Petit Bac'||r.bacPhase!=='write')return;r.bacPhase='review';io.to(code).emit('bacState',bacPublic(r));});
- s.on('bacJudge',({code,playerId,category,valid}={})=>{const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Petit Bac'||r.bacPhase!=='review'||!r.bacAnswers[playerId]||!Number.isInteger(category)||category<0||category>=4||typeof valid!=='boolean')return;r.bacJudgements[playerId]=r.bacJudgements[playerId]||{};const old=r.bacJudgements[playerId][category];if(old===valid)return;if(old===true)r.players[playerId].score-=250;if(valid)r.players[playerId].score+=250;r.bacJudgements[playerId][category]=valid;io.to(code).emit('bacState',bacPublic(r));emit(r);});
+ s.on('bacSubmit',({code,answers}={})=>{const r=rooms[code];if(!r||r.current?.game!=='Petit Bac'||r.bacPhase!=='write'||!r.players[s.id]||r.bacAnswers[s.id])return;if(!Array.isArray(answers)||answers.length!==BAC_CATEGORIES.length)return;if(Date.now()>r.bacDeadline)return;r.bacAnswers[s.id]=answers.map(a=>String(a||'').trim().slice(0,90));io.to(code).emit('bacState',bacPublic(r));});
+ s.on('bacReview',({code}={})=>{const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Petit Bac'||r.bacPhase!=='write')return;r.bacPhase='review';if(r._roundTimer)clearTimeout(r._roundTimer);r._timerToken=(r._timerToken||0)+1;io.to(code).emit('bacState',bacPublic(r));});
+ s.on('bacJudge',({code,playerId,category,valid}={})=>{const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Petit Bac'||r.bacPhase!=='review'||!r.bacAnswers[playerId]||!Number.isInteger(category)||category<0||category>=BAC_CATEGORIES.length||typeof valid!=='boolean')return;r.bacJudgements[playerId]=r.bacJudgements[playerId]||{};const old=r.bacJudgements[playerId][category];if(old===valid)return;if(old===true)r.players[playerId].score-=250;if(valid)r.players[playerId].score+=250;r.bacJudgements[playerId][category]=valid;io.to(code).emit('bacState',bacPublic(r));emit(r);});
  s.on('bacNext',({code}={})=>{const r=rooms[code];if(!r||r.host!==s.id||r.current?.game!=='Petit Bac'||r.bacPhase!=='review')return;r._advancing=true;next(r);});
  s.on('answer',x=>{
  let r=rooms[x.code];if(!r||!r.players[s.id]||r.answers?.[s.id]!=null)return;
@@ -1268,7 +1346,7 @@ s.on('disconnect',()=>{for(const c in rooms){let r=rooms[c];if(r.players[s.id]){
 
 app.get('/tmdb-scene/:type/:id/:difficulty',(req,res)=>{const type=req.params.type,id=Number(req.params.id);if(!['movie','tv'].includes(type)||!Number.isSafeInteger(id))return res.status(400).end();const difficulty=['simple','moyen','dur'].includes(req.params.difficulty)?req.params.difficulty:'moyen';const hits=tmdbSceneCache.get(id+'-'+type+'-'+difficulty);const hit=Array.isArray(hits)?hits.find(x=>x.tmdbPath===req.query.file):null;if(!hit)return res.status(404).end();res.set('Content-Type',hit.ct);res.set('Cache-Control','public,max-age=3600');res.send(hit.buffer)});
 app.get('/cine-extrait-status',(req,res)=>res.json({tmdbConfigured:!!tmdbKey(),...cineCatalogStatus,notice:'Vérification des métadonnées TMDB seulement ; lecture YouTube non garantie.'}));
-app.get('/image-culte-status',(req,res)=>res.json({tmdbConfigured:!!tmdbKey(),ready:tmdbSceneCache.size,total:IMAGE_CULTE_BANK.length,discovered:tmdbDiscoverStatus.loaded,discoveryError:tmdbDiscoverStatus.error,pending:tmdbScenePending.size}));
+app.get('/image-culte-status',(req,res)=>res.json({tmdbConfigured:!!tmdbKey(),ready:tmdbSceneCache.size,total:IMAGE_CULTE_BANK.length,discovered:tmdbDiscoverStatus.loaded,curatedLoaded,curatedTargets:CURATED_WORK_SEARCH.length,discoveryError:tmdbDiscoverStatus.error,pending:tmdbScenePending.size}));
 if(tmdbKey()){setTimeout(async()=>{await tmdbExpandCatalogue();cineVerifyCatalog().catch(e=>console.warn('Ciné catalogue',e.message));tmdbWarmScenes()},500)}else{console.warn('Image Culte: TMDB_API_KEY manquante dans Render Environment')}
 server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.72 lancé'));
 const HARD_EXTRA={"Culture générale": [{"q": "Quel traité de 1648 est associé à la fin de la guerre de Trente Ans ?", "a": ["Westphalie", "Utrecht", "Versailles", "Tordesillas"], "c": 0, "difficulty": "dur"}, {"q": "Quel élément chimique porte le numéro atomique 74 ?", "a": ["Tungstène", "Osmium", "Iridium", "Hafnium"], "c": 0, "difficulty": "dur"}, {"q": "Quelle dynastie chinoise a précédé immédiatement les Ming ?", "a": ["Yuan", "Song", "Qing", "Tang"], "c": 0, "difficulty": "dur"}, {"q": "Quel philosophe a écrit Critique de la raison pure ?", "a": ["Kant", "Hegel", "Spinoza", "Leibniz"], "c": 0, "difficulty": "dur"}], "Football": [{"q": "Quel club a remporté la première Coupe d’Europe des clubs champions en 1956 ?", "a": ["Real Madrid", "Benfica", "Milan", "Reims"], "c": 0, "difficulty": "dur"}, {"q": "Quel gardien a remporté le Ballon d’Or 1963 ?", "a": ["Lev Yachine", "Dino Zoff", "Gordon Banks", "Sepp Maier"], "c": 0, "difficulty": "dur"}, {"q": "Quel pays a remporté l’Euro 1992 après avoir été repêché tardivement ?", "a": ["Danemark", "Suède", "Pays-Bas", "Allemagne"], "c": 0, "difficulty": "dur"}], "Anime & Manga": [{"q": "Dans Hunter × Hunter, quel type de Nen est associé à Kurapika lorsque ses yeux deviennent écarlates ?", "a": ["Spécialisation", "Matérialisation", "Renforcement", "Manipulation"], "c": 0, "difficulty": "dur"}, {"q": "Dans Fullmetal Alchemist, quel principe est présenté comme fondamental à l’alchimie au début de l’œuvre ?", "a": ["Échange équivalent", "Transmutation absolue", "Résonance vitale", "Cercle parfait"], "c": 0, "difficulty": "dur"}, {"q": "Dans Bleach, comment se nomme l’étape supérieure de libération d’un Zanpakutō ?", "a": ["Bankai", "Resurrección", "Shikai", "Vollständig"], "c": 0, "difficulty": "dur"}], "Mathématiques": [{"q": "Quelle est la dérivée de ln(x²+1) ?", "a": ["2x/(x²+1)", "1/(x²+1)", "2/(x²+1)", "ln(2x)"], "c": 0, "difficulty": "dur"}, {"q": "Combien vaut la somme des angles intérieurs d’un dodécagone ?", "a": ["1800°", "1620°", "1980°", "2160°"], "c": 0, "difficulty": "dur"}, {"q": "Si log₂(x)=7, combien vaut x ?", "a": ["128", "64", "256", "49"], "c": 0, "difficulty": "dur"}]};for(const [t,a] of Object.entries(HARD_EXTRA)){DB[t]=DB[t]||[];DB[t].push(...a)}

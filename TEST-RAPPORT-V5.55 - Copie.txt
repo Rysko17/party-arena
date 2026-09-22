@@ -1,0 +1,11 @@
+V5.55 — BLIND AUDIO GUARD
+- 410 segments actifs conservés: Anime 100, Cinéma/Séries 100, Musique 110, Dessins animés 100.
+- Player Blind remplacé par YouTube IFrame API.
+- Au clic: vérifie métadonnées/durée; si start+8 dépasse la durée, extrait rejeté.
+- onError YouTube ou absence de démarrage sous 7 s => signal serveur et remplacement synchronisé pour toute la room.
+- Un extrait rejeté est ajouté à badBlind/blindSeen pour éviter sa reprise immédiate.
+- Extrait arrêté après 8 secondes.
+- Difficulté/confusion: moyen peut demander 0.95x/1.05x, dur 0.90x/1.10x si ces vitesses sont disponibles; sinon 1x.
+- L'utilisateur doit toujours cliquer pour lancer, conformément aux restrictions autoplay navigateur.
+Tests: >=100 par thème, IDs uniques, 100 rounds de génération, durée logique 8s, taux autorisés, syntaxe serveur/client PASS.
+Limite honnête: un test statique ne peut pas garantir qu'une vidéo YouTube restera disponible demain ni que chaque timestamp contient du son non silencieux. Le runtime élimine les erreurs/fin de vidéo, mais ne peut pas mesurer perceptuellement le silence sans accès direct au flux audio cross-origin.

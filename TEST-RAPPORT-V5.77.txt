@@ -1,0 +1,13 @@
+V5.77 — TheSportsDB V1 gratuit
+Variable Render : SPORTSDB_API_KEY=123 (clé publique ; défaut 123).
+Recherche des sportifs des banques Football et Sport existantes + liste étendue.
+Vérifie le nom exact, la source du portrait, le type MIME et la taille du fichier avant de remplacer une photo.
+Images valides mises en cache en mémoire et diffusées via /sportsdb-photo/:id (même origine).
+Qui est-ce ? simple et duo utilisent WHO_PHOTOS : intégration automatique de la nouvelle source.
+Les anciennes photos restent en place si TheSportsDB ne fournit pas de portrait valide.
+Respect de la limite gratuite : une recherche environ toutes les 2,2 secondes ; préchauffage progressif.
+Diagnostic : /sportsdb-status et /qui-est-ce-status.
+Aucune clé privée embarquée ; la clé 123 est publique.
+Tests locaux : syntaxe serveur et JS client, contrôle de l'archive.
+Limite : les requêtes API et la disponibilité des portraits ne peuvent pas être validées depuis ce conteneur sans accès réseau ; vérifier /sportsdb-status après déploiement.
+Les licences et droits d'utilisation des photos doivent être vérifiés avant exploitation commerciale.

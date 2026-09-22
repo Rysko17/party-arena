@@ -367,6 +367,8 @@ function whoKind(name,theme){
  if(theme==='Dessins animés')return 'cartoon';
  if(theme==='Cinéma & Séries')return 'cinema';
  if(WHO_LANDMARKS?.some(x=>x[0]===name))return 'monument';
+ if(theme==='Football')return 'footballer';
+ if(theme==='Sport')return 'other-sport';
  if(WHO_FEMALE.has(name))return 'female';
  return 'male';
 }
@@ -374,6 +376,41 @@ function whoKind(name,theme){
 // Les images sont ajoutées uniquement après une réponse API contenant un chemin exploitable.
 const WHO_ACTOR_NAMES=['Cillian Murphy','Pedro Pascal','Zendaya','Florence Pugh','Tom Holland','Margot Robbie','Robert Downey Jr.','Ryan Gosling','Ana de Armas','Keanu Reeves','Jenna Ortega','Millie Bobby Brown','Henry Cavill','Timothée Chalamet','Scarlett Johansson','Leonardo DiCaprio','Denzel Washington','Samuel L. Jackson','Jason Momoa','Sydney Sweeney','Andrew Garfield','Emma Stone','Chris Hemsworth','Anne Hathaway','Christian Bale','Mads Mikkelsen','Park Seo-joon','Lee Jung-jae','Song Kang-ho','Hiroyuki Sanada'];
 const WHO_LANDMARKS=[['Sagrada Família','Sagrada Familia Barcelona'],['Burj Khalifa','Burj Khalifa Dubai'],['Opéra de Sydney','Sydney Opera House'],['Pyramides de Gizeh','Great Pyramid of Giza'],['Mont Saint-Michel','Mont Saint Michel abbey'],['Machu Picchu','Machu Picchu Peru'],['Pont du Golden Gate','Golden Gate Bridge San Francisco'],['Arc de Triomphe','Arc de Triomphe Paris'],['Petra','Petra Jordan Treasury'],['Château de Chambord','Chateau de Chambord']];
+// TheSportsDB V1: public free key 123. Never put an API key in the browser.
+// Only validated portrait images are offered to players; existing sources remain fallbacks.
+const sportsDbKey=()=>process.env.SPORTSDB_API_KEY||'123';
+const SPORTS_EXTRA={
+ Football:['N’Golo Kanté','Paul Pogba','Ousmane Dembélé','Marcus Thuram','Randal Kolo Muani','Eduardo Camavinga','Aurélien Tchouaméni','William Saliba','Ibrahima Konaté','Mike Maignan','Jules Koundé','Achraf Hakimi','Hakim Ziyech','Riyad Mahrez','Sadio Mané','Mohamed Salah','Victor Osimhen','Ademola Lookman','Khvicha Kvaratskhelia','Lamine Yamal','Pedri','Gavi','Ferran Torres','Raphinha','Robert Lewandowski','Jamal Musiala','Florian Wirtz','Kai Havertz','Bukayo Saka','Cole Palmer','Phil Foden','Declan Rice','Martin Ødegaard','Bruno Fernandes','Bernardo Silva','Rúben Dias','João Félix','Rafael Leão','Federico Valverde','Rodrygo','Endrick','Lautaro Martínez','Julián Álvarez','Enzo Fernández','Alexis Mac Allister','Emiliano Martínez','Ángel Di María','Paulo Dybala','Olivier Giroud','Raphaël Varane','Hugo Lloris','Franck Ribéry','Arjen Robben','Wesley Sneijder','Robin van Persie','Sergio Ramos','Gerard Piqué','Andrés Iniesta','Xavi Hernández','David Villa','Fernando Torres','Iker Casillas','Gianluigi Buffon','Andrea Pirlo','Gennaro Gattuso','Paolo Maldini','Alessandro Del Piero','Zlatan Ibrahimović','Edinson Cavani','Luis Suárez','Sergio Agüero','Wayne Rooney','Steven Gerrard','Frank Lampard','Didier Drogba','Samuel Eto’o','Yaya Touré','Vincent Kompany','Eden Hazard','Kevin De Bruyne','Romelu Lukaku','Thibaut Courtois','Son Heung-min','Heung-min Son','Harry Kane','Jude Bellingham','Vinícius Júnior','Erling Haaland'],
+ Sport:['Victor Wembanyama','Kobe Bryant','Michael Jordan','Shaquille O’Neal','Kyrie Irving','James Harden','Jayson Tatum','Jaylen Brown','Anthony Edwards','Jimmy Butler','Devin Booker','Joel Embiid','Nikola Jokić','Luka Dončić','LeBron James','Stephen Curry','Kevin Durant','Giannis Antetokounmpo','Diana Taurasi','A’ja Wilson','Caitlin Clark','Naomi Osaka','Iga Świątek','Aryna Sabalenka','Coco Gauff','Carlos Alcaraz','Jannik Sinner','Novak Djokovic','Rafael Nadal','Roger Federer','Serena Williams','Lewis Hamilton','Max Verstappen','Charles Leclerc','Lando Norris','Fernando Alonso','Oscar Piastri','George Russell','Sebastian Vettel','Michael Schumacher','Ayrton Senna','Valentino Rossi','Marc Márquez','Fabio Quartararo','Jon Jones','Conor McGregor','Khabib Nurmagomedov','Islam Makhachev','Alex Pereira','Israel Adesanya','Francis Ngannou','Ciryl Gane','Amanda Nunes','Ronda Rousey','Muhammad Ali','Mike Tyson','Tyson Fury','Oleksandr Usyk','Anthony Joshua','Canelo Álvarez','Floyd Mayweather','Antoine Dupont','Cheslin Kolbe','Beauden Barrett','Dan Carter','Jonah Lomu','Usain Bolt','Noah Lyles','Armand Duplantis','Simone Biles','Léon Marchand','Michael Phelps']
+};
+const sportsStatus={configured:true,source:'TheSportsDB V1',checked:0,found:0,failed:0,replaced:0,extra:0,imagesCached:0,started:false,completed:false};
+const sportsImageCache=new Map();
+const sportsName=x=>String(x||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’']/g,'').replace(/[^a-z0-9]/gi,'').toLowerCase();
+const sportsUrl=(name)=>'https://www.thesportsdb.com/api/v1/json/'+encodeURIComponent(sportsDbKey())+'/searchplayers.php?p='+encodeURIComponent(name);
+function sportsPortraitUrl(p){const url=p?.strThumb||p?.strCutout||p?.strRender||'';try{const u=new URL(url);return u.protocol==='https:'&&(/(^|\.)thesportsdb\.com$/.test(u.hostname)||u.hostname==='r2.thesportsdb.com')?url:null}catch{return null}}
+async function sportsDownload(url){const response=await fetch(url,{signal:AbortSignal.timeout(7500)});if(!response.ok||!/^image\/(jpeg|png|webp)/i.test(response.headers.get('content-type')||''))return null;const data=Buffer.from(await response.arrayBuffer());return data.length>=2000&&data.length<3000000?{data,type:response.headers.get('content-type').split(';')[0]}:null}
+async function sportsLookup(name,theme){
+ try{const res=await fetch(sportsUrl(name),{signal:AbortSignal.timeout(7500)});if(!res.ok)throw Error('HTTP '+res.status);const data=await res.json();const matches=(data.player||[]).filter(p=>sportsName(p.strPlayer)===sportsName(name));const match=matches.find(p=>sportsPortraitUrl(p));if(!match)return false;
+ const url=sportsPortraitUrl(match),img=await sportsDownload(url);if(!img)return false;
+ const id=String(match.idPlayer);sportsImageCache.set(id,img);sportsStatus.imagesCached++;
+ const local='/sportsdb-photo/'+id;let existing=WHO_PHOTOS.filter(p=>p.answer===name&&p.theme===theme);
+ if(existing.length){for(const p of existing){p.image=local;p.source='TheSportsDB';p.kind=theme==='Football'?'footballer':sportsKind(match.strSport);p.sportsDiscipline=match.strSport||'';}sportsStatus.replaced+=existing.length;}
+ else{WHO_PHOTOS.push({answer:name,theme,kind:theme==='Football'?'footballer':sportsKind(match.strSport),image:local,source:'TheSportsDB',sportsDiscipline:match.strSport||''});sportsStatus.extra++;}
+ // Older WHO_BANK entries also serve photo-based rounds: replace their SVGs with real portraits.
+ for(const w of WHO_BANK[theme]||[])if(w[0]===name)w[2]=local;
+ sportsStatus.found++;return true;
+ }catch(e){sportsStatus.failed++;return false}finally{sportsStatus.checked++}
+}
+function sportsKind(sport){const s=String(sport||'').toLowerCase();if(/basket/.test(s))return 'basketball';if(/tennis/.test(s))return 'tennis';if(/motor|racing|formula|motorsport/.test(s))return 'motorsport';if(/boxing/.test(s))return 'boxing';if(/mixed martial|mma/.test(s))return 'mma';if(/rugby/.test(s))return 'rugby';if(/athlet|track/.test(s))return 'athletics';if(/swim/.test(s))return 'swimming';return 'other-sport'}
+async function warmSportsDb(){if(sportsStatus.started)return;sportsStatus.started=true;
+ const all=[];for(const theme of ['Football','Sport']){const names=[...new Set([...(WHO_PHOTOS.filter(p=>p.theme===theme).map(p=>p.answer)),...(WHO_BANK[theme]||[]).map(p=>p[0]),...SPORTS_EXTRA[theme]])];for(const name of names)all.push({name,theme})}
+ // V1 free API: cap to below 30 requests/minute. Cache successful images in RAM.
+ for(const {name,theme} of all){await sportsLookup(name,theme);await new Promise(resolve=>setTimeout(resolve,2200));}
+ sportsStatus.completed=true;
+}
+app.get('/sportsdb-photo/:id',(req,res)=>{const pic=sportsImageCache.get(req.params.id);if(!pic)return res.status(404).end();res.set('Cache-Control','public, max-age=3600');res.type(pic.type);res.send(pic.data)});
+app.get('/sportsdb-status',(req,res)=>res.json({...sportsStatus,photoEntries:WHO_PHOTOS.filter(x=>['Football','Sport'].includes(x.theme)).length,publicFreeKey:sportsDbKey()==='123'}));
+setTimeout(()=>warmSportsDb().catch(e=>console.warn('SportsDB',e.message)),3500);
 const whoApiStatus={tmdbActors:0,commonsLandmarks:0,attempted:0};
 function addWhoPhoto(z){if(!z?.image||WHO_PHOTOS.some(p=>p.answer===z.answer&&p.image===z.image))return false;WHO_PHOTOS.push(z);return true;}
 async function warmWhoActors(){if(!tmdbKey())return;for(const name of WHO_ACTOR_NAMES){try{const url='https://api.themoviedb.org/3/search/person?api_key='+encodeURIComponent(tmdbKey())+'&query='+encodeURIComponent(name)+'&language=fr-FR';const data=await tmdbJson(url);const match=(data.results||[]).find(p=>p.name.toLowerCase()===name.toLowerCase()&&p.profile_path);if(match&&addWhoPhoto({answer:name,theme:'Cinéma & Séries',image:'https://image.tmdb.org/t/p/w500'+match.profile_path,source:'TMDB'}))whoApiStatus.tmdbActors++;}catch(e){console.warn('Who TMDB',name,e.message)}whoApiStatus.attempted++;}}
