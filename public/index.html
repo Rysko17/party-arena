@@ -21,7 +21,7 @@
 </style>
 <style>
 #gameImg:not(.hide){display:block!important;width:min(92vw,720px)!important;height:min(52vh,440px)!important;object-fit:contain!important;object-position:50% 50%!important;margin:10px auto!important;border-radius:16px;background:#111!important;padding:6px!important;box-sizing:border-box!important}
-</style><style>.cineTitleMask{position:absolute;top:0;left:0;right:0;height:52px;background:#090b13;z-index:5;pointer-events:none}.cineBottomMask{position:absolute;bottom:0;left:0;right:0;height:28px;background:#090b13;z-index:5;pointer-events:none}</style></head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.63 — IMAGE CULTE TMDB</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
+</style><style>.cineTitleMask{position:absolute;top:0;left:0;right:0;height:52px;background:#090b13;z-index:5;pointer-events:none}.cineBottomMask{position:absolute;bottom:0;left:0;right:0;height:28px;background:#090b13;z-index:5;pointer-events:none}</style></head><body><div id="persistentHostControls" style="position:relative;z-index:50"></div><div id="answerFlash"><div class="feedbackBox"></div></div><div class="w"><div class="logo">⚡ PARTY ARENA V5.72 — PIXEL & CINÉ EXTRAIT</div><p>Choisis ton jeu, tes thèmes, et que la soirée commence !</p>
 <div id="home" class="card">
 <h2>Que veux-tu faire ?</h2>
 <p>Crée une nouvelle partie ou rejoins tes amis avec leur code.</p>
@@ -131,18 +131,24 @@ function playCineClip(video,start,seconds,excerptId){
 // Visual challenges are deterministic for every player in a round (server chooses effect).
 function applyImageCulteEffect(effect){
  const img=document.getElementById('img');if(!img)return;
- img.style.filter='';img.style.clipPath='';img.style.transform='';
- let cover=document.getElementById('imageCulteCover');if(cover)cover.remove();
+ img.style.filter='';img.style.clipPath='';img.style.transform='';img.style.imageRendering='';
+ const old=document.getElementById('imageCulteCover');if(old)old.remove();
  const filters={'soft-blur':'blur(3px)','strong-blur':'blur(8px)','desaturate':'grayscale(1) contrast(1.35)','hue':'hue-rotate(145deg) saturate(1.8)','invert':'invert(.85) hue-rotate(100deg)'};
  if(filters[effect])img.style.filter=filters[effect];
  if(effect==='crop'){img.style.clipPath='inset(15% 19% 15% 19%)';img.style.transform='scale(1.15)'}
- if(effect==='mask'&&img.parentNode){
-  // Overlay positioned relative to the image, without obscuring the choices.
-  const rect=img.getBoundingClientRect();if(rect.width>0){
-   cover=document.createElement('div');cover.id='imageCulteCover';cover.setAttribute('aria-hidden','true');
-   cover.style.cssText='pointer-events:none;position:fixed;background:#080b14;opacity:.97;z-index:15;border-radius:5px;left:'+(rect.left+rect.width*.29)+'px;top:'+(rect.top+rect.height*.18)+'px;width:'+(rect.width*.43)+'px;height:'+(rect.height*.46)+'px';
-   document.body.appendChild(cover);
-  }
+ if(effect==='pixel-soft'||effect==='pixel-strong'){
+  // Pixelation uses the original same-origin TMDB image. No floating rectangle or overlay.
+  if(!img.complete||!img.naturalWidth||img.dataset.pixelDone==='1')return;
+  try{
+   const w=img.naturalWidth,h=img.naturalHeight;
+   const small=document.createElement('canvas');
+   const blocks=effect==='pixel-strong'?18:46;
+   small.width=blocks;small.height=Math.max(1,Math.round(blocks*h/w));
+   const ctx=small.getContext('2d');ctx.imageSmoothingEnabled=true;ctx.drawImage(img,0,0,small.width,small.height);
+   const out=document.createElement('canvas');out.width=Math.min(w,960);out.height=Math.max(1,Math.round(out.width*h/w));
+   const oc=out.getContext('2d');oc.imageSmoothingEnabled=false;oc.drawImage(small,0,0,out.width,out.height);
+   img.dataset.pixelDone='1';img.src=out.toDataURL('image/png');img.style.imageRendering='pixelated';
+  }catch(e){img.style.filter='blur(7px)'}
  }
 }
 const hostKey=localStorage.getItem('partyArenaHostKey')||(()=>{const k=(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random());localStorage.setItem('partyArenaHostKey',k);return k})();
@@ -349,7 +355,7 @@ if(x.current.game==='L’Imposteur' && me===state?.host && x.current.phase!=='vo
  award.innerHTML=`<div class="card"><h3>🕵️ Imposteur</h3><button onclick="startImpostorVote()">🗳️ LANCER LE VOTE</button><button onclick="s.emit('next',room)">⏭️ PASSER / JEU SUIVANT</button></div>`;
 }
 if(x.current.difficulty && !x.current.blind && !x.current.pairDuel) q.innerHTML += ` <small>• ${x.current.difficulty.toUpperCase()} • ${x.current.points||500} pts</small>`;
-if(x.current.answer && state && state.host===me) q.textContent += '  •  Réponse : '+x.current.answer;img.classList.toggle('hide',!x.current.image);if(x.current.image)img.src=x.current.image;img.onload=()=>{if(x.current.imageCulte)applyImageCulteEffect(x.current.imageEffect)};applyImageCulteEffect(x.current.imageCulte?x.current.imageEffect:'none');document.getElementById('tmdbCredit').classList.toggle('hide',!x.current.imageCulte);if(x.current.game==='Tu me connais ?'&&x.current.phase==='choose'){if(me===x.current.target){q.textContent=x.current.q+' — choisis ta réponse secrètement';answers.innerHTML=x.current.a.map((a,i)=>`<div class="ans" onclick="secretChoice(${i})">${a}</div>`).join('')}else{q.textContent=x.current.targetName+' choisit sa réponse secrète…';answers.innerHTML='<div class="card">⏳ Attends que '+x.current.targetName+' ait choisi. Tu ne peux pas répondre avant.</div>'}}else{answers.innerHTML=x.current.a?x.current.a.map((a,i)=>`<div class="ans" onclick="answer(${i})">${a}</div>`).join(''):''}if(x.current.specialDuel){
+if(x.current.answer && state && state.host===me) q.textContent += '  •  Réponse : '+x.current.answer;img.classList.toggle('hide',!x.current.image);if(x.current.image){img.dataset.pixelDone='0';img.src=x.current.image;}img.onload=()=>{if(x.current.imageCulte)applyImageCulteEffect(x.current.imageEffect)};applyImageCulteEffect(x.current.imageCulte?x.current.imageEffect:'none');document.getElementById('tmdbCredit').classList.toggle('hide',!x.current.imageCulte);if(x.current.game==='Tu me connais ?'&&x.current.phase==='choose'){if(me===x.current.target){q.textContent=x.current.q+' — choisis ta réponse secrètement';answers.innerHTML=x.current.a.map((a,i)=>`<div class="ans" onclick="secretChoice(${i})">${a}</div>`).join('')}else{q.textContent=x.current.targetName+' choisit sa réponse secrète…';answers.innerHTML='<div class="card">⏳ Attends que '+x.current.targetName+' ait choisi. Tu ne peux pas répondre avant.</div>'}}else{answers.innerHTML=x.current.a?x.current.a.map((a,i)=>`<div class="ans" onclick="answer(${i})">${a}</div>`).join(''):''}if(x.current.specialDuel){
  const allowed=[x.current.first,x.current.last].includes(me);
  const f=state?.players?.find(p=>p.id===x.current.first)?.name||'Premier';
  const l=state?.players?.find(p=>p.id===x.current.last)?.name||'Dernier';

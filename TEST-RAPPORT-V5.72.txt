@@ -1,0 +1,5 @@
+PARTY ARENA V5.72 — MODIFICATIONS ET LIMITES
+- Image Culte : suppression du rectangle flottant défectueux. Aucun effet « mask » n'est tiré. Ajout d'une pixellisation canvas douce ou forte selon la difficulté ; autres effets conservés.
+- Ciné Extrait : découverte TMDB étendue à 6 pages films, 6 pages séries, 8 pages séries d'animation japonaises et 5 pages films d'animation japonais. Vérification en tâche de fond des métadonnées de clips officiels pour viser 65 œuvres distinctes dans chacune des catégories Cinéma & Séries et Anime & Manga. Statut : /cine-extrait-status. Le serveur peut essayer jusqu'à 100 œuvres pour trouver un extrait neuf.
+- IMPORTANT : les 60 extraits lisibles par thème ne peuvent pas être garantis sans TMDB_API_KEY sur Render et sans tester les vidéos YouTube dans les pays des joueurs. Le statut mesure uniquement les métadonnées de clips officiels trouvés sur TMDB, pas la lecture effective.
+- Tests locaux : node --check serveur et JS client, contrôles statiques de la suppression du masque et de l'ajout des effets pixel. Aucun accès à la clé TMDB privée de l'utilisateur ; pas de test de lecture YouTube sur Render.
