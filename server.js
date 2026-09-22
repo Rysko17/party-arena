@@ -476,6 +476,18 @@ function expandBlindTo100PerTheme(){
 }
 expandBlindTo100PerTheme();
 
+function normalizeBlindSources(){
+ for(const arr of Object.values(BLIND_DOUBLE_BANK)){
+  for(const x of arr){
+   if(!Array.isArray(x.sources)||!x.sources.length){
+    x.sources=[{provider:'youtube',id:x.video,start:x.start,end:(x.start||0)+8}];
+   }
+  }
+ }
+}
+normalizeBlindSources();
+
+
 function blindRound(r){
  let themes=(r.settings.themes||[]).filter(t=>BLIND_DOUBLE_BANK[t]?.length);
  if(!themes.length)themes=['Musique','Anime & Manga','Cinéma & Séries','Dessins animés'];
@@ -496,7 +508,7 @@ function blindRound(r){
  const a=[z.title,...wrong].sort(()=>Math.random()-.5);
  const difficulty=['simple','moyen','dur'][(Math.max(1,r.gameRound)-1)%3];
  const rates=difficulty==='dur'?[0.90,1,1.10]:difficulty==='moyen'?[0.95,1,1.05]:[1];const playbackRate=rates[Math.floor(Math.random()*rates.length)];
- return {game:'Blind Test',q:'🎧 BLIND TEST — écoute les 8 secondes',a,c:a.indexOf(z.title),theme:t,blind:true,video:z.video,start:z.start,end:z.start+8,excerptId:z.excerptId,difficulty,points:difficultyPoints(difficulty),playbackRate};
+ return {game:'Blind Test',q:'🎧 BLIND TEST — écoute les 8 secondes',a,c:a.indexOf(z.title),theme:t,blind:true,video:z.video,start:z.start,end:z.start+8,excerptId:z.excerptId,difficulty,points:difficultyPoints(difficulty),playbackRate,sources:z.sources||[{provider:'youtube',id:z.video,start:z.start,end:z.start+8}]};
 }
 
 function difficultyPoints(d){return ({simple:250,moyen:500,dur:1000}[d]||500)}
@@ -793,5 +805,5 @@ s.on('majorityNext',({code}={})=>{
 s.on('blindHistory',ids=>{const r=Object.values(rooms).find(x=>x.players.some(p=>p.id===s.id));if(!r)return;if(!r.blindSeen)r.blindSeen=new Set();for(const id of (Array.isArray(ids)?ids:[]).slice(-5000))r.blindSeen.add(String(id));});
 s.on('disconnect',()=>{for(const c in rooms){let r=rooms[c];if(r.players[s.id]){delete r.players[s.id];if(!Object.keys(r.players).length)delete rooms[c];else{if(r.host===s.id)r.host=Object.keys(r.players)[0];emit(r)}}}})
 });
-server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.55 lancé'));
+server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.56 lancé'));
 const HARD_EXTRA={"Culture générale": [{"q": "Quel traité de 1648 est associé à la fin de la guerre de Trente Ans ?", "a": ["Westphalie", "Utrecht", "Versailles", "Tordesillas"], "c": 0, "difficulty": "dur"}, {"q": "Quel élément chimique porte le numéro atomique 74 ?", "a": ["Tungstène", "Osmium", "Iridium", "Hafnium"], "c": 0, "difficulty": "dur"}, {"q": "Quelle dynastie chinoise a précédé immédiatement les Ming ?", "a": ["Yuan", "Song", "Qing", "Tang"], "c": 0, "difficulty": "dur"}, {"q": "Quel philosophe a écrit Critique de la raison pure ?", "a": ["Kant", "Hegel", "Spinoza", "Leibniz"], "c": 0, "difficulty": "dur"}], "Football": [{"q": "Quel club a remporté la première Coupe d’Europe des clubs champions en 1956 ?", "a": ["Real Madrid", "Benfica", "Milan", "Reims"], "c": 0, "difficulty": "dur"}, {"q": "Quel gardien a remporté le Ballon d’Or 1963 ?", "a": ["Lev Yachine", "Dino Zoff", "Gordon Banks", "Sepp Maier"], "c": 0, "difficulty": "dur"}, {"q": "Quel pays a remporté l’Euro 1992 après avoir été repêché tardivement ?", "a": ["Danemark", "Suède", "Pays-Bas", "Allemagne"], "c": 0, "difficulty": "dur"}], "Anime & Manga": [{"q": "Dans Hunter × Hunter, quel type de Nen est associé à Kurapika lorsque ses yeux deviennent écarlates ?", "a": ["Spécialisation", "Matérialisation", "Renforcement", "Manipulation"], "c": 0, "difficulty": "dur"}, {"q": "Dans Fullmetal Alchemist, quel principe est présenté comme fondamental à l’alchimie au début de l’œuvre ?", "a": ["Échange équivalent", "Transmutation absolue", "Résonance vitale", "Cercle parfait"], "c": 0, "difficulty": "dur"}, {"q": "Dans Bleach, comment se nomme l’étape supérieure de libération d’un Zanpakutō ?", "a": ["Bankai", "Resurrección", "Shikai", "Vollständig"], "c": 0, "difficulty": "dur"}], "Mathématiques": [{"q": "Quelle est la dérivée de ln(x²+1) ?", "a": ["2x/(x²+1)", "1/(x²+1)", "2/(x²+1)", "ln(2x)"], "c": 0, "difficulty": "dur"}, {"q": "Combien vaut la somme des angles intérieurs d’un dodécagone ?", "a": ["1800°", "1620°", "1980°", "2160°"], "c": 0, "difficulty": "dur"}, {"q": "Si log₂(x)=7, combien vaut x ?", "a": ["128", "64", "256", "49"], "c": 0, "difficulty": "dur"}]};for(const [t,a] of Object.entries(HARD_EXTRA)){DB[t]=DB[t]||[];DB[t].push(...a)}

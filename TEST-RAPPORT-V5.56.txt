@@ -1,0 +1,12 @@
+V5.56 — BLIND MULTI-SOURCE
+- Schéma sources[] ajouté à chaque extrait actif.
+- Les 410 segments existants sont migrés automatiquement comme sources YouTube.
+- Router client multi-source avec fallback en chaîne.
+- YouTube: IFrame API, durée + démarrage + erreur.
+- SoundCloud: Widget API officiel, READY/ERROR/getDuration/seekTo/play/pause, coupure à 8 s.
+- TikTok: Embed Player officiel, onPlayerReady/onStateChange/onPlayerError, seekTo/play/pause, coupure à 8 s.
+- Dailymotion est reconnu par le schéma mais PAS activé sans Player ID Dailymotion configuré; le routeur passe à la source suivante.
+- Si toutes les sources échouent, le serveur remplace la question pour toute la room.
+- Les variantes de vitesse YouTube de V5.55 restent actives quand disponibles.
+Tests automatisés: 410 entrées, >=100 par thème, toutes avec sources[], 100 rounds générés avec source, syntaxe serveur/client PASS.
+Important: aucune fausse source SoundCloud/TikTok/Dailymotion n'a été inventée. La banque actuelle reste 410 sources YouTube; l'infrastructure est maintenant prête pour ajouter de vrais fallback URLs/IDs vérifiés.
