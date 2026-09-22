@@ -574,6 +574,43 @@ const DEEZER_PREVIEWS_ENABLED=process.env.DEEZER_PREVIEWS_ENABLED==='true';
 const deezerState={queries:0,tracks:0,errors:0,lastError:null,ready:false};
 const DEEZER_ARTISTS=['Stromae','Aya Nakamura','Gims','Ninho','Damso','SCH','PNL','Orelsan','Nekfeu','Booba','Jul','Tiakola','Dadju','The Weeknd','Rihanna','Beyoncé','Drake','Eminem','Kendrick Lamar','Travis Scott','SZA','Billie Eilish','Dua Lipa','Michael Jackson','Daft Punk','Bruno Mars','Adele','Imagine Dragons','Ed Sheeran','Taylor Swift'];
 const deezerIds=new Set();
+
+const BLIND_ERA_THEME='Musique 2006–2018';
+const BLIND_ERA_TARGETS=require('./blind-2006-2018.json');
+const BLIND_THEME_TARGETS=require('./blind-theme-targets.json');
+BLIND_DOUBLE_BANK[BLIND_ERA_THEME]=[];
+const eraState={targets:BLIND_ERA_TARGETS.length,matched:0,playable:0,queries:0,errors:0,finished:false};
+function normMusic(x){return String(x||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/gi,' ').toLowerCase().trim()}
+async function loadEraTrack(item){
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),6500);
+ try{
+  const query='artist:"'+item.artist+'" track:"'+item.title+'"';
+  const response=await fetch('https://api.deezer.com/search?q='+encodeURIComponent(query)+'&limit=8',{signal:controller.signal});
+  eraState.queries++;
+  if(!response.ok)throw Error('HTTP '+response.status);
+  const data=await response.json();
+  const found=(data.data||[]).find(x=>normMusic(x.artist?.name)===normMusic(item.artist)&&normMusic(x.title_short||x.title)===normMusic(item.title));
+  if(!found?.id)return;
+  eraState.matched++;
+  if(!found.preview||!/^https:\/\/[^\s]+$/i.test(found.preview)||deezerIds.has(found.id))return;
+  deezerIds.add(found.id);
+  BLIND_DOUBLE_BANK[BLIND_ERA_THEME].push({title:item.artist+' — '+item.title,genre:item.genre,excerptId:'deezer:'+found.id,
+   sources:[{provider:'deezer',url:found.preview,start:Math.floor(Math.random()*16),end:30}],deezer:true});
+  eraState.playable++;
+ }catch(e){eraState.errors++}finally{clearTimeout(timer)}
+}
+async function warmEraTracks(){
+ if(!DEEZER_PREVIEWS_ENABLED){eraState.finished=true;return}
+ // Gradual loading avoids blocking Render startup or overwhelming the public API.
+ for(const item of BLIND_ERA_TARGETS){await loadEraTrack(item);await new Promise(resolve=>setTimeout(resolve,450))}
+ eraState.finished=true;
+}
+app.get('/blind-bank-status',(req,res)=>res.json({eraTheme:BLIND_ERA_THEME,era:eraState,
+ audius:{...audiusState},existingPlayable:Object.fromEntries(Object.entries(BLIND_DOUBLE_BANK).map(([k,v])=>[k,v.length])),
+ searchTargets:Object.fromEntries(Object.entries(BLIND_THEME_TARGETS).map(([k,v])=>[k,v.length])),
+ note:'Une cible de recherche n’est pas un extrait jouable. Deezer nécessite une autorisation adaptée avant activation.'}));
+setTimeout(()=>warmEraTracks().catch(()=>{eraState.finished=true;eraState.errors++}),3200);
+
 async function loadDeezerArtist(artist){
  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),6500);
  try{
@@ -609,19 +646,67 @@ setTimeout(()=>warmDeezer().catch(e=>{deezerState.lastError=String(e.message);de
 
 
 
+// Audius: server-side discovery and stream proxy. API credentials never reach browsers.
+// Streaming is opt-in until the owner confirms the relevant rights for game use.
+const AUDIUS_API_KEY=process.env.AUDIUS_API_KEY||'';
+const AUDIUS_BEARER_TOKEN=process.env.AUDIUS_BEARER_TOKEN||'';
+const AUDIUS_STREAMS_ENABLED=process.env.AUDIUS_STREAMS_ENABLED==='true';
+const audiusState={configured:!!(AUDIUS_API_KEY||AUDIUS_BEARER_TOKEN),enabled:AUDIUS_STREAMS_ENABLED,queries:0,added:0,errors:0,lastError:null,ready:false};
+const audiusIds=new Set();
+const AUDIUS_SEARCHES=['rap francais','french hip hop','rnb','hip hop','pop','electronic','anime remix','video game soundtrack'];
+function audiusHeaders(){return AUDIUS_BEARER_TOKEN?{Authorization:'Bearer '+AUDIUS_BEARER_TOKEN}:AUDIUS_API_KEY?{'x-api-key':AUDIUS_API_KEY}:{}}
+async function audiusJson(url){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),7500);try{const response=await fetch(url,{headers:audiusHeaders(),signal:controller.signal});if(!response.ok)throw Error('Audius HTTP '+response.status);return await response.json()}finally{clearTimeout(timer)}}
+function audiusAcceptTrack(track){
+ if(!track||!track.id||!track.title||!track.user?.name||track.is_stream_gated||track.isStreamGated||track.is_unlisted||track.isUnlisted)return false;
+ if(!Number.isFinite(Number(track.duration))||Number(track.duration)<20||Number(track.duration)>900)return false;
+ const id=String(track.id);if(!/^[a-zA-Z0-9_-]{1,100}$/.test(id)||audiusIds.has(id))return false;
+ audiusIds.add(id);
+ const title=track.user.name+' — '+track.title;
+ BLIND_DOUBLE_BANK['Musique'].push({title,genre:'audius-musique',excerptId:'audius:'+id,sources:[{provider:'audius',url:'/audius-stream/'+encodeURIComponent(id),start:Math.min(90,Math.max(0,Math.floor(Number(track.duration)*.22))),end:Number(track.duration)}]});
+ audiusState.added++;return true;
+}
+async function warmAudius(){
+ if(!AUDIUS_STREAMS_ENABLED){audiusState.ready=true;return}
+ for(const query of AUDIUS_SEARCHES){
+  try{const json=await audiusJson('https://api.audius.co/v1/tracks/search?query='+encodeURIComponent(query)+'&limit=30');audiusState.queries++;
+   for(const track of (Array.isArray(json.data)?json.data:[]))audiusAcceptTrack(track);
+  }catch(e){audiusState.errors++;audiusState.lastError=String(e.message).slice(0,120)}
+  await new Promise(resolve=>setTimeout(resolve,500));
+ }
+ audiusState.ready=true;
+}
+app.get('/audius-status',(req,res)=>res.json({...audiusState,note:'La clé reste sur Render. Le catalogue Audius ne garantit ni les tubes originaux ni les droits de modification/diffusion.'}));
+app.get('/audius-stream/:id',async(req,res)=>{
+ const id=req.params.id;
+ if(!AUDIUS_STREAMS_ENABLED||!audiusIds.has(id))return res.sendStatus(404);
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),18000);
+ try{
+  const headers={...audiusHeaders()};if(req.headers.range&&/^bytes=\d+-\d*$/.test(req.headers.range))headers.Range=req.headers.range;
+  const upstream=await fetch('https://api.audius.co/v1/tracks/'+encodeURIComponent(id)+'/stream',{headers,signal:controller.signal});
+  if(!upstream.ok||!upstream.body)throw Error('Stream HTTP '+upstream.status);
+  res.status(upstream.status===206?206:200);res.set('Content-Type',upstream.headers.get('content-type')||'audio/mpeg');res.set('Cache-Control','private, max-age=300');
+  for(const h of ['content-range','accept-ranges','content-length']){const v=upstream.headers.get(h);if(v)res.set(h,v)}
+  const {Readable}=require('stream');Readable.fromWeb(upstream.body).pipe(res);
+  res.on('close',()=>{clearTimeout(timer);controller.abort()});
+ }catch(e){clearTimeout(timer);if(!res.headersSent)res.status(502).json({error:'Audio indisponible'});else res.end()}
+});
+setTimeout(()=>warmAudius().catch(e=>{audiusState.lastError=String(e.message);audiusState.ready=true}),3800);
+
 function blindRound(r){
  let themes=(r.settings.themes||[]).filter(t=>BLIND_DOUBLE_BANK[t]?.length);
- if(!themes.length)themes=['Musique','Anime & Manga','Cinéma & Séries','Dessins animés'];
+ if(!themes.length)themes=['Musique','Anime & Manga','Cinéma & Séries','Dessins animés'].filter(t=>BLIND_DOUBLE_BANK[t]?.length);
  // Randomise the theme independently for every Blind round.
  // Do not use a deterministic "starter" tied to gameRound.
  let themePool=[...themes];
  if(themes.length>1&&r.lastBlindTheme)themePool=themePool.filter(x=>x!==r.lastBlindTheme);
- const t=chooseTheme(r,'blindThemes',themes);r.lastBlindTheme=t;
+ const weighted=themes.includes(BLIND_ERA_THEME)&&BLIND_DOUBLE_BANK[BLIND_ERA_THEME].length&&Math.random()<.58;
+ const t=weighted?BLIND_ERA_THEME:chooseTheme(r,'blindThemes',themes);r.lastBlindTheme=t;
  let pool=BLIND_DOUBLE_BANK[t],seen=r.blindSeen||new Set(),fresh=pool.filter(x=>!seen.has(x.excerptId));
  if(!fresh.length)fresh=pool;
  // Fisher-Yates shuffle before selection: each new game/round gets a fresh order.
  fresh=[...fresh];for(let i=fresh.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[fresh[i],fresh[j]]=[fresh[j],fresh[i]]}
- const z=fresh[0];if(!r.blindSeen)r.blindSeen=new Set();r.blindSeen.add(z.excerptId);
+ const eraFrench=t===BLIND_ERA_THEME&&Math.random()<.70?fresh.filter(x=>x.genre==='FR'):[];
+ const z=eraFrench.length?eraFrench[0]:fresh[0];if(!r.blindSeen)r.blindSeen=new Set();r.blindSeen.add(z.excerptId);
  const difficulty=['simple','moyen','dur','extra-dur'][(Math.max(1,r.gameRound)-1)%4];
  const sameGenre=z.genre?pool.filter(x=>x.genre===z.genre&&x.title!==z.title).map(x=>x.title):[];
  const sameSource=pool.filter(x=>z.video&&x.video===z.video&&x.title!==z.title).map(x=>x.title);
@@ -635,7 +720,8 @@ function blindRound(r){
  // fragments in reverse order, NOT reversed waveform; actual reversal requires
  // a licensed local audio file and Web Audio processing.
  const extremeMods=[{mode:'reverse-order',rate:1},{mode:'reverse-order',rate:.75},{mode:'pitch',rate:.5},{mode:'pitch',rate:2},{mode:'chaos',rate:1.5},{mode:'micro',rate:.75},{mode:'scramble',rate:2}];
- const blindMod=difficulty==='extra-dur'?extremeMods[Math.floor(Math.random()*extremeMods.length)]:difficulty==='dur'?hardMods[Math.floor(Math.random()*hardMods.length)]:difficulty==='moyen'?(Math.random()<.8?mediumMods[Math.floor(Math.random()*mediumMods.length)]:{mode:'normal',rate:1}):{mode:'normal',rate:1};
+ // Le thème nostalgie 2006–2018 conserve TOUJOURS le son original, quelle que soit la difficulté.
+ const blindMod=t===BLIND_ERA_THEME?{mode:'normal',rate:1}:difficulty==='extra-dur'?extremeMods[Math.floor(Math.random()*extremeMods.length)]:difficulty==='dur'?hardMods[Math.floor(Math.random()*hardMods.length)]:difficulty==='moyen'?(Math.random()<.8?mediumMods[Math.floor(Math.random()*mediumMods.length)]:{mode:'normal',rate:1}):{mode:'normal',rate:1};
  const playbackRate=blindMod.rate||1;
  return {game:'Blind Test',q:'🎧 BLIND TEST — écoute les 8 secondes',a,c:a.indexOf(z.title),theme:t,blind:true,video:z.video||null,start:z.start||0,end:(z.start||0)+8,excerptId:z.excerptId,difficulty,points:difficultyPoints(difficulty),playbackRate,blindMod,sources:z.sources||[{provider:'youtube',id:z.video,start:z.start,end:z.start+8}]};
 }

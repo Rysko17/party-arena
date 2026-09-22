@@ -1,0 +1,11 @@
+PARTY ARENA V5.84 — Audius
+
+- Audius ajoute des pistes au thème Musique lorsque AUDIUS_STREAMS_ENABLED=true.
+- Clé serveur : AUDIUS_API_KEY (ou AUDIUS_BEARER_TOKEN si Audius a fourni un bearer token).
+- Les pistes Audius sont recherchées dans plusieurs styles et les doublons sont éliminés.
+- Le lecteur audio utilise une route locale /audius-stream/:id ; la clé n'est jamais envoyée au navigateur.
+- /audius-status affiche les pistes récupérées, erreurs et état de configuration.
+- Les anciens catalogues Deezer et YouTube sont conservés.
+- Musique 2006–2018 reste au naturel ; les nouvelles pistes Audius rejoignent Musique, pas le thème nostalgie.
+- IMPORTANT : activation désactivée par défaut tant que les droits de diffusion dans le jeu ne sont pas confirmés. L'API gratuite n'accorde pas automatiquement les droits de diffusion ni de transformation des morceaux.
+- Tests locaux : syntaxe serveur et navigateur ; tests de doublons, pistes privées et branche du lecteur audio. Les appels réels Audius et la lecture sur Render n'ont pas été testés avec la clé privée de l'utilisateur.

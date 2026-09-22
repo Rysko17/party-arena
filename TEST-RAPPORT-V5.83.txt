@@ -1,0 +1,7 @@
+V5.83 — Musique 2006–2018 sans effets
+- Le thème Musique 2006–2018 force blindMod={mode:'normal',rate:1}, même en dur/extra-dur.
+- Extraits toujours de 8 secondes, pris aux positions déjà choisies dans la source.
+- Les autres thèmes gardent les effets selon leur difficulté.
+- Banque et pondération de V5.82 inchangées.
+- Tests locaux : syntaxe Node serveur et scripts intégrés, vérification de la branche normale.
+- Lecture réelle Deezer/YouTube sur Render non vérifiée. Deezer nécessite des droits adaptés avant activation.

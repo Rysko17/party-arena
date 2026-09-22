@@ -1,0 +1,11 @@
+PARTY ARENA V5.82 — BLIND TEST GRAND CATALOGUE
+
+Banque 2006–2018 : 354 pistes de recherche sélectionnées (195 FR, 159 internationales).
+Le nouveau thème Musique 2006–2018 est visible dans le lobby.
+Lorsqu'il est sélectionné et qu'au moins un extrait est disponible, il est choisi avec une priorité de 58 % ; à l'intérieur du thème, les morceaux FR ont une priorité de 70 % lorsqu'ils sont disponibles.
+Cibles de recherche par thème (PAS des extraits validés) : {'Anime & Manga': 101, 'Cinéma & Séries': 135, 'Dessins animés': 115, 'Musique': 433, 'Jeux vidéo': 140}.
+Les catalogues Anime, Cinéma, Dessins animés, Jeux vidéo sont des pistes à sourcer, pas des extraits artificiellement générés. Les extraits déjà existants sont conservés.
+L'API Deezer tente de faire correspondre exactement artiste + titre, en chargeant progressivement le catalogue 2006–2018 uniquement si DEEZER_PREVIEWS_ENABLED=true.
+IMPORTANT : la diffusion et la modification d'extraits Deezer nécessitent des droits adaptés ; la variable reste désactivée par défaut. Aucune garantie de 200 extraits jouables ni de 100 extraits jouables par thème.
+Diagnostic : /blind-bank-status (cibles, correspondances Deezer et vrais extraits en mémoire).
+Tests : syntaxe Node et JavaScript client, validation des fichiers JSON, simulation de tirage pondéré, ZIP. Pas de test de lecture réelle sur Render.
