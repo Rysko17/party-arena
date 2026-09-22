@@ -599,45 +599,78 @@ const IMAGE_CULTE_BANK=[
 {work:'A Silent Voice',type:'movie',id:378064,theme:'Anime & Manga'},
 {work:'Suzume',type:'movie',id:916224,theme:'Anime & Manga'}
 ];
+// Similar franchises, genres and eras make plausible wrong answers.
+const IMAGE_CULTE_GROUPS=[
+ ['Interstellar','Inception','The Matrix','Dune','Dune: Part Two','Avatar','Avatar: The Way of Water','The Truman Show'],
+ ['The Dark Knight','The Batman','Joker','Iron Man','Avengers: Infinity War','Avengers: Endgame','Spider-Man: No Way Home','Spider-Man: Into the Spider-Verse','The Boys'],
+ ['Harry Potter and the Philosopher’s Stone','Harry Potter and the Prisoner of Azkaban','Harry Potter and the Goblet of Fire','The Lord of the Rings: The Fellowship of the Ring','The Lord of the Rings: The Two Towers','The Lord of the Rings: The Return of the King','The Witcher','Game of Thrones','House of the Dragon'],
+ ['Star Wars: A New Hope','Star Wars: The Empire Strikes Back','Star Wars: Revenge of the Sith','The Mandalorian','Dune','Dune: Part Two'],
+ ['Breaking Bad','Better Call Saul','Ozark','Peaky Blinders','Prison Break','Money Heist','The Walking Dead','The Last of Us'],
+ ['Stranger Things','Dark','Lost','The Last of Us','The Walking Dead','Squid Game','Wednesday'],
+ ['John Wick','John Wick: Chapter 4','The Batman','The Dark Knight','Scream','Se7en','Fight Club','Pulp Fiction'],
+ ['Naruto','Naruto Shippuden','Bleach','One Piece','Dragon Ball Z','My Hero Academia','Jujutsu Kaisen','Demon Slayer','Black Clover'],
+ ['Attack on Titan','Vinland Saga','Fullmetal Alchemist: Brotherhood','Death Note','Chainsaw Man','Jujutsu Kaisen','Solo Leveling','Cyberpunk: Edgerunners'],
+ ['Spirited Away','Princess Mononoke','Howl’s Moving Castle','Your Name','A Silent Voice','Suzume','Frieren: Beyond Journey’s End'],
+ ['Arcane','Cyberpunk: Edgerunners','Spider-Man: Into the Spider-Verse','The Boys','Invincible']
+];
+function imageCulteDecoys(entry,pool){
+ const names=new Set(pool.map(x=>x.work)),out=[];
+ const add=n=>{if(n!==entry.work&&names.has(n)&&!out.includes(n))out.push(n)};
+ const related=IMAGE_CULTE_GROUPS.filter(g=>g.includes(entry.work));
+ for(const group of related){for(const n of [...group].sort(()=>Math.random()-.5))add(n)}
+ for(const e of [...pool].filter(x=>x.type===entry.type&&x.theme===entry.theme).sort(()=>Math.random()-.5))add(e.work);
+ for(const e of [...pool].filter(x=>x.theme===entry.theme).sort(()=>Math.random()-.5))add(e.work);
+ for(const e of [...pool].sort(()=>Math.random()-.5))add(e.work);
+ return out.slice(0,3);
+}
 const tmdbSceneCache=new Map(),tmdbScenePending=new Map(),tmdbSceneBad=new Map();
 let tmdbWarmIndex=0,tmdbWarmRunning=false;
 const tmdbAttribution='Images : TMDB (The Movie Database). Ce produit utilise l’API TMDB mais n’est ni approuvé ni certifié par TMDB.';
 function tmdbKey(){return String(process.env.TMDB_API_KEY||'').trim()}
 async function tmdbJson(url){const response=await fetch(url,{headers:{accept:'application/json'},signal:AbortSignal.timeout(9000)});if(!response.ok)throw Error('TMDB API HTTP '+response.status);return response.json()}
-async function tmdbLoadScene(entry){
- if(tmdbSceneCache.has(entry.id+'-'+entry.type))return tmdbSceneCache.get(entry.id+'-'+entry.type);
- const key=entry.id+'-'+entry.type;if(tmdbScenePending.has(key))return tmdbScenePending.get(key);
+async function tmdbLoadScene(entry,difficulty='moyen'){
+ const key=entry.id+'-'+entry.type+'-'+difficulty;
+ if(tmdbSceneCache.has(key))return tmdbSceneCache.get(key);
+ if(tmdbScenePending.has(key))return tmdbScenePending.get(key);
  if(tmdbSceneBad.get(key)>Date.now())return null;
  const promise=(async()=>{try{
   const api=tmdbKey();if(!api)return null;
-  const base='https://api.themoviedb.org/3/'+entry.type+'/'+entry.id+'/images?api_key='+encodeURIComponent(api)+'&include_image_language=null,en';
-  const data=await tmdbJson(base);
-  // Backdrops are actual horizontal images from the work, not posters, logos or portraits.
-  // Prefer less popular frames over the first promotional image; avoid text-bearing backdrops.
-  const candidates=(data.backdrops||[]).filter(x=>x.file_path&&x.width>=900&&x.height>=450&&x.aspect_ratio>1.3&&x.aspect_ratio<2.8&&x.iso_639_1==null);
-  if(!candidates.length)return null;
-  const chosen=candidates.slice(0,Math.min(candidates.length,25)).sort((a,b)=>(a.vote_count||0)-(b.vote_count||0));
-  const start=Math.min(chosen.length-1,Math.floor(chosen.length*.3));
-  for(const pic of [...chosen.slice(start),...chosen.slice(0,start)]){
-   try{const url='https://image.tmdb.org/t/p/w780'+pic.file_path;const ir=await fetch(url,{signal:AbortSignal.timeout(8500)});if(!ir.ok)continue;const ct=ir.headers.get('content-type')||'';if(!ct.startsWith('image/'))continue;const buffer=Buffer.from(await ir.arrayBuffer());if(buffer.length<4000||buffer.length>4000000)continue;
-    const item={buffer,ct,entry,tmdbPath:pic.file_path};tmdbSceneCache.set(key,item);return item;
-   }catch(e){}
+  const sources=[];
+  // Difficult TV/anime rounds: episode stills instead of recognizable promotional backdrops.
+  if(difficulty==='dur'&&entry.type==='tv'){
+   for(const ep of [5,7,3,9])sources.push('https://api.themoviedb.org/3/tv/'+entry.id+'/season/1/episode/'+ep+'/images?api_key='+encodeURIComponent(api)+'&include_image_language=null,en');
+  }
+  sources.push('https://api.themoviedb.org/3/'+entry.type+'/'+entry.id+'/images?api_key='+encodeURIComponent(api)+'&include_image_language=null,en');
+  for(const url of sources){
+   let data;try{data=await tmdbJson(url)}catch(e){continue}
+   const episode=url.includes('/episode/');
+   let pics=(episode?(data.stills||[]):(data.backdrops||[])).filter(x=>x.file_path&&x.width>=750&&x.height>=400&&x.aspect_ratio>1.3&&x.aspect_ratio<2.8&&x.iso_639_1==null);
+   // Hard: lower-rated, less reused frames. Never take posters, logos, or top-voted hero shots.
+   pics=pics.sort((a,b)=>(a.vote_count||0)-(b.vote_count||0));
+   if(difficulty==='dur'&&!episode&&pics.length>6)pics=pics.slice(0,Math.max(3,Math.ceil(pics.length*.45)));
+   else if(difficulty!=='dur')pics=pics.sort((a,b)=>(b.vote_count||0)-(a.vote_count||0));
+   for(const pic of pics.slice(0,14)){
+    try{const ir=await fetch('https://image.tmdb.org/t/p/w780'+pic.file_path,{signal:AbortSignal.timeout(8500)});if(!ir.ok)continue;const ct=ir.headers.get('content-type')||'';if(!ct.startsWith('image/'))continue;const buffer=Buffer.from(await ir.arrayBuffer());if(buffer.length<4000||buffer.length>4000000)continue;
+     const item={buffer,ct,entry,tmdbPath:pic.file_path,episodeStill:episode,difficulty};tmdbSceneCache.set(key,item);return item;
+    }catch(e){}
+   }
   }
  }catch(e){console.warn('TMDB Image Culte',entry.work,e.message)}
  tmdbSceneBad.set(key,Date.now()+3*60*1000);return null
  })();tmdbScenePending.set(key,promise);try{return await promise}finally{tmdbScenePending.delete(key)}
 }
-function tmdbWarmScenes(){if(tmdbWarmRunning||!tmdbKey())return;tmdbWarmRunning=true;(async()=>{while(tmdbWarmIndex<IMAGE_CULTE_BANK.length){const batch=IMAGE_CULTE_BANK.slice(tmdbWarmIndex,tmdbWarmIndex+3);tmdbWarmIndex+=3;await Promise.allSettled(batch.map(tmdbLoadScene));await new Promise(r=>setTimeout(r,250))}tmdbWarmRunning=false})().catch(e=>{console.warn('TMDB warm',e.message);tmdbWarmRunning=false})}
+function tmdbWarmScenes(){if(tmdbWarmRunning||!tmdbKey())return;tmdbWarmRunning=true;(async()=>{while(tmdbWarmIndex<IMAGE_CULTE_BANK.length){const batch=IMAGE_CULTE_BANK.slice(tmdbWarmIndex,tmdbWarmIndex+3);tmdbWarmIndex+=3;await Promise.allSettled(batch.map(x=>tmdbLoadScene(x,'moyen')));await new Promise(r=>setTimeout(r,250))}tmdbWarmRunning=false})().catch(e=>{console.warn('TMDB warm',e.message);tmdbWarmRunning=false})}
 async function imageCulteRound(r){
  const selected=r.settings.themes||[];let pool=IMAGE_CULTE_BANK.filter(x=>selected.includes(x.theme));if(!pool.length)pool=IMAGE_CULTE_BANK;
- r.imageCulteSeen=r.imageCulteSeen||new Set();let ready=pool.filter(x=>tmdbSceneCache.has(x.id+'-'+x.type)&&!r.imageCulteSeen.has(x.id+'-'+x.type));
- if(!ready.length){const shuffled=[...pool].sort(()=>Math.random()-.5);for(const entry of shuffled.slice(0,9)){if(r.imageCulteSeen.has(entry.id+'-'+entry.type))continue;const scene=await tmdbLoadScene(entry);if(scene){ready=[entry];break}}}
- if(!ready.length){r.imageCulteSeen.clear();ready=pool.filter(x=>tmdbSceneCache.has(x.id+'-'+x.type));}
+ r.imageCulteSeen=r.imageCulteSeen||new Set();const difficulty=['simple','moyen','dur'][(Math.max(1,r.gameRound)-1)%3];
+ const sceneKey=x=>x.id+'-'+x.type+'-'+difficulty;
+ let ready=pool.filter(x=>tmdbSceneCache.has(sceneKey(x))&&!r.imageCulteSeen.has(sceneKey(x)));
+ if(!ready.length){const shuffled=[...pool].sort(()=>Math.random()-.5);for(const entry of shuffled.slice(0,12)){if(r.imageCulteSeen.has(sceneKey(entry)))continue;const scene=await tmdbLoadScene(entry,difficulty);if(scene){ready=[entry];break}}}
+ if(!ready.length){r.imageCulteSeen.clear();ready=pool.filter(x=>tmdbSceneCache.has(sceneKey(x)))}
  if(!ready.length){return {game:'Image culte',q:'⚠️ Aucune image disponible pour le moment. Vérifie TMDB_API_KEY dans Render, puis relance une partie.',a:[],image:null,imageCulteUnavailable:true,theme:'Images',difficulty:'simple',points:0}}
- const z=ready[Math.floor(Math.random()*ready.length)];r.imageCulteSeen.add(z.id+'-'+z.type);
- const decPool=pool.filter(x=>x.work!==z.work).sort(()=>Math.random()-.5);const dec=[...new Set(decPool.map(x=>x.work))].slice(0,3);if(dec.length<3)dec.push(...IMAGE_CULTE_BANK.filter(x=>x.work!==z.work&&!dec.includes(x.work)).map(x=>x.work).slice(0,3-dec.length));
- const a=[z.work,...dec].sort(()=>Math.random()-.5);
- return {game:'Image culte',q:'🎬 De quelle œuvre vient cette scène ?',a,c:a.indexOf(z.work),image:'/tmdb-scene/'+z.type+'/'+z.id,theme:z.theme,difficulty:'dur',points:1000,imageCulte:true,tmdbAttribution};
+ const z=ready[Math.floor(Math.random()*ready.length)];r.imageCulteSeen.add(sceneKey(z));
+ const dec=imageCulteDecoys(z,pool);const a=[z.work,...dec].sort(()=>Math.random()-.5);
+ return {game:'Image culte',q:difficulty==='dur'?'🎬 PLAN DIFFICILE — De quelle œuvre vient cette scène ?':'🎬 De quelle œuvre vient cette scène ?',a,c:a.indexOf(z.work),image:'/tmdb-scene/'+z.type+'/'+z.id+'/'+difficulty,theme:z.theme,difficulty,points:difficultyPoints(difficulty),imageCulte:true,tmdbAttribution};
 }
 function makeRound(r,g){
  let c={game:g};
@@ -922,8 +955,8 @@ s.on('blindHistory',ids=>{const r=Object.values(rooms).find(x=>x&&x.players&&Obj
 s.on('disconnect',()=>{for(const c in rooms){let r=rooms[c];if(r.players[s.id]){delete r.players[s.id];if(!Object.keys(r.players).length)delete rooms[c];else{if(r.host===s.id)r.host=Object.keys(r.players)[0];emit(r)}}}})
 });
 
-app.get('/tmdb-scene/:type/:id',(req,res)=>{const type=req.params.type,id=Number(req.params.id);if(!['movie','tv'].includes(type)||!Number.isSafeInteger(id))return res.status(400).end();const hit=tmdbSceneCache.get(id+'-'+type);if(!hit)return res.status(404).end();res.set('Content-Type',hit.ct);res.set('Cache-Control','public,max-age=3600');res.send(hit.buffer)});
+app.get('/tmdb-scene/:type/:id/:difficulty',(req,res)=>{const type=req.params.type,id=Number(req.params.id);if(!['movie','tv'].includes(type)||!Number.isSafeInteger(id))return res.status(400).end();const difficulty=['simple','moyen','dur'].includes(req.params.difficulty)?req.params.difficulty:'moyen';const hit=tmdbSceneCache.get(id+'-'+type+'-'+difficulty);if(!hit)return res.status(404).end();res.set('Content-Type',hit.ct);res.set('Cache-Control','public,max-age=3600');res.send(hit.buffer)});
 app.get('/image-culte-status',(req,res)=>res.json({tmdbConfigured:!!tmdbKey(),ready:tmdbSceneCache.size,total:IMAGE_CULTE_BANK.length,pending:tmdbScenePending.size}));
 if(tmdbKey()){setTimeout(tmdbWarmScenes,500)}else{console.warn('Image Culte: TMDB_API_KEY manquante dans Render Environment')}
-server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.63 lancé'));
+server.listen(process.env.PORT||3000,()=>console.log('Party Arena V5.64 lancé'));
 const HARD_EXTRA={"Culture générale": [{"q": "Quel traité de 1648 est associé à la fin de la guerre de Trente Ans ?", "a": ["Westphalie", "Utrecht", "Versailles", "Tordesillas"], "c": 0, "difficulty": "dur"}, {"q": "Quel élément chimique porte le numéro atomique 74 ?", "a": ["Tungstène", "Osmium", "Iridium", "Hafnium"], "c": 0, "difficulty": "dur"}, {"q": "Quelle dynastie chinoise a précédé immédiatement les Ming ?", "a": ["Yuan", "Song", "Qing", "Tang"], "c": 0, "difficulty": "dur"}, {"q": "Quel philosophe a écrit Critique de la raison pure ?", "a": ["Kant", "Hegel", "Spinoza", "Leibniz"], "c": 0, "difficulty": "dur"}], "Football": [{"q": "Quel club a remporté la première Coupe d’Europe des clubs champions en 1956 ?", "a": ["Real Madrid", "Benfica", "Milan", "Reims"], "c": 0, "difficulty": "dur"}, {"q": "Quel gardien a remporté le Ballon d’Or 1963 ?", "a": ["Lev Yachine", "Dino Zoff", "Gordon Banks", "Sepp Maier"], "c": 0, "difficulty": "dur"}, {"q": "Quel pays a remporté l’Euro 1992 après avoir été repêché tardivement ?", "a": ["Danemark", "Suède", "Pays-Bas", "Allemagne"], "c": 0, "difficulty": "dur"}], "Anime & Manga": [{"q": "Dans Hunter × Hunter, quel type de Nen est associé à Kurapika lorsque ses yeux deviennent écarlates ?", "a": ["Spécialisation", "Matérialisation", "Renforcement", "Manipulation"], "c": 0, "difficulty": "dur"}, {"q": "Dans Fullmetal Alchemist, quel principe est présenté comme fondamental à l’alchimie au début de l’œuvre ?", "a": ["Échange équivalent", "Transmutation absolue", "Résonance vitale", "Cercle parfait"], "c": 0, "difficulty": "dur"}, {"q": "Dans Bleach, comment se nomme l’étape supérieure de libération d’un Zanpakutō ?", "a": ["Bankai", "Resurrección", "Shikai", "Vollständig"], "c": 0, "difficulty": "dur"}], "Mathématiques": [{"q": "Quelle est la dérivée de ln(x²+1) ?", "a": ["2x/(x²+1)", "1/(x²+1)", "2/(x²+1)", "ln(2x)"], "c": 0, "difficulty": "dur"}, {"q": "Combien vaut la somme des angles intérieurs d’un dodécagone ?", "a": ["1800°", "1620°", "1980°", "2160°"], "c": 0, "difficulty": "dur"}, {"q": "Si log₂(x)=7, combien vaut x ?", "a": ["128", "64", "256", "49"], "c": 0, "difficulty": "dur"}]};for(const [t,a] of Object.entries(HARD_EXTRA)){DB[t]=DB[t]||[];DB[t].push(...a)}

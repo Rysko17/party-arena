@@ -1,0 +1,8 @@
+PARTY ARENA V5.64
+Image Culte: decoys prioritize same franchise, genre, type and theme (96 works).
+Difficulty cycles simple / moyen / dur; 4 choices.
+Hard TV/anime: prioritize less promotional episode stills (season 1 episodes 5,7,3,9) if TMDB provides them; fallback low-vote backdrops.
+Hard film: less popular horizontal backdrops, avoiding top-voted hero/promotional images where multiple candidates exist.
+All images checked and buffered before sending round; same-origin image endpoint keyed by difficulty.
+IMPORTANT: TMDB metadata alone cannot verify whether a frame shows a secondary character or is objectively non-obvious. This is a heuristic, not a manual visual curation. Remote TMDB responses cannot be checked without user's API key.
+Tests: node --check PASS; 96 entries, 60 simulated rounds, 20 hard rounds, coherent unique decoys PASS.
